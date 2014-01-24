@@ -4,7 +4,6 @@ import com.stuckinadrawer.Tile;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class Renderer extends JFrame{
 

@@ -3,6 +3,9 @@ package com.stuckinadrawer.generator;
 import com.stuckinadrawer.Tile;
 import com.stuckinadrawer.Utils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public class GeneratorBSPLayout implements Generator{
 
     private Tile[][] level;
@@ -14,26 +17,37 @@ public class GeneratorBSPLayout implements Generator{
 
     private int count = 0;
 
-    private int distanceFromWallsWhenSplitting = 8;
+    private int distanceFromWallsWhenSplitting = 10;
+
+    private ArrayList<Dungeon> dungeons;
 
     public GeneratorBSPLayout(int levelWidth, int levelHeight, int maxRoomSize){
         this.levelWidth = levelWidth;
         this.levelHeight = levelHeight;
         this.maxRoomSize = maxRoomSize;
-        initializeEmptyLevel();
-
-
     }
 
     public GeneratorBSPLayout(){
-        this(80, 50, 20);
+        this(90, 70, 25);
     }
 
     @Override
     public Tile[][] generate(){
+        initializeEmptyLevel();
+        dungeons = new ArrayList<Dungeon>();
         Dungeon dungeon = new Dungeon(0, 0, levelWidth, levelHeight, null, 0);
+        dungeons.add(dungeon);
         split(dungeon);
+        createCorridors();
         return level;
+    }
+
+    private void createCorridors() {
+        //array list from back to front
+        //take dungeon, find partner via parent, connect, remove both
+        //if parent  == null : ende
+
+
     }
 
     private void split(Dungeon dungeon){
@@ -42,6 +56,7 @@ public class GeneratorBSPLayout implements Generator{
         System.out.println("it " + dungeon.iteration);
         count++;
         System.out.println("Dungeon x:"+dungeon.x+" y:"+dungeon.y+" w:"+dungeon.width+" h:"+dungeon.height);
+
         //check if we have to split
         if((dungeon.width <= maxRoomSize && dungeon.height <= maxRoomSize)||dungeon.iteration >5){
             System.out.println("NO Split");
@@ -67,22 +82,39 @@ public class GeneratorBSPLayout implements Generator{
                 a =  new Dungeon(dungeon.x, dungeon.y, dungeon.width, pos, dungeon, dungeon.iteration+1);
                 b = new Dungeon(dungeon.x, dungeon.y+pos, dungeon.width, dungeon.height-pos, dungeon, dungeon.iteration+1);
             }
+            dungeon.addChild(a);
+            dungeon.addChild(b);
+            dungeons.add(a);
+            dungeons.add(b);
+
             split(a);
             split(b);
         }
     }
 
     private void createRoom(Dungeon dungeon){
+
+        int variable = 3;
+
         //add to level
-        for(int y = 0; y < dungeon.height; y++){
-            for(int x = 0; x < dungeon.width; x++){
-                if(y == 0 || x == 0 || y == dungeon.height-1 || x == dungeon.width-1){
-                    level[dungeon.x + x][dungeon.y + y] = Tile.WALL;
+        int offsetX = Utils.random(variable);            /// + dungeon.x
+        int offsetY = Utils.random(variable);
+
+        int roomWidth = Utils.random(dungeon.width-offsetX-variable, dungeon.width-offsetX);
+        int roomHeight = Utils.random(dungeon.height-offsetY-variable, dungeon.height-offsetY);
+
+        Room r = new Room(dungeon.x + offsetX, dungeon.y + offsetY, roomWidth, roomHeight);
+
+        for(int x = 0; x < r.width; x++){
+            for(int y = 0; y < r.height; y++){
+                if(y == 0 || x == 0 || y == r.height-1 || x == r.width-1){
+                    level[r.x + x][r.y + y] = Tile.WALL;
                 }else{
-                    level[dungeon.x + x][dungeon.y + y] = Tile.ROOM;
+                    level[r.x + x][r.y + y] = Tile.ROOM;
                 }
             }
         }
+
     }
 
     private class Dungeon{
@@ -91,6 +123,7 @@ public class GeneratorBSPLayout implements Generator{
         int width;
         int height;
         Dungeon parent;
+        HashSet<Dungeon> children;
         int iteration;
 
         public Dungeon(int x, int y, int width, int height, Dungeon parent, int iteration){
@@ -100,8 +133,15 @@ public class GeneratorBSPLayout implements Generator{
             this.height = height;
             this.parent = parent;
             this.iteration = iteration;
+            children = new HashSet<Dungeon>();
+        }
+
+        public void addChild(Dungeon d){
+            children.add(d);
         }
     }
+
+
 
     private void initializeEmptyLevel() {
         level = new Tile[levelWidth][levelHeight];
