@@ -11,7 +11,7 @@ public class Test {
         Generator g = new GeneratorBSPLayout();
         Tile[][] level = g.generate();
 
-        Renderer r = new Renderer(level);
+        new Renderer(level);
 
     }
 }

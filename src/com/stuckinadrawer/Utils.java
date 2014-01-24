@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Utils {
 
-    static Random random = new Random();
+    private static Random random = new Random();
 
     /** Returns a random number between 0 (inclusive) and the specified value (inclusive). */
     static public int random (int range) {

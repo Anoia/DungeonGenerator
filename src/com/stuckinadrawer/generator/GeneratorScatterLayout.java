@@ -169,8 +169,7 @@ public class GeneratorScatterLayout implements Generator{
     }
 
     private void buildBetterCorridors(){
-        for (int i = 0; i < rooms.size(); i++) {
-            Room roomA = rooms.get(i);
+        for (Room roomA : rooms) {
             Room roomB = getNextRoom(roomA);
 
             int pointAX = Utils.random(roomA.x + 1, roomA.x + roomA.width - 1);
@@ -189,7 +188,7 @@ public class GeneratorScatterLayout implements Generator{
                 }
 
                 level[pointBX][pointBY] = Tile.CORRIDOR;
-        }
+            }
 
         }
 
