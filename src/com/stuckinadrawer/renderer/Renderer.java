@@ -47,7 +47,7 @@ public class Renderer extends JFrame{
                             g2d.setColor(Color.gray);
                             break;
                         case CORRIDOR:
-                            g2d.setColor(Color.gray);
+                            g2d.setColor(Color.darkGray);
                             break;
                     }
 

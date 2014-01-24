@@ -2,8 +2,10 @@ package com.stuckinadrawer.generator;
 
 import com.stuckinadrawer.Tile;
 import com.stuckinadrawer.Utils;
+import com.sun.deploy.si.SingleInstanceManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class GeneratorBSPLayout implements Generator{
@@ -28,7 +30,7 @@ public class GeneratorBSPLayout implements Generator{
     }
 
     public GeneratorBSPLayout(){
-        this(90, 70, 25);
+        this(70, 50, 25);
     }
 
     @Override
@@ -46,7 +48,102 @@ public class GeneratorBSPLayout implements Generator{
         //array list from back to front
         //take dungeon, find partner via parent, connect, remove both
         //if parent  == null : ende
+        Collections.reverse(dungeons);
+        HashSet<Dungeon> connectedDungeons = new HashSet<Dungeon>();
+        for(Dungeon d: dungeons){
+            if(d.parent!=null && !connectedDungeons.contains(d) && d.childA == null){
+                Dungeon dungeonA = d.parent.childA;
+                Dungeon dungeonB = d.parent.childB;
 
+                //drawCorridor from A to B
+                drawCorridor(dungeonA, dungeonB);
+
+                connectedDungeons.add(dungeonA);
+                connectedDungeons.add(dungeonB);
+            }
+        }
+
+
+    }
+
+    private void drawCorridor(Dungeon dA, Dungeon dB){
+
+        int pointAX = dA.x + dA.width/2;
+        int pointAY = dA.y + dA.height/2;
+
+        int pointBX = dB.x + dB.width/2;
+        int pointBY = dB.y + dB.height/2;
+        System.out.println(pointAX + " " + pointAY + " | " + pointBX +" "+ pointBY);
+                /*
+        if(pointAX < pointBX){
+            //a links von b
+            System.out.println("a links von b");
+            int walkingPoint = pointBX;
+            boolean drawing = false;
+            while(true){
+                System.out.println("test");
+                if(level[walkingPoint][pointBY] == Tile.WALL){
+                    if(drawing){
+                        level[walkingPoint][pointBY] = Tile.CORRIDOR;
+                        System.out.println("stop drawing");
+                        break;
+                    }else{
+                    drawing = true;
+                        System.out.println("Start drawing");
+                    }
+                }
+                if(drawing){
+                    level[walkingPoint][pointBY] = Tile.CORRIDOR;
+                    level[walkingPoint][pointBY-1] = Tile.WALL;
+                    level[walkingPoint][pointBY+1] = Tile.WALL;
+                }
+                walkingPoint --;
+            }
+        } else if(pointAX > pointBX){
+            //a rechts von b
+            System.out.println("a rechts von b");
+            int walkingPoint = pointBX;
+            boolean drawing = false;
+            while(true){
+                if(level[walkingPoint][pointBY] == Tile.WALL){
+                    if(drawing){
+                        level[walkingPoint][pointBY] = Tile.CORRIDOR;
+                        break;
+                    }else{
+                        drawing = true;
+                    }
+                }
+                if(drawing){
+                    level[walkingPoint][pointBY] = Tile.CORRIDOR;
+                    level[walkingPoint][pointBY-1] = Tile.CORRIDOR;
+                    level[walkingPoint][pointBY+1] = Tile.CORRIDOR;
+                }
+                walkingPoint++;
+            }
+
+        } else if(pointAY > pointBY){
+            //a über b
+            System.out.println("a über b");
+
+        } else{
+            //a unter b
+            System.out.println("a unter b");
+
+        }  */
+
+        while ((pointBX != pointAX) || (pointBY != pointAY)) {
+            if (pointBX != pointAX) {
+                if (pointBX > pointAX) pointBX--;
+                else pointBX++;
+            } else {
+                if (pointBY > pointAY) pointBY--;
+                else pointBY++;
+            }
+
+            level[pointBX][pointBY] = Tile.CORRIDOR;
+        }
+
+        //surround with walls
 
     }
 
@@ -82,8 +179,8 @@ public class GeneratorBSPLayout implements Generator{
                 a =  new Dungeon(dungeon.x, dungeon.y, dungeon.width, pos, dungeon, dungeon.iteration+1);
                 b = new Dungeon(dungeon.x, dungeon.y+pos, dungeon.width, dungeon.height-pos, dungeon, dungeon.iteration+1);
             }
-            dungeon.addChild(a);
-            dungeon.addChild(b);
+            dungeon.childA = a;
+            dungeon.childB = b;
             dungeons.add(a);
             dungeons.add(b);
 
@@ -123,7 +220,8 @@ public class GeneratorBSPLayout implements Generator{
         int width;
         int height;
         Dungeon parent;
-        HashSet<Dungeon> children;
+        Dungeon childA = null;
+        Dungeon childB = null;
         int iteration;
 
         public Dungeon(int x, int y, int width, int height, Dungeon parent, int iteration){
@@ -133,12 +231,9 @@ public class GeneratorBSPLayout implements Generator{
             this.height = height;
             this.parent = parent;
             this.iteration = iteration;
-            children = new HashSet<Dungeon>();
         }
 
-        public void addChild(Dungeon d){
-            children.add(d);
-        }
+
     }
 
 
