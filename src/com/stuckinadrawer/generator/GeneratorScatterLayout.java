@@ -52,9 +52,10 @@ public class GeneratorScatterLayout implements Generator{
         //buildCorridors();
 
         //createEnemies();
+        buildBetterCorridors();
         putRoomsInMap();
 
-        buildBetterCorridors();
+
 
         buildWalls();
 

@@ -1,17 +1,23 @@
 package com.stuckinadrawer.renderer;
 
 import com.stuckinadrawer.Tile;
+import com.stuckinadrawer.generator.Generator;
+import com.stuckinadrawer.generator.GeneratorBSPLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class Renderer extends JFrame{
 
     private Tile[][] level;
     private int tileSize = 16;
+    private Generator g;
 
-    public Renderer(Tile[][] level){
-        this.level = level;
+    public Renderer(){
+        g = new GeneratorBSPLayout();
+        this.level = g.generate();
         initGUI();
     }
 
@@ -19,11 +25,27 @@ public class Renderer extends JFrame{
         setTitle("Points");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(level.length*tileSize, level[0].length*tileSize);
-
         add(new MyPanel());
 
         setLocationRelativeTo(null);
         setVisible(true);
+
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == 32){
+                    createNewLevel();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
     }
 
 
@@ -64,5 +86,10 @@ public class Renderer extends JFrame{
             super.paintComponents(g);
             draw(g);
         }
+    }
+
+    public void createNewLevel(){
+        level = g.generate();
+        repaint();
     }
 }
