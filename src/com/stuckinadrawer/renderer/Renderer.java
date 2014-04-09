@@ -3,6 +3,7 @@ package com.stuckinadrawer.renderer;
 import com.stuckinadrawer.Tile;
 import com.stuckinadrawer.generator.Generator;
 import com.stuckinadrawer.generator.GeneratorBSPLayout;
+import com.stuckinadrawer.generator.GeneratorScatterLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,17 +17,17 @@ public class Renderer extends JFrame{
     private Generator g;
 
     public Renderer(){
-        g = new GeneratorBSPLayout();
+        //g = new GeneratorBSPLayout();
+        g = new GeneratorScatterLayout();
         this.level = g.generate();
         initGUI();
     }
 
     private void initGUI() {
-        setTitle("Points");
+        setTitle("LevelGenerator: ScatterLayout");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(level.length*tileSize, level[0].length*tileSize);
         add(new MyPanel());
-
+        pack();
         setLocationRelativeTo(null);
         setVisible(true);
 
@@ -39,6 +40,25 @@ public class Renderer extends JFrame{
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == 32){
                     createNewLevel();
+                }
+                switch(e.getKeyCode()){
+                    case 32:
+                        createNewLevel();
+                        break;
+                    case 83:
+                        //scatter
+                        setTitle("LevelGenerator: ScatterLayout");
+                        System.out.println("Now using ScatterLayout to generate Level");
+                        g = new GeneratorScatterLayout();
+                        createNewLevel();
+                        break;
+                    case 66:
+                        //bsp
+                        setTitle("LevelGenerator: BSP-Tree");
+                        System.out.println("Now using BSP-Tree to generate Level");
+                        g = new GeneratorBSPLayout();
+                        createNewLevel();
+                        break;
                 }
             }
 
@@ -85,6 +105,11 @@ public class Renderer extends JFrame{
         public void paintComponent(Graphics g) {
             super.paintComponents(g);
             draw(g);
+        }
+
+        @Override
+        public Dimension getPreferredSize(){
+            return new Dimension(level.length*tileSize, level[0].length*tileSize);
         }
     }
 
