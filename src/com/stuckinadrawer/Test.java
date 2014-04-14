@@ -54,7 +54,12 @@ public class Test {
         renderer.setGraph(g);
         System.out.println(g.toString());
 
-
+        Layout layout = new Layout(g);
+        while(true){
+            Thread.sleep(1000/64);
+            layout.step();
+            renderer.update();
+        }
 
 
     }
