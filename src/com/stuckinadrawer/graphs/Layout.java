@@ -5,7 +5,7 @@ public class Layout {
     private Graph graph;
 
     private static final int REPULSION = 200000;
-    private static final int SPRING_LENGTH = 20;
+    private static final int SPRING_LENGTH = 60;
     private static final double STEP_SIZE = 0.0005;
 
 

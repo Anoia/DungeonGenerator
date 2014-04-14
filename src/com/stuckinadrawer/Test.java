@@ -5,6 +5,7 @@ import com.stuckinadrawer.graphs.GraphRenderer;
 import com.stuckinadrawer.graphs.Layout;
 import com.stuckinadrawer.graphs.Vertex;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Test {
@@ -49,7 +50,8 @@ public class Test {
         edge.add(a);
         edges.add(edge);
 
-        Graph g = new Graph(edges);
+      //  Graph g = new Graph(edges);
+        Graph g = createRandomGraph();
         GraphRenderer renderer = new GraphRenderer();
         renderer.setGraph(g);
         System.out.println(g.toString());
@@ -64,7 +66,40 @@ public class Test {
 
     }
 
+    public Graph createRandomGraph(){
+        String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int amountOfVertices = Utils.random(5, 15);
+        HashSet<Vertex> vertices = new HashSet<Vertex>();
+        ArrayList<Vertex> vertexList = new ArrayList<Vertex>();
+        for(int i = 0; i < amountOfVertices; i++){
+            String letter = abc.charAt(i) + " ";
+            Vertex v = new Vertex(letter);
+            vertices.add(v);
+            vertexList.add(v);
+        }
+        HashSet<HashSet<Vertex>> edges = new HashSet<HashSet<Vertex>>();
+        int amountOfEdges = Utils.random(amountOfVertices, amountOfVertices+10);
+        for(int i = 0; i < amountOfEdges; i++){
+            HashSet<Vertex> edge = new HashSet<Vertex>();
+            Vertex v1 = getRandomVertexFromList(vertexList);
+            Vertex v2 = getRandomVertexFromList(vertexList);
+            while(v1.equals(v2)){
+                v2 = getRandomVertexFromList(vertexList);
+            }
+            edge.add(v1);
+            edge.add(v2);
+            edges.add(edge);
+        }
 
+        Graph g = new Graph(edges, vertices);
+
+        return g;
+    }
+
+    public Vertex getRandomVertexFromList(ArrayList<Vertex> list){
+        int index = Utils.random(list.size()-1);
+        return list.get(index);
+    }
 
     public static void main(String[] args) throws InterruptedException {
         new Test();
