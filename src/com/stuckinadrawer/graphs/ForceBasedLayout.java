@@ -1,6 +1,6 @@
 package com.stuckinadrawer.graphs;
 
-public class Layout {
+public class ForceBasedLayout {
 
     private Graph graph;
 
@@ -8,8 +8,14 @@ public class Layout {
     private static final int SPRING_LENGTH = 60;
     private static final double STEP_SIZE = 0.0005;
 
+    /**
+     * This Class positions the Nodes of a Graph with a force based Layout
+     * Spring-Based attractive forces based on Hooke's Law are applied to pull directly connected Nodes together,
+     * while a repulsive force like those of electrically charged particles based on Coulomb's Law are used to separate all Nodes
+     * @param g Graph the Graph to be laid out
+     */
 
-    public Layout(Graph g){
+    public ForceBasedLayout(Graph g){
         this.graph = g;
     }
 
@@ -26,16 +32,19 @@ public class Layout {
                     double delta2 = deltaX * deltaX + deltaY * deltaY;
 
                     //Add some jitter if distance² is very small
-                    if(delta2 < 0.01){
+                    if(delta2 < 0.1){
                         System.out.println("Too Close! Jitter!");
-                        deltaX = 0.1 * Math.random() + 0.1;
-                        deltaY = 0.1 * Math.random() + 0.1;
+                        deltaX = 1 * Math.random() + 0.1;
+                        deltaY = 1 * Math.random() + 0.1;
                         delta2 = deltaX * deltaX + deltaY * deltaY;
                     }
 
                     //Coulomb's Law -- repulsion varies inversely with square of distance
-                    vertex1.forceX -= (REPULSION / delta2) * deltaX;
-                    vertex1.forceY -= (REPULSION / delta2) * deltaY;
+                    if (delta2 < 100*100){
+                        vertex1.forceX -= (REPULSION / delta2) * deltaX;
+                        vertex1.forceY -= (REPULSION / delta2) * deltaY;
+                    }
+
 
                     //Hooke's Law -- spring force along edges
                     if(graph.hasEdge(vertex1, vertex2)){

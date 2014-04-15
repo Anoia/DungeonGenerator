@@ -1,8 +1,8 @@
 package com.stuckinadrawer;
 
+import com.stuckinadrawer.graphs.ForceBasedLayout;
 import com.stuckinadrawer.graphs.Graph;
 import com.stuckinadrawer.graphs.GraphRenderer;
-import com.stuckinadrawer.graphs.Layout;
 import com.stuckinadrawer.graphs.Vertex;
 
 import java.util.ArrayList;
@@ -56,10 +56,10 @@ public class Test {
         renderer.setGraph(g);
         System.out.println(g.toString());
 
-        Layout layout = new Layout(g);
+        ForceBasedLayout forceBasedLayout = new ForceBasedLayout(g);
         while(true){
             Thread.sleep(1000/64);
-            layout.step();
+            forceBasedLayout.step();
             renderer.update();
         }
 
@@ -91,9 +91,7 @@ public class Test {
             edges.add(edge);
         }
 
-        Graph g = new Graph(edges, vertices);
-
-        return g;
+        return new Graph(edges, vertices);
     }
 
     public Vertex getRandomVertexFromList(ArrayList<Vertex> list){
