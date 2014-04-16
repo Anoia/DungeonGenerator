@@ -1,9 +1,10 @@
 package com.stuckinadrawer.graphs;
 
+import com.stuckinadrawer.Point;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -15,6 +16,7 @@ public class GraphRenderer extends JFrame{
     private int height = 600;
     private int offsetX = width/2;
     private int offsetY = height/2;
+    private int vertexRadius = 20;
 
     public GraphRenderer(){
 
@@ -50,6 +52,8 @@ public class GraphRenderer extends JFrame{
             public void keyReleased(KeyEvent e) {
             }
         });
+
+
     }
 
     public void setGraph(Graph g) {
@@ -63,6 +67,81 @@ public class GraphRenderer extends JFrame{
     }
 
     private class MyPanel extends JPanel {
+
+        private Point dragging = null;
+        private Vertex draggedVertex = null;
+
+
+        public MyPanel(){
+            super();
+            this.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int mouseX = e.getX() - offsetX;
+                    int mouseY = e.getY() - offsetY;
+                    Vertex v = getVertexOnPosition(mouseX, mouseY);
+                    if (v != null) {
+                        System.out.println("Clicked on Vertex: " + v.getLabel());
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                        draggedVertex = getVertexOnPosition(e.getX() - offsetX, e.getY() - offsetY);
+                        dragging = new Point(e.getX(), e.getY());
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    draggedVertex = null;
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+
+            this.addMouseMotionListener(new MouseMotionListener() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    if (draggedVertex != null) {
+                        int deltaX = e.getX() - dragging.getX();
+                        int deltaY = e.getY() - dragging.getY();
+
+                        draggedVertex.move(deltaX, deltaY);
+
+                        dragging = new Point(e.getX(), e.getY());
+                        repaint();
+
+                    }
+                }
+
+                @Override
+                public void mouseMoved(MouseEvent e) {
+
+                }
+            });
+        }
+
+        private Vertex getVertexOnPosition(int x, int y){
+            for(Vertex v: graph.getVertices()){
+                int distanceX = x - v.getX();
+                int distanceY = y - v.getY();
+                int distance2 = distanceX*distanceX + distanceY*distanceY;
+                if(distance2 < vertexRadius*vertexRadius){
+                    return v;
+                }
+            }
+            return null;
+
+        }
+
         private void draw(Graphics g){
 
             //this is where the drawing happens
@@ -104,11 +183,10 @@ public class GraphRenderer extends JFrame{
         }
 
         public void circeWithText(Graphics2D g, String vertex, int x, int y){
-            int radiusSmall = 20;
             g.setColor(Color.WHITE);
-            g.fillOval(x-radiusSmall, y-radiusSmall, 2*radiusSmall, 2*radiusSmall);
+            g.fillOval(x- vertexRadius, y- vertexRadius, 2* vertexRadius, 2* vertexRadius);
             g.setColor(Color.BLACK);
-            g.drawOval(x-radiusSmall, y-radiusSmall, 2*radiusSmall, 2*radiusSmall);
+            g.drawOval(x- vertexRadius, y- vertexRadius, 2* vertexRadius, 2* vertexRadius);
             g.drawString(vertex, x-3, y+3);
         }
 
