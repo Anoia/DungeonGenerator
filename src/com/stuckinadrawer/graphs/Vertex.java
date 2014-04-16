@@ -3,12 +3,15 @@ package com.stuckinadrawer.graphs;
 import java.io.Serializable;
 
 public class Vertex implements Serializable{
+    private static int currentMaxId = 0;
     private String label;
+    private int id;
     protected int x, y;
     public float forceX, forceY = 0;
 
     public Vertex(String label) {
         this.label = label;
+        id = currentMaxId++;
     }
 
     public String getLabel() {
@@ -27,6 +30,10 @@ public class Vertex implements Serializable{
         return y;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -39,7 +46,7 @@ public class Vertex implements Serializable{
         }
         Vertex other = (Vertex) obj;
 
-        return label.equals(other.getLabel());
+        return this.id == other.id;
     }
 
 
@@ -51,5 +58,11 @@ public class Vertex implements Serializable{
     public void applyForce(double stepSize) {
         this.x += forceX * stepSize;
         this.y += forceY * stepSize;
+    }
+
+    public void move(int deltaX, int deltaY) {
+        this.x += deltaX;
+        this.y += deltaY;
+
     }
 }
