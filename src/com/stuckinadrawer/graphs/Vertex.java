@@ -9,6 +9,8 @@ public class Vertex implements Serializable{
     protected int x, y;
     public float forceX, forceY = 0;
 
+    public boolean marked = false;
+
     public Vertex(String label) {
         this.label = label;
         id = currentMaxId++;

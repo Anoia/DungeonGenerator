@@ -18,6 +18,8 @@ public class GraphRenderer extends JFrame{
     private int offsetY = height/2;
     private int vertexRadius = 20;
 
+    private ClickMode mode = ClickMode.NONE;
+
     public GraphRenderer(){
 
         initGUI();
@@ -27,31 +29,12 @@ public class GraphRenderer extends JFrame{
         setTitle("Graph");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new MyPanel();
+        panel.setFocusable(true);
         add(panel);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        this.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch(e.getKeyCode()){
-                    case 32:
-                        break;
-                    case 83:
-                        break;
-                    case 66:
-                        break;
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
 
 
     }
@@ -76,32 +59,99 @@ public class GraphRenderer extends JFrame{
 
         public MyPanel(){
             super();
+
+            this.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    System.out.println("Keypressed: "+e.getKeyCode());
+                    switch(e.getKeyCode()){
+                        case 78:
+                            //none
+                            System.out.println("Movement Mode");
+                            mode = ClickMode.NONE;
+                            markedVertex = null;
+                            dragging = null;
+                            draggedVertex = null;
+                            break;
+                        case 86:
+                            //vertex
+                            System.out.println("Add Vertex Mode");
+                            mode = ClickMode.ADD_VERTEX;
+                            markedVertex = null;
+                            dragging = null;
+                            draggedVertex = null;
+                            break;
+                        case 69:
+                            //edges
+                            System.out.println("Add Edge Mode");
+                            mode = ClickMode.ADD_EDGE;
+                            markedVertex = null;
+                            dragging = null;
+                            draggedVertex = null;
+                            break;
+                        case 82:
+                            //remove edge
+                            break;
+                        case 66:
+                            //remove vertex
+                            break;
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                }
+            });
+
             this.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    // Transform screen coors to actual position
                     int mouseX = e.getX() - offsetX;
                     int mouseY = e.getY() - offsetY;
+
                     Vertex v = getVertexOnPosition(mouseX, mouseY);
-                    if (v != null) {
-                        System.out.println("Clicked on Vertex: " + v.getLabel());
-                        if(markedVertex == null){
-                            markedVertex = v;
-                        }else{
-                            graph.addEdge(v, markedVertex);
-                            markedVertex = null;
-                        }
+
+                    switch (mode){
+                        case NONE:
+
+                            break;
+                        case ADD_EDGE:
+                            if (v != null) {
+                                System.out.println("Clicked on Vertex: " + v.getLabel());
+                                if(markedVertex == null){
+                                    markedVertex = v;
+                                    v.marked = true;
+                                }else{
+                                    markedVertex.marked = false;
+                                    graph.addEdge(v, markedVertex);
+                                    markedVertex = null;
+
+                                }
+                            }
+                            break;
+                        case ADD_VERTEX:
+                            break;
                     }
                 }
 
                 @Override
                 public void mousePressed(MouseEvent e) {
-                        draggedVertex = getVertexOnPosition(e.getX() - offsetX, e.getY() - offsetY);
-                        dragging = new Point(e.getX(), e.getY());
+                        if(mode == ClickMode.NONE){
+                            draggedVertex = getVertexOnPosition(e.getX() - offsetX, e.getY() - offsetY);
+                            dragging = new Point(e.getX(), e.getY());
+                        }
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    draggedVertex = null;
+                    if(mode == ClickMode.NONE){
+                        draggedVertex = null;
+                    }
                 }
 
                 @Override
@@ -118,7 +168,7 @@ public class GraphRenderer extends JFrame{
             this.addMouseMotionListener(new MouseMotionListener() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
-                    if (draggedVertex != null) {
+                    if (mode == ClickMode.NONE && draggedVertex != null) {
                         int deltaX = e.getX() - dragging.getX();
                         int deltaY = e.getY() - dragging.getY();
 
@@ -186,14 +236,18 @@ public class GraphRenderer extends JFrame{
 
         public void drawVertices(Graphics2D g2d){
             for(Vertex vertex: graph.getVertices()){
-                circeWithText(g2d, vertex.getLabel(), vertex.getX(), vertex.getY());
+                Color c = Color.black;
+                if(vertex.marked){
+                    c = Color.red;
+                }
+                circeWithText(g2d, vertex.getLabel(), vertex.getX(), vertex.getY(), c);
             }
         }
 
-        public void circeWithText(Graphics2D g, String vertex, int x, int y){
+        public void circeWithText(Graphics2D g, String vertex, int x, int y, Color c){
             g.setColor(Color.WHITE);
             g.fillOval(x- vertexRadius, y- vertexRadius, 2* vertexRadius, 2* vertexRadius);
-            g.setColor(Color.BLACK);
+            g.setColor(c);
             g.drawOval(x- vertexRadius, y- vertexRadius, 2* vertexRadius, 2* vertexRadius);
             g.drawString(vertex, x-3, y+3);
         }
@@ -209,4 +263,8 @@ public class GraphRenderer extends JFrame{
             return new Dimension(width, height);
         }
     }
+}
+
+enum ClickMode {
+    ADD_EDGE, ADD_VERTEX, NONE, REMOVE_EDGE, REMOVE_VERTEX
 }
