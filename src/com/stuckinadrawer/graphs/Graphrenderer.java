@@ -71,6 +71,8 @@ public class GraphRenderer extends JFrame{
         private Point dragging = null;
         private Vertex draggedVertex = null;
 
+        private Vertex markedVertex = null;
+
 
         public MyPanel(){
             super();
@@ -82,6 +84,12 @@ public class GraphRenderer extends JFrame{
                     Vertex v = getVertexOnPosition(mouseX, mouseY);
                     if (v != null) {
                         System.out.println("Clicked on Vertex: " + v.getLabel());
+                        if(markedVertex == null){
+                            markedVertex = v;
+                        }else{
+                            graph.addEdge(v, markedVertex);
+                            markedVertex = null;
+                        }
                     }
                 }
 
