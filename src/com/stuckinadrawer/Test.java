@@ -51,9 +51,10 @@ public class Test {
 
       //  Graph g = new Graph(edges);
         Graph g = createRandomGraph();
+        System.out.println(g.toString());
         GraphRenderer renderer = new GraphRenderer();
         renderer.setGraph(g);
-        System.out.println(g.toString());
+
 
         ForceBasedLayout forceBasedLayout = new ForceBasedLayout(g);
         while(true){
@@ -66,7 +67,6 @@ public class Test {
     }
 
     public Graph createRandomGraph(){
-        String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         int amountOfVertices = Utils.random(5, 15);
         HashSet<Vertex> vertices = new HashSet<Vertex>();
         ArrayList<Vertex> vertexList = new ArrayList<Vertex>();

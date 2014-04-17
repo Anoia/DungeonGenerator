@@ -79,6 +79,14 @@ public class Graph {
         this.edges.remove(edge);
     }
 
+    public void deleteEdge(Vertex v1, Vertex v2){
+        HashSet<Vertex> edge = new HashSet<Vertex>();
+        edge.add(v1);
+        edge.add(v2);
+        deleteEdge(edge);
+    }
+
+
     public void deleteVertex(Vertex vertex){
         for(HashSet<Vertex> edge: getIncidentEdges(vertex)){
             this.edges.remove(edge);

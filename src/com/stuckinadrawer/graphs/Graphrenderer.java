@@ -18,10 +18,15 @@ public class GraphRenderer extends JFrame{
     private int offsetY = height/2;
     private int vertexRadius = 20;
 
+    VertexFactory factory = new VertexFactory();
+
     private ClickMode mode = ClickMode.NONE;
+    private Font defaultFont;
+    private Font bigFont;
 
     public GraphRenderer(){
-
+        defaultFont = new Font("default", Font.PLAIN, 12);
+        bigFont = new Font("big", Font.BOLD, 16);
         initGUI();
     }
 
@@ -34,6 +39,12 @@ public class GraphRenderer extends JFrame{
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+        System.out.println("Modes:" +
+                "\n N for MoveVertices" +
+                "\n V for AddVertex" +
+                "\n B for RemoveVertex" +
+                "\n E for AddEdge" +
+                "\n R for RemoveEdge");
 
 
 
@@ -51,6 +62,8 @@ public class GraphRenderer extends JFrame{
 
     private class MyPanel extends JPanel {
 
+        String displayText = "Mode: MoveVertices";
+
         private Point dragging = null;
         private Vertex draggedVertex = null;
 
@@ -67,11 +80,10 @@ public class GraphRenderer extends JFrame{
 
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    System.out.println("Keypressed: "+e.getKeyCode());
                     switch(e.getKeyCode()){
                         case 78:
                             //none
-                            System.out.println("Movement Mode");
+                            displayText = "Mode: MoveVertices";
                             mode = ClickMode.NONE;
                             markedVertex = null;
                             dragging = null;
@@ -79,7 +91,7 @@ public class GraphRenderer extends JFrame{
                             break;
                         case 86:
                             //vertex
-                            System.out.println("Add Vertex Mode");
+                            displayText = "Mode: AddVertices";
                             mode = ClickMode.ADD_VERTEX;
                             markedVertex = null;
                             dragging = null;
@@ -87,7 +99,7 @@ public class GraphRenderer extends JFrame{
                             break;
                         case 69:
                             //edges
-                            System.out.println("Add Edge Mode");
+                            displayText = "Mode: AddEdges";
                             mode = ClickMode.ADD_EDGE;
                             markedVertex = null;
                             dragging = null;
@@ -95,9 +107,19 @@ public class GraphRenderer extends JFrame{
                             break;
                         case 82:
                             //remove edge
+                            displayText = "Mode: RemoveEdges";
+                            mode = ClickMode.REMOVE_EDGE;
+                            markedVertex = null;
+                            dragging = null;
+                            draggedVertex = null;
                             break;
                         case 66:
                             //remove vertex
+                            displayText = "Mode: RemoveVertices";
+                            mode = ClickMode.REMOVE_VERTEX;
+                            markedVertex = null;
+                            dragging = null;
+                            draggedVertex = null;
                             break;
                     }
                 }
@@ -127,14 +149,46 @@ public class GraphRenderer extends JFrame{
                                     markedVertex = v;
                                     v.marked = true;
                                 }else{
-                                    markedVertex.marked = false;
-                                    graph.addEdge(v, markedVertex);
-                                    markedVertex = null;
+                                    if(v.equals(markedVertex)){
+                                        markedVertex.marked = false;
+                                        markedVertex = null;
+                                    }else{
+                                        markedVertex.marked = false;
+                                        graph.addEdge(v, markedVertex);
+                                        markedVertex = null;
+                                    }
 
                                 }
                             }
                             break;
                         case ADD_VERTEX:
+                            if(v == null){
+                                Vertex vertex = factory.createNewVertex();
+                                vertex.setPosition(mouseX, mouseY);
+                                graph.addVertex(vertex);
+                            }
+                            break;
+                        case REMOVE_EDGE:
+                            System.out.println("Clicked on Vertex: " + v.getLabel());
+                            if(markedVertex == null){
+                                markedVertex = v;
+                                v.marked = true;
+                            }else{
+                                if(v.equals(markedVertex)){
+                                    markedVertex.marked = false;
+                                    markedVertex = null;
+                                }else{
+                                    markedVertex.marked = false;
+                                    graph.deleteEdge(v, markedVertex);
+                                    markedVertex = null;
+                                }
+
+                            }
+                            break;
+                        case REMOVE_VERTEX:
+                            if (v != null){
+                                graph.deleteVertex(v);
+                            }
                             break;
                     }
                 }
@@ -209,6 +263,21 @@ public class GraphRenderer extends JFrame{
 
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(Color.BLACK);
+            g2d.setFont(bigFont);
+            g2d.drawString(displayText, 10, 20);
+            g2d.setFont(defaultFont);
+            String text = "Modes:" +
+                    "\n N for MoveVertices" +
+                    "\n V for AddVertex" +
+                    "\n B for RemoveVertex" +
+                    "\n E for AddEdge" +
+                    "\n R for RemoveEdge";
+            g2d.drawString("Modes", 10, 40);
+            g2d.drawString("N for MoveVertices", 10, 50);
+            g2d.drawString("V for AddVertex", 10, 60);
+            g2d.drawString("B for RemoveVertex", 10, 70);
+            g2d.drawString("E for AddEdge", 10, 80);
+            g2d.drawString("R for RemoveEdge", 10, 90);
 
             g2d.translate(offsetX, offsetY);
 
