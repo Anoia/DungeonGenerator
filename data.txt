@@ -1,0 +1,8 @@
+door
+monster
+entrance
+exit
+chest
+A
+B
+C
