@@ -1,14 +1,13 @@
 package com.stuckinadrawer;
 
-import com.stuckinadrawer.graphs.ForceBasedLayout;
-import com.stuckinadrawer.graphs.Graph;
-import com.stuckinadrawer.graphs.GraphRenderer;
-import com.stuckinadrawer.graphs.Vertex;
+import com.stuckinadrawer.graphs.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Test {
+
+    VertexFactory factory = new VertexFactory();
 
     public Test() throws InterruptedException {
         Vertex a = new Vertex("A");
@@ -72,8 +71,7 @@ public class Test {
         HashSet<Vertex> vertices = new HashSet<Vertex>();
         ArrayList<Vertex> vertexList = new ArrayList<Vertex>();
         for(int i = 0; i < amountOfVertices; i++){
-            String letter = abc.charAt(i) + " ";
-            Vertex v = new Vertex(letter);
+            Vertex v = factory.createNewVertex();
             vertices.add(v);
             vertexList.add(v);
         }
