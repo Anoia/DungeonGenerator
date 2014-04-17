@@ -266,12 +266,6 @@ public class GraphRenderer extends JFrame{
             g2d.setFont(bigFont);
             g2d.drawString(displayText, 10, 20);
             g2d.setFont(defaultFont);
-            String text = "Modes:" +
-                    "\n N for MoveVertices" +
-                    "\n V for AddVertex" +
-                    "\n B for RemoveVertex" +
-                    "\n E for AddEdge" +
-                    "\n R for RemoveEdge";
             g2d.drawString("Modes", 10, 40);
             g2d.drawString("N for MoveVertices", 10, 50);
             g2d.drawString("V for AddVertex", 10, 60);
