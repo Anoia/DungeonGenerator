@@ -1,8 +1,7 @@
 door
-monster
+witch
+skeleton
+rat
 entrance
 exit
 chest
-A
-B
-C

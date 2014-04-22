@@ -1,6 +1,7 @@
 package com.stuckinadrawer.graphs;
 
 import com.stuckinadrawer.Point;
+import sun.awt.VerticalBagLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,23 @@ public class GraphRenderer extends JFrame{
     private Font bigFont;
 
     public GraphRenderer(){
+
+            try {
+                for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(info.getName())) {
+                        UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                // If Nimbus is not available, fall back to cross-platform
+                try {
+                    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+                } catch (Exception ex) {
+                    // not worth my time
+                }
+            }
+
         defaultFont = new Font("default", Font.PLAIN, 12);
         bigFont = new Font("big", Font.BOLD, 16);
         initGUI();
@@ -35,7 +53,16 @@ public class GraphRenderer extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new MyPanel();
         panel.setFocusable(true);
-        add(panel);
+        add(panel, BorderLayout.CENTER);
+
+        JPanel menuPanel = new JPanel();
+        menuPanel.add(new JButton("New Graph"));
+        add(menuPanel, BorderLayout.WEST);
+
+        panel.requestFocusInWindow();
+
+
+
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -46,6 +73,7 @@ public class GraphRenderer extends JFrame{
                 "\n E for AddEdge" +
                 "\n R for RemoveEdge");
 
+        panel.requestFocusInWindow();
 
 
     }

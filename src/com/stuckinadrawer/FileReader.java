@@ -5,24 +5,34 @@ import java.util.ArrayList;
 
 public class FileReader {
 
-    private File dataFile;
+    private File terminalsFile;
+    private File nonTerminalsFile;
 
     public FileReader() {
 
         File dir = new File(".");
         try {
-            dataFile = new File(dir.getCanonicalPath() + File.separator + "data.txt");
+            terminalsFile = new File(dir.getCanonicalPath() + File.separator + "terminals.txt");
+            nonTerminalsFile = new File(dir.getCanonicalPath() + File.separator + "nonTerminals.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<String> getVertexNames(){
+    public ArrayList<String> getNonTerminals(){
+        return loadFile(nonTerminalsFile);
+    }
+
+    public ArrayList<String> getTerminals(){
+        return loadFile(terminalsFile);
+    }
+
+    private ArrayList<String> loadFile(File file){
         ArrayList<String> strings = new ArrayList<String>();
 
         FileInputStream fis = null;
         try {
-            fis = new FileInputStream(dataFile);
+            fis = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -31,7 +41,7 @@ public class FileReader {
         String line = null;
         try {
             while((line = br.readLine()) != null){
-            strings.add(line);
+                strings.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,7 +52,11 @@ public class FileReader {
 
     public static void main(String[] arg) throws IOException {
         FileReader fr = new FileReader();
-        for(String s : fr.getVertexNames()){
+        for(String s : fr.getNonTerminals()){
+            System.out.println(s);
+        }
+        System.out.println("---");
+        for(String s : fr.getTerminals()){
             System.out.println(s);
         }
 

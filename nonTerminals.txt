@@ -1,0 +1,5 @@
+obstacle
+monster
+loot
+dungeon
+reward
