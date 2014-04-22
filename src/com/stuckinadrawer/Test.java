@@ -55,13 +55,13 @@ public class Test {
         GraphRenderer renderer = new GraphRenderer();
         renderer.setGraph(g);
 
-
-        ForceBasedLayout forceBasedLayout = new ForceBasedLayout(g);
+        /*
+        ForceBasedLayout forceBasedLayout = new ForceBasedLayout();
         while(true){
-            Thread.sleep(1000/64);
-            forceBasedLayout.step();
+            Thread.sleep(1000/60);
+            forceBasedLayout.step(g);
             renderer.update();
-        }
+        } */
 
 
     }

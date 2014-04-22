@@ -2,6 +2,7 @@ package com.stuckinadrawer;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class FileReader {
 
@@ -46,6 +47,7 @@ public class FileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Collections.sort(strings);
 
         return strings;
     }

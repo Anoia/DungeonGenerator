@@ -12,14 +12,9 @@ public class ForceBasedLayout {
      * This Class positions the Nodes of a Graph with a force based Layout
      * Spring-Based attractive forces based on Hooke's Law are applied to pull directly connected Nodes together,
      * while a repulsive force like those of electrically charged particles based on Coulomb's Law are used to separate all Nodes
-     * @param g Graph the Graph to be laid out
      */
 
-    public ForceBasedLayout(Graph g){
-        this.graph = g;
-    }
-
-    public void step(){
+    public void step(Graph graph){
 
         //calculate force on all vertices
         for(Vertex vertex1: graph.getVertices()){

@@ -5,3 +5,4 @@ rat
 entrance
 exit
 chest
+trap

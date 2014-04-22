@@ -1,6 +1,7 @@
 package com.stuckinadrawer.graphs;
 
 import com.stuckinadrawer.Point;
+import com.stuckinadrawer.graphs.ui.EditProductionWindow;
 import sun.awt.VerticalBagLayout;
 
 import javax.swing.*;
@@ -82,6 +83,7 @@ public class GraphRenderer extends JFrame{
         graph = g;
         graph.setRandomVertexPosition(width, height);
         panel.repaint();
+        new EditProductionWindow(new Production(graph, graph));
     }
 
     public void update(){
@@ -223,17 +225,15 @@ public class GraphRenderer extends JFrame{
 
                 @Override
                 public void mousePressed(MouseEvent e) {
-                        if(mode == ClickMode.NONE){
                             draggedVertex = getVertexOnPosition(e.getX() - offsetX, e.getY() - offsetY);
                             dragging = new Point(e.getX(), e.getY());
-                        }
+
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    if(mode == ClickMode.NONE){
                         draggedVertex = null;
-                    }
+
                 }
 
                 @Override
@@ -250,7 +250,7 @@ public class GraphRenderer extends JFrame{
             this.addMouseMotionListener(new MouseMotionListener() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
-                    if (mode == ClickMode.NONE && draggedVertex != null) {
+                    if (draggedVertex != null) {
                         int deltaX = e.getX() - dragging.getX();
                         int deltaY = e.getY() - dragging.getY();
 
