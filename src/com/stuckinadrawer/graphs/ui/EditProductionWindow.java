@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
 
 public class EditProductionWindow extends JFrame {
     private Production p;
@@ -16,7 +15,7 @@ public class EditProductionWindow extends JFrame {
     private VertexFactory vertexFactory;
     GraphDisplayPanel gp;
 
-    private JList vertexList;
+    private JList<Object> vertexList;
 
     public EditProductionWindow(){
         this(null);
@@ -100,7 +99,7 @@ public class EditProductionWindow extends JFrame {
         menuPanel.add(Box.createRigidArea(distanceBetweenElements));
         menuPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         //liste
-        vertexList = new JList(vertexFactory.getAllSymbols().toArray());
+        vertexList = new JList<Object>(vertexFactory.getAllSymbols().toArray());
         vertexList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         vertexList.setLayoutOrientation(JList.VERTICAL);
         vertexList.setVisibleRowCount(-1);
@@ -115,7 +114,7 @@ public class EditProductionWindow extends JFrame {
 
 
         this.add(menuPanel, BorderLayout.WEST);
-        gp = new GraphDisplayPanel(p.getLeft(), 600, 800);
+        gp = new GraphDisplayPanel(p.getLeft(), 800, 600);
         this.add(gp, BorderLayout.CENTER);
 
 
