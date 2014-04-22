@@ -39,7 +39,7 @@ public class GraphRenderer extends JFrame{
                 try {
                     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 } catch (Exception ex) {
-                    // not worth my time
+                    ex.printStackTrace();
                 }
             }
 
