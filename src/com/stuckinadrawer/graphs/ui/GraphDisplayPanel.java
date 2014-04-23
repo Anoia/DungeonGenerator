@@ -1,6 +1,5 @@
 package com.stuckinadrawer.graphs.ui;
 
-import com.stuckinadrawer.Point;
 import com.stuckinadrawer.graphs.Graph;
 import com.stuckinadrawer.graphs.Vertex;
 

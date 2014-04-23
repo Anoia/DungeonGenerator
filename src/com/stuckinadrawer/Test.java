@@ -10,50 +10,11 @@ public class Test {
     VertexFactory factory = new VertexFactory();
 
     public Test() throws InterruptedException {
-        Vertex a = new Vertex("A");
-        Vertex b = new Vertex("B");
-        Vertex c = new Vertex("C");
-        Vertex d = new Vertex("D");
-        Vertex e = new Vertex("E");
-        Vertex f = new Vertex("F");
-
-        HashSet<HashSet<Vertex>> edges = new HashSet<HashSet<Vertex>>();
-
-        HashSet<Vertex> edge = new HashSet<Vertex>();
-        edge.add(e);
-        edge.add(d);
-        edges.add(edge);
-
-        edge = new HashSet<Vertex>();
-        edge.add(c);
-        edge.add(b);
-       // edges.add(edge);
-        edge = new HashSet<Vertex>();
-        edge.add(c);
-        edge.add(d);
-        edges.add(edge);
-        edge = new HashSet<Vertex>();
-        edge.add(a);
-        edge.add(d);
-        edges.add(edge);
-        edge = new HashSet<Vertex>();
-        edge.add(f);
-        edge.add(a);
-        edges.add(edge);
-        edge = new HashSet<Vertex>();
-        edge.add(e);
-        edge.add(b);
-        edges.add(edge);
-        edge = new HashSet<Vertex>();
-        edge.add(c);
-        edge.add(a);
-        edges.add(edge);
 
       //  Graph g = new Graph(edges);
         Graph g = createRandomGraph();
         System.out.println(g.toString());
-        GraphRenderer renderer = new GraphRenderer();
-        renderer.setGraph(g);
+
 
         /*
         ForceBasedLayout forceBasedLayout = new ForceBasedLayout();
