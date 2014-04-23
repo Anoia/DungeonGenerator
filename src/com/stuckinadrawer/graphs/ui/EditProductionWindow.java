@@ -1,31 +1,31 @@
 package com.stuckinadrawer.graphs.ui;
 
-import com.stuckinadrawer.graphs.ForceBasedLayout;
-import com.stuckinadrawer.graphs.Production;
-import com.stuckinadrawer.graphs.VertexFactory;
+import com.stuckinadrawer.graphs.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.util.HashSet;
 
 public class EditProductionWindow extends JFrame {
     private Production p;
-    private ClickMode clickMode = ClickMode.NONE;
+
     private VertexFactory vertexFactory;
+    private ClickMode clickMode = ClickMode.NONE;
     GraphDisplayPanel gp;
 
     private JList<Object> vertexList;
 
     public EditProductionWindow(){
-        this(null);
+        this(new Production(new Graph(), new Graph()));
     }
 
     public EditProductionWindow(Production p){
         this.p = p;
         vertexFactory = new VertexFactory();
         initUI();
-
         startUpdating();
     }
 
@@ -110,11 +110,16 @@ public class EditProductionWindow extends JFrame {
         JScrollPane scrollPane = new JScrollPane(vertexList);
         menuPanel.add(scrollPane);
         menuPanel.add(Box.createVerticalGlue());
-        menuPanel.add(new JButton("Hello"));
 
+        JButton cancel = new JButton("Cancel");
+        JButton save = new JButton("Save");
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(cancel);
+        buttonPanel.add(save);
+        menuPanel.add(buttonPanel);
 
         this.add(menuPanel, BorderLayout.WEST);
-        gp = new GraphDisplayPanel(p.getLeft(), 800, 600);
+        gp = new GraphDisplayPanel(p.getLeft(), 800, 600, this);
         this.add(gp, BorderLayout.CENTER);
 
 
@@ -127,6 +132,24 @@ public class EditProductionWindow extends JFrame {
         gp.repaint();
     }
 
+    public ClickMode getClickMode() {
+        return clickMode;
+    }
+
+    public void setClickMode(ClickMode clickMode) {
+        this.clickMode = clickMode;
+    }
+
+    public VertexFactory getVertexFactory() {
+        return vertexFactory;
+    }
+
+    public String getCurrentVertexSelection(){
+        if(vertexList.isSelectionEmpty()){
+            return null;
+        }
+        return vertexList.getSelectedValue().toString();
+    }
 
     private class CellRenderer extends DefaultListCellRenderer{
         @Override

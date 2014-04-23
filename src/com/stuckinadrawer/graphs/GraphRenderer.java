@@ -83,7 +83,7 @@ public class GraphRenderer extends JFrame{
         graph = g;
         graph.setRandomVertexPosition(width, height);
         panel.repaint();
-        new EditProductionWindow(new Production(graph, graph));
+        new EditProductionWindow();
     }
 
     public void update(){

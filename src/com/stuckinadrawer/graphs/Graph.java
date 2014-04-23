@@ -27,6 +27,11 @@ public class Graph {
         this(edges, new HashSet<Vertex>());
     }
 
+    public Graph(){
+        vertices = new HashSet<Vertex>();
+        edges = new HashSet<HashSet<Vertex>>();
+    }
+
    /*
     public Graph(HashSet<Vertex> vertices){
         this(new HashSet<HashSet<Vertex>>(), vertices);
