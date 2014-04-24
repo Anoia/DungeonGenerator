@@ -17,8 +17,6 @@ public class Leaf {
 
     public Room room = null;
 
-    //public Halls hallways;
-
     public Leaf(int x, int y, int width, int height){
         this.x = x;
         this.y = y;
@@ -55,7 +53,7 @@ public class Leaf {
 
         int split = Utils.random(MIN_LEAF_SIZE, max);
 
-        // create our left and right children based on the direction of the split
+        // create left and right children based on the direction of the split
         if(splitH){
             leftChild = new Leaf(x, y, width, split);
             rightChild = new Leaf(x, y+split, width, height-split);
