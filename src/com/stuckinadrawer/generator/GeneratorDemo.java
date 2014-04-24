@@ -22,7 +22,7 @@ public class GeneratorDemo extends JFrame{
 
     private void initGUI() {
         setTitle("LevelGenerator: ScatterLayout");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(new MyPanel());
         pack();
         setLocationRelativeTo(null);
