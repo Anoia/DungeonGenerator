@@ -10,7 +10,7 @@ public class RandomGraphFactory {
     VertexFactory factory = new VertexFactory();
 
     public Graph createRandomGraph(){
-        int amountOfVertices = Utils.random(5, 15);
+        int amountOfVertices = Utils.random(2, 6);
         HashSet<Vertex> vertices = new HashSet<Vertex>();
         ArrayList<Vertex> vertexList = new ArrayList<Vertex>();
         for(int i = 0; i < amountOfVertices; i++){
@@ -19,7 +19,7 @@ public class RandomGraphFactory {
             vertexList.add(v);
         }
         HashSet<HashSet<Vertex>> edges = new HashSet<HashSet<Vertex>>();
-        int amountOfEdges = Utils.random(amountOfVertices, amountOfVertices+10);
+        int amountOfEdges = Utils.random(amountOfVertices, amountOfVertices+3);
         for(int i = 0; i < amountOfEdges; i++){
             HashSet<Vertex> edge = new HashSet<Vertex>();
             Vertex v1 = getRandomVertexFromList(vertexList);
