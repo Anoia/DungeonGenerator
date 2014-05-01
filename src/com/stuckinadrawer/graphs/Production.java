@@ -38,6 +38,11 @@ public class Production implements Serializable{
 
     @Override
     public String toString() {
-        return name;
+        String theString = name + ": \n";
+        theString += "Left side: \n";
+        theString += left.toString();
+        theString += "Right side: \n";
+        theString += right.toString();
+        return theString;
     }
 }

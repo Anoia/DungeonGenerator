@@ -143,13 +143,13 @@ public class Graph implements Serializable{
         String result = "";
         result += "Vertices: ";
         for(Vertex v: vertices){
-            result += v.getLabel()+" ";
+            result += v.getId()+":"+v.getLabel()+" ";
         }
         result += "\n Edges: ";
         for(HashSet<Vertex> edge: edges){
             result+=" [";
             for(Vertex v: edge){
-                result+=v.getLabel();
+                result+=v.getId()+":"+v.getLabel();
             }
             result+="] ";
         }
