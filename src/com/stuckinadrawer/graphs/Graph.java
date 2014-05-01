@@ -2,9 +2,10 @@ package com.stuckinadrawer.graphs;
 
 import com.stuckinadrawer.Utils;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class Graph {
+public class Graph implements Serializable{
 
     private HashSet<HashSet<Vertex>> edges;
     private HashSet<Vertex> vertices;
