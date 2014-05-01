@@ -1,6 +1,5 @@
 package com.stuckinadrawer.generator;
 
-import com.stuckinadrawer.Tile;
 import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;

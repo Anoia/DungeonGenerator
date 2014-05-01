@@ -4,6 +4,8 @@ import com.stuckinadrawer.graphs.Production;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GraphGrammarCreator extends JFrame {
@@ -60,6 +62,14 @@ public class GraphGrammarCreator extends JFrame {
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.LINE_AXIS));
 
         JButton btn_new = new JButton("New");
+        btn_new.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EditProductionWindow window = new EditProductionWindow(GraphGrammarCreator.this);
+                window.setVisible(true);
+                //window.startUpdating();
+            }
+        });
         JButton btn_edit = new JButton("Edit");
         JButton btn_delete = new JButton("Delete");
         buttonsPanel.add(btn_new);
@@ -89,6 +99,10 @@ public class GraphGrammarCreator extends JFrame {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public void addProduction(Production p){
+        productions.add(p);
     }
 
     public static void main(String[] arg){

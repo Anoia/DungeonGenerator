@@ -1,7 +1,5 @@
 package com.stuckinadrawer.generator;
 
-import com.stuckinadrawer.Tile;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;

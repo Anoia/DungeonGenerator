@@ -6,32 +6,37 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-import java.util.HashSet;
 
 public class EditProductionWindow extends JFrame {
     private Production p;
-
+    GraphGrammarCreator creator;
     private VertexFactory vertexFactory;
     private ClickMode clickMode = ClickMode.NONE;
-    GraphDisplayPanel gp;
+    SimpleGraphDisplayPanel gp;
+    private boolean keepUpdating = true;
 
     private JList<Object> vertexList;
 
-    public EditProductionWindow(){
-        this(new Production(new Graph(), new Graph()));
+    public EditProductionWindow(GraphGrammarCreator creator){
+        this(new Production(new Graph(), new Graph()), creator);
     }
 
-    public EditProductionWindow(Production p){
+    public EditProductionWindow(Production p, GraphGrammarCreator creator){
+        //super(creator, "Edit Production", ModalityType.APPLICATION_MODAL);
+        System.out.println("hello");
         this.p = p;
+        this.creator = creator;
         vertexFactory = new VertexFactory();
         initUI();
-        startUpdating();
+        System.out.println("UI initiated");
+
+
     }
 
-    private void startUpdating() {
+    void startUpdating() {
         ForceBasedLayout forceBasedLayout = new ForceBasedLayout();
-        while(true){
+        System.out.println("test");
+        while(keepUpdating){
             try {
                 Thread.sleep(1000/60);
             } catch (InterruptedException e) {
@@ -44,14 +49,16 @@ public class EditProductionWindow extends JFrame {
     }
 
     private void initUI() {
-        setTitle("Edit Production");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("production");
+        System.out.println("start UI");
+       // setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         // Create Buttons with Listeners to change mode
         JButton btn_addEdge = new JButton("Add Edge");
         btn_addEdge.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                update();
                 clickMode = ClickMode.ADD_EDGE;
                 vertexList.setEnabled(false);
             }
@@ -112,20 +119,41 @@ public class EditProductionWindow extends JFrame {
         menuPanel.add(Box.createVerticalGlue());
 
         JButton cancel = new JButton("Cancel");
+        cancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                keepUpdating = false;
+                System.out.println("Close");
+            }
+        });
         JButton save = new JButton("Save");
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                keepUpdating = false;
+                creator.addProduction(p);
+            }
+        });
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(cancel);
         buttonPanel.add(save);
         menuPanel.add(buttonPanel);
 
         this.add(menuPanel, BorderLayout.WEST);
-        gp = new GraphDisplayPanel(p.getLeft(), 800, 600, this);
+        System.out.println("added menu panel");
+        gp = new EditableGraphDisplayPanel(p.getLeft(), 800, 600, this);
         this.add(gp, BorderLayout.CENTER);
+        System.out.println("added graphpanel");
 
 
         pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        System.out.println("packed");
+        setLocationRelativeTo(creator);
+        System.out.println("location");
+
+
+        System.out.println("visible");
+
     }
 
     public void update(){

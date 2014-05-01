@@ -1,12 +1,8 @@
 package com.stuckinadrawer.generator;
 
-import com.stuckinadrawer.Tile;
 import com.stuckinadrawer.Utils;
-import com.sun.deploy.si.SingleInstanceManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 
 public class GeneratorBSPLayout implements Generator{
 

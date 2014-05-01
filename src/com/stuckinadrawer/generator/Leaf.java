@@ -1,7 +1,6 @@
 package com.stuckinadrawer.generator;
 
 import com.stuckinadrawer.Point;
-import com.stuckinadrawer.Tile;
 import com.stuckinadrawer.Utils;
 
 public class Leaf {
