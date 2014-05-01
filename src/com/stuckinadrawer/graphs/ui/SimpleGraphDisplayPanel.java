@@ -122,6 +122,11 @@ public class SimpleGraphDisplayPanel extends JPanel{
         repaint();
     }
 
+    public void clear() {
+        this.graph = null;
+        repaint();
+    }
+
     private class CustomMouseMotionListener implements MouseMotionListener{
 
 

@@ -152,7 +152,7 @@ public class EditProductionWindow extends JDialog {
         JPanel productionNameContainer = new JPanel();
         productionNameContainer.setLayout(new BoxLayout(productionNameContainer, BoxLayout.LINE_AXIS));
         productionNameContainer.add(new Label("Name of the Production: "));
-        nameField = new JTextField();
+        nameField = new JTextField(p.getName());
         productionNameContainer.add(nameField);
 
         JPanel centerPanelContailer = new JPanel();

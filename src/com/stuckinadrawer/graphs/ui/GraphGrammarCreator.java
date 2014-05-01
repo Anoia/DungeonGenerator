@@ -72,16 +72,10 @@ public class GraphGrammarCreator extends JFrame {
         productionList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(!productionList.isSelectionEmpty()){
-                    String name = productionList.getSelectedValue();
-                    for(Production p: productions){
-                        if(name.equals(p.getName())){
-                            gpLeft.setGraph(p.getLeft());
-                            gpRight.setGraph(p.getRight());
-                            break;
-                        }
-                    }
-
+                Production selectedProduction = getSelectedProductionFromList();
+                if(selectedProduction!=null){
+                    gpLeft.setGraph(selectedProduction.getLeft());
+                    gpRight.setGraph(selectedProduction.getRight());
                 }
             }
         });
@@ -103,6 +97,17 @@ public class GraphGrammarCreator extends JFrame {
             }
         });
         JButton btn_edit = new JButton("Edit");
+        btn_edit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Production selectedProduction = getSelectedProductionFromList();
+                if(selectedProduction!= null){
+                    EditProductionWindow window = new EditProductionWindow(selectedProduction, GraphGrammarCreator.this);
+                    window.startUpdating();
+                    window.setVisible(true);
+                }
+            }
+        });
         JButton btn_delete = new JButton("Delete");
         buttonsPanel.add(btn_new);
         buttonsPanel.add(btn_edit);
@@ -113,6 +118,19 @@ public class GraphGrammarCreator extends JFrame {
         productionsPanel.add(insidePanel);
         productionsPanel.add(buttonsPanel);
         return productionsPanel;
+    }
+
+    public Production getSelectedProductionFromList(){
+        if(!productionList.isSelectionEmpty()){
+            String name = productionList.getSelectedValue();
+            for(Production p: productions){
+                if(name.equals(p.getName())){
+                    return p;
+                }
+            }
+
+        }
+        return null;
     }
 
     private void setLookAndFeel() {
@@ -134,12 +152,17 @@ public class GraphGrammarCreator extends JFrame {
     }
 
     public void addProduction(Production production){
-        productions.add(production);
+        gpRight.clear();
+        gpLeft.clear();
+        if(!productions.contains(production)){
+            productions.add(production);
+        }
         DefaultListModel<String> listModel = new DefaultListModel<String>();
         for(Production p: productions){
             listModel.addElement(p.getName());
         }
         productionList.setModel(listModel);
+
     }
 
     public static void main(String[] arg){
