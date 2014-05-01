@@ -5,27 +5,9 @@ import com.stuckinadrawer.graphs.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Test {
+public class RandomGraphFactory {
 
     VertexFactory factory = new VertexFactory();
-
-    public Test() throws InterruptedException {
-
-      //  Graph g = new Graph(edges);
-        Graph g = createRandomGraph();
-        System.out.println(g.toString());
-
-
-        /*
-        ForceBasedLayout forceBasedLayout = new ForceBasedLayout();
-        while(true){
-            Thread.sleep(1000/60);
-            forceBasedLayout.step(g);
-            renderer.update();
-        } */
-
-
-    }
 
     public Graph createRandomGraph(){
         int amountOfVertices = Utils.random(5, 15);
@@ -58,8 +40,5 @@ public class Test {
         return list.get(index);
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        new Test();
-    }
 
 }
