@@ -1,6 +1,8 @@
 package com.stuckinadrawer.graphs;
 
-public class Production {
+import java.io.Serializable;
+
+public class Production implements Serializable{
     private Graph left;
     private Graph right;
     private String name;
