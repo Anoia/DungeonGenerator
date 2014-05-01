@@ -66,8 +66,9 @@ public class GraphGrammarCreator extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 EditProductionWindow window = new EditProductionWindow(GraphGrammarCreator.this);
+                window.startUpdating();
                 window.setVisible(true);
-                //window.startUpdating();
+
             }
         });
         JButton btn_edit = new JButton("Edit");

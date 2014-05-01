@@ -7,12 +7,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EditProductionWindow extends JFrame {
+public class EditProductionWindow extends JDialog {
     private Production p;
     GraphGrammarCreator creator;
     private VertexFactory vertexFactory;
     private ClickMode clickMode = ClickMode.NONE;
-    SimpleGraphDisplayPanel gp;
+    EditableGraphDisplayPanel gp1;
+    EditableGraphDisplayPanel gp2;
     private boolean keepUpdating = true;
 
     private JList<Object> vertexList;
@@ -22,7 +23,7 @@ public class EditProductionWindow extends JFrame {
     }
 
     public EditProductionWindow(Production p, GraphGrammarCreator creator){
-        //super(creator, "Edit Production", ModalityType.APPLICATION_MODAL);
+        super(creator, "Edit Production", ModalityType.APPLICATION_MODAL);
         System.out.println("hello");
         this.p = p;
         this.creator = creator;
@@ -34,17 +35,8 @@ public class EditProductionWindow extends JFrame {
     }
 
     void startUpdating() {
-        ForceBasedLayout forceBasedLayout = new ForceBasedLayout();
-        System.out.println("test");
-        while(keepUpdating){
-            try {
-                Thread.sleep(1000/60);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            forceBasedLayout.step(p.getLeft());
-            update();
-        }
+        UpdateRunnable updateRunnable = new UpdateRunnable();
+        new Thread(updateRunnable).start();
 
     }
 
@@ -112,6 +104,7 @@ public class EditProductionWindow extends JFrame {
         vertexList.setVisibleRowCount(-1);
 
         vertexList.setCellRenderer(new CellRenderer());
+        vertexList.setPreferredSize(new Dimension(100, 400));
 
         //vertexList.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(vertexList);
@@ -123,7 +116,7 @@ public class EditProductionWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 keepUpdating = false;
-                System.out.println("Close");
+                dispose();
             }
         });
         JButton save = new JButton("Save");
@@ -132,6 +125,7 @@ public class EditProductionWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 keepUpdating = false;
                 creator.addProduction(p);
+                dispose();
             }
         });
         JPanel buttonPanel = new JPanel();
@@ -141,8 +135,18 @@ public class EditProductionWindow extends JFrame {
 
         this.add(menuPanel, BorderLayout.WEST);
         System.out.println("added menu panel");
-        gp = new EditableGraphDisplayPanel(p.getLeft(), 800, 600, this);
-        this.add(gp, BorderLayout.CENTER);
+        gp1 = new EditableGraphDisplayPanel(p.getLeft(), 400, 400, this);
+        gp2 = new EditableGraphDisplayPanel(p.getRight(), 400, 400, this);
+        JPanel panelContainer = new JPanel();
+        panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.LINE_AXIS));
+        panelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
+        panelContainer.add(gp1);
+        panelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
+        panelContainer.add(gp2);
+        panelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
+
+
+        this.add(panelContainer, BorderLayout.CENTER);
         System.out.println("added graphpanel");
 
 
@@ -157,7 +161,8 @@ public class EditProductionWindow extends JFrame {
     }
 
     public void update(){
-        gp.repaint();
+        gp1.repaint();
+        gp2.repaint();
     }
 
     public ClickMode getClickMode() {
@@ -193,6 +198,27 @@ public class EditProductionWindow extends JFrame {
             }
         }
 
+    }
+
+    private class UpdateRunnable implements Runnable{
+        ForceBasedLayout forceBasedLayout;
+        public UpdateRunnable(){
+            forceBasedLayout = new ForceBasedLayout();
+        }
+
+        @Override
+        public void run() {
+            while (keepUpdating){
+                try {
+                    Thread.sleep(1000/60);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                forceBasedLayout.step(p.getLeft());
+                forceBasedLayout.step(p.getRight());
+                update();
+            }
+        }
     }
 
 
