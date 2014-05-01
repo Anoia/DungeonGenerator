@@ -12,11 +12,12 @@ public class EditProductionWindow extends JDialog {
     GraphGrammarCreator creator;
     private VertexFactory vertexFactory;
     private ClickMode clickMode = ClickMode.NONE;
-    EditableGraphDisplayPanel gp1;
-    EditableGraphDisplayPanel gp2;
+    EditableGraphDisplayPanel gpLeft;
+    EditableGraphDisplayPanel gpRight;
     private boolean keepUpdating = true;
 
     private JList<Object> vertexList;
+    private JTextField nameField;
 
     public EditProductionWindow(GraphGrammarCreator creator){
         this(new Production(new Graph(), new Graph()), creator);
@@ -124,6 +125,9 @@ public class EditProductionWindow extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 keepUpdating = false;
+                p.setName(nameField.getText());
+                p.setLeft(gpLeft.graph);
+                p.setRight(gpRight.graph);
                 creator.addProduction(p);
                 dispose();
             }
@@ -134,35 +138,36 @@ public class EditProductionWindow extends JDialog {
         menuPanel.add(buttonPanel);
 
         this.add(menuPanel, BorderLayout.WEST);
-        System.out.println("added menu panel");
-        gp1 = new EditableGraphDisplayPanel(p.getLeft(), 400, 400, this);
-        gp2 = new EditableGraphDisplayPanel(p.getRight(), 400, 400, this);
-        JPanel panelContainer = new JPanel();
-        panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.LINE_AXIS));
-        panelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
-        panelContainer.add(gp1);
-        panelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
-        panelContainer.add(gp2);
-        panelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
+        gpLeft = new EditableGraphDisplayPanel(p.getLeft(), 400, 400, this);
+        gpRight = new EditableGraphDisplayPanel(p.getRight(), 400, 400, this);
+        JPanel productionPanelContainer = new JPanel();
+        productionPanelContainer.setLayout(new BoxLayout(productionPanelContainer, BoxLayout.LINE_AXIS));
+        productionPanelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
+        productionPanelContainer.add(gpLeft);
+        productionPanelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
+        productionPanelContainer.add(gpRight);
+        productionPanelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
 
 
-        this.add(panelContainer, BorderLayout.CENTER);
-        System.out.println("added graphpanel");
+        JPanel productionNameContainer = new JPanel();
+        productionNameContainer.setLayout(new BoxLayout(productionNameContainer, BoxLayout.LINE_AXIS));
+        productionNameContainer.add(new Label("Name of the Production: "));
+        nameField = new JTextField();
+        productionNameContainer.add(nameField);
 
+        JPanel centerPanelContailer = new JPanel();
+        centerPanelContailer.setLayout(new BoxLayout(centerPanelContailer, BoxLayout.PAGE_AXIS));
+        centerPanelContailer.add(productionNameContainer);
+        centerPanelContailer.add(productionPanelContainer);
+        this.add(centerPanelContailer, BorderLayout.CENTER);
 
         pack();
-        System.out.println("packed");
         setLocationRelativeTo(creator);
-        System.out.println("location");
-
-
-        System.out.println("visible");
-
     }
 
     public void update(){
-        gp1.repaint();
-        gp2.repaint();
+        gpLeft.repaint();
+        gpRight.repaint();
     }
 
     public ClickMode getClickMode() {

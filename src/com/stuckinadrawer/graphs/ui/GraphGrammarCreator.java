@@ -3,6 +3,8 @@ package com.stuckinadrawer.graphs.ui;
 import com.stuckinadrawer.graphs.Production;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,10 @@ public class GraphGrammarCreator extends JFrame {
     private Font bigFont;
 
     private ArrayList<Production> productions;
+    JList<String> productionList;
+
+    SimpleGraphDisplayPanel gpLeft;
+    SimpleGraphDisplayPanel gpRight;
 
     public GraphGrammarCreator(){
         setLookAndFeel();
@@ -47,13 +53,38 @@ public class GraphGrammarCreator extends JFrame {
         JPanel insidePanel = new JPanel();
         insidePanel.setLayout(new BoxLayout(insidePanel, BoxLayout.LINE_AXIS));
 
-        JList productionList = new JList<Object>(productions.toArray());
+        productionList = new JList<String>();
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+        for(Production p: productions){
+            listModel.addElement(p.getName());
+        }
+        productionList.setModel(listModel);
         JScrollPane scrollPane = new JScrollPane(productionList);
         insidePanel.add(scrollPane);
 
         //insidePanel.add(new GraphDisplayPanel());
-        insidePanel.add(new JPanel());
-        insidePanel.add(new JPanel());
+        gpLeft = new SimpleGraphDisplayPanel(400, 400);
+        gpRight = new SimpleGraphDisplayPanel(400, 400);
+        insidePanel.add(gpLeft);
+        insidePanel.add(Box.createRigidArea(new Dimension(5, 5)));
+        insidePanel.add(gpRight);
+
+        productionList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!productionList.isSelectionEmpty()){
+                    String name = productionList.getSelectedValue();
+                    for(Production p: productions){
+                        if(name.equals(p.getName())){
+                            gpLeft.setGraph(p.getLeft());
+                            gpRight.setGraph(p.getRight());
+                            break;
+                        }
+                    }
+
+                }
+            }
+        });
 
 
 
@@ -102,8 +133,13 @@ public class GraphGrammarCreator extends JFrame {
         }
     }
 
-    public void addProduction(Production p){
-        productions.add(p);
+    public void addProduction(Production production){
+        productions.add(production);
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+        for(Production p: productions){
+            listModel.addElement(p.getName());
+        }
+        productionList.setModel(listModel);
     }
 
     public static void main(String[] arg){
