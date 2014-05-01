@@ -109,6 +109,15 @@ public class GraphGrammarCreator extends JFrame {
             }
         });
         JButton btn_delete = new JButton("Delete");
+        btn_delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Production selectedProduction = getSelectedProductionFromList();
+                if(selectedProduction!=null){
+                    removeProduction(selectedProduction);
+                }
+            }
+        });
         buttonsPanel.add(btn_new);
         buttonsPanel.add(btn_edit);
         buttonsPanel.add(btn_delete);
@@ -152,17 +161,28 @@ public class GraphGrammarCreator extends JFrame {
     }
 
     public void addProduction(Production production){
-        gpRight.clear();
-        gpLeft.clear();
         if(!productions.contains(production)){
             productions.add(production);
         }
+        updateListModel();
+
+    }
+
+    public void removeProduction(Production production){
+        if(productions.contains(production)){
+            productions.remove(production);
+        }
+        updateListModel();
+    }
+
+    private void updateListModel(){
+        gpRight.clear();
+        gpLeft.clear();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
         for(Production p: productions){
             listModel.addElement(p.getName());
         }
         productionList.setModel(listModel);
-
     }
 
     public static void main(String[] arg){
