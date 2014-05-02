@@ -1,12 +1,19 @@
 package com.stuckinadrawer.graphs;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Grammar {
+public class Grammar implements Serializable{
 
     private ArrayList<Production> productions;
     private String name;
     private Graph startingGraph;
+
+    public Grammar(){
+        productions = new ArrayList<Production>();
+        startingGraph = new Graph();
+        name = null;
+    }
 
     public ArrayList<Production> getProductions() {
         return productions;
@@ -30,5 +37,17 @@ public class Grammar {
 
     public void setStartingGraph(Graph startingGraph) {
         this.startingGraph = startingGraph;
+    }
+
+    public void addProduction(Production production){
+        if(!productions.contains(production)){
+            productions.add(production);
+        }
+    }
+
+    public void removeProduction(Production production){
+        if(productions.contains(production)){
+            productions.remove(production);
+        }
     }
 }

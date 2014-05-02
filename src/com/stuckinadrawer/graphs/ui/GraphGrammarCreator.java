@@ -1,5 +1,6 @@
 package com.stuckinadrawer.graphs.ui;
 
+import com.stuckinadrawer.graphs.Grammar;
 import com.stuckinadrawer.graphs.Production;
 
 import javax.swing.*;
@@ -8,6 +9,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class GraphGrammarCreator extends JFrame {
@@ -15,18 +20,53 @@ public class GraphGrammarCreator extends JFrame {
     private Font defaultFont;
     private Font bigFont;
 
-    private ArrayList<Production> productions;
+    private Grammar grammar;
     JList<String> productionList;
 
     SimpleGraphDisplayPanel gpLeft;
     SimpleGraphDisplayPanel gpRight;
 
+    private static final String FILE_NAME = "grammar1.ser";
+
     public GraphGrammarCreator(){
         setLookAndFeel();
         defaultFont = new Font("default", Font.PLAIN, 12);
         bigFont = new Font("big", Font.BOLD, 16);
-        productions = new ArrayList<Production>();
+        loadGrammar(FILE_NAME);
+
         initUI();
+    }
+
+    private void loadGrammar(String fileName){
+        FileInputStream fis = null;
+        ObjectInputStream in = null;
+        grammar = null;
+        try {
+            fis = new FileInputStream(fileName);
+            in = new ObjectInputStream(fis);
+            grammar = (Grammar) in.readObject();
+            in.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if(grammar == null){
+            grammar = new Grammar();
+        }
+    }
+
+    private void saveGrammar(String fileName){
+        FileOutputStream fos = null;
+        ObjectOutputStream out = null;
+        try {
+            fos = new FileOutputStream(fileName);
+            out = new ObjectOutputStream(fos);
+            out.writeObject(grammar);
+
+            out.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void initUI() {
@@ -55,7 +95,7 @@ public class GraphGrammarCreator extends JFrame {
 
         productionList = new JList<String>();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
-        for(Production p: productions){
+        for(Production p: grammar.getProductions()){
             listModel.addElement(p.getName());
         }
         productionList.setModel(listModel);
@@ -126,13 +166,22 @@ public class GraphGrammarCreator extends JFrame {
         productionsPanel.add(label);
         productionsPanel.add(insidePanel);
         productionsPanel.add(buttonsPanel);
+
+        JButton btn_saveGrammar = new JButton("Save Grammar");
+        btn_saveGrammar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveGrammar(FILE_NAME);
+            }
+        });
+        productionsPanel.add(btn_saveGrammar);
         return productionsPanel;
     }
 
     public Production getSelectedProductionFromList(){
         if(!productionList.isSelectionEmpty()){
             String name = productionList.getSelectedValue();
-            for(Production p: productions){
+            for(Production p: grammar.getProductions()){
                 if(name.equals(p.getName())){
                     return p;
                 }
@@ -161,17 +210,13 @@ public class GraphGrammarCreator extends JFrame {
     }
 
     public void addProduction(Production production){
-        if(!productions.contains(production)){
-            productions.add(production);
-        }
+        grammar.addProduction(production);
         updateListModel();
 
     }
 
     public void removeProduction(Production production){
-        if(productions.contains(production)){
-            productions.remove(production);
-        }
+        grammar.removeProduction(production);
         updateListModel();
     }
 
@@ -179,7 +224,7 @@ public class GraphGrammarCreator extends JFrame {
         gpRight.clear();
         gpLeft.clear();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
-        for(Production p: productions){
+        for(Production p: grammar.getProductions()){
             listModel.addElement(p.getName());
         }
         productionList.setModel(listModel);
