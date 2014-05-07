@@ -1,6 +1,9 @@
 package com.stuckinadrawer.graphs.ui;
 
+import com.stuckinadrawer.GraphFactory;
+import com.stuckinadrawer.graphs.ForceBasedLayout;
 import com.stuckinadrawer.graphs.Grammar;
+import com.stuckinadrawer.graphs.Graph;
 import com.stuckinadrawer.graphs.Production;
 
 import javax.swing.*;
@@ -72,8 +75,17 @@ public class GraphGrammarCreator extends JFrame {
     private void initUI() {
         setTitle("Graph Grammar Creator");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JPanel center = new JPanel();
+        center.setLayout(new BoxLayout(center, BoxLayout.PAGE_AXIS));
         JPanel productionsPanel = createProductionsPanel();
-        add(productionsPanel);
+
+
+        JPanel startGraphPanel = createStartGraphPanel();
+        center.add(startGraphPanel);
+        center.add(Box.createRigidArea(new Dimension(5, 5)));
+        center.add(productionsPanel);
+
+        add(center);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -176,6 +188,26 @@ public class GraphGrammarCreator extends JFrame {
         });
         productionsPanel.add(btn_saveGrammar);
         return productionsPanel;
+    }
+
+    private JPanel createStartGraphPanel(){
+        JPanel startGraphPanel = new JPanel();
+        startGraphPanel.setLayout(new BoxLayout(startGraphPanel, BoxLayout.PAGE_AXIS));
+
+        // Title
+        JLabel label = new JLabel("StartGraph");
+        label.setFont(bigFont);
+
+        startGraphPanel.add(label);
+        GraphFactory graphFactory = new GraphFactory();
+        Graph startGraph = graphFactory.createStartGraph();
+        new ForceBasedLayout().layout(startGraph);
+        SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 400, 400);
+        startGraphPanel.add(Box.createRigidArea(new Dimension(5, 5)));
+        startGraphPanel.add(graphDisplayPanel);
+
+
+        return startGraphPanel;
     }
 
     public Production getSelectedProductionFromList(){

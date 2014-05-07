@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 public class ProductionTest {
 
     public ProductionTest(){
-        RandomGraphFactory graphFactory = new RandomGraphFactory();
+        GraphFactory graphFactory = new GraphFactory();
         Production p = new Production(graphFactory.createRandomGraph(), graphFactory.createRandomGraph());
         System.out.println(p.toString());
         String fileName = "production.ser";

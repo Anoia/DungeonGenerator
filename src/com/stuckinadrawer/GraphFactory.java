@@ -5,7 +5,7 @@ import com.stuckinadrawer.graphs.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class RandomGraphFactory {
+public class GraphFactory {
 
     VertexFactory factory = new VertexFactory();
 
@@ -33,6 +33,19 @@ public class RandomGraphFactory {
         }
 
         return new Graph(edges, vertices);
+    }
+
+    public Graph createStartGraph(){
+        Vertex entrance = factory.createNewVertex("entrance");
+        Vertex exit = factory.createNewVertex("exit");
+        Vertex dungeon = factory.createNewVertex("dungeon");
+        Graph graph = new Graph();
+        graph.addVertex(entrance);
+        graph.addVertex(exit);
+        graph.addVertex(dungeon);
+        graph.addEdge(entrance, dungeon);
+        graph.addEdge(dungeon, exit);
+        return graph;
     }
 
     public Vertex getRandomVertexFromList(ArrayList<Vertex> list){
