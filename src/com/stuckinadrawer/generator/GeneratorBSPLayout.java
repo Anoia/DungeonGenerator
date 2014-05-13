@@ -4,19 +4,12 @@ import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
 
-public class GeneratorBSPLayout implements Generator{
+public class GeneratorBSPLayout extends Generator{
 
     private final static int MAX_LEAF_SIZE = 30;
 
-    public static Tile[][] level;
-
-    private int levelWidth;
-    private int levelHeight;
-
     public GeneratorBSPLayout(int levelWidth, int levelHeight){
-        this.levelWidth = levelWidth;
-        this.levelHeight = levelHeight;
-
+        super(levelWidth, levelHeight);
     }
 
     public GeneratorBSPLayout(){
@@ -73,34 +66,5 @@ public class GeneratorBSPLayout implements Generator{
         buildWalls();
 
         return level;
-    }
-
-    /**
-     * Initializes the Level with empty Tiles
-     */
-    private void initializeEmptyLevel() {
-        level = new Tile[levelWidth][levelHeight];
-
-        for (int x = 0; x < levelWidth; x++) {
-            for (int y = 0; y < levelHeight; y++) {
-                level[x][y] = Tile.EMPTY;
-            }
-        }
-    }
-
-    private void buildWalls() {
-        for (int x = 0; x < levelWidth; x++) {
-            for (int y = 0; y < levelHeight; y++) {
-                if (level[x][y] == Tile.ROOM || level[x][y] == Tile.CORRIDOR) {
-                    for (int xx = x - 1; xx <= x + 1; xx++) {
-                        for (int yy = y - 1; yy <= y + 1; yy++) {
-                            if (level[xx][yy] == Tile.EMPTY) {
-                                level[xx][yy] = Tile.WALL;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }

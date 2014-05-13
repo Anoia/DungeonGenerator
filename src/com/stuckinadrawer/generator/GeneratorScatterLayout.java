@@ -4,26 +4,20 @@ import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
 
-public class GeneratorScatterLayout implements Generator{
+public class GeneratorScatterLayout extends Generator{
 
     private int roomCount;
 
     private int minRoomSize;
     private int maxRoomSize;
 
-    private Tile[][] level;
-
     private ArrayList<Room> rooms;
-
-    private int levelWidth;
-    private int levelHeight;
 
 
     public GeneratorScatterLayout(int minRoomCount, int maxRoomCount, int minRoomSize, int maxRoomSize, int levelWidth, int levelHeight){
+        super(levelWidth, levelHeight);
         this.minRoomSize = minRoomSize;
         this.maxRoomSize = maxRoomSize;
-        this.levelWidth = levelWidth;
-        this.levelHeight = levelHeight;
         roomCount = Utils.random(minRoomCount, maxRoomCount);
         initializeEmptyLevel();
 
@@ -31,16 +25,6 @@ public class GeneratorScatterLayout implements Generator{
 
     public GeneratorScatterLayout(){
         this(15, 25, 5, 15, 70, 50);
-    }
-
-    private void initializeEmptyLevel() {
-        level = new Tile[levelWidth][levelHeight];
-
-        for (int x = 0; x < levelWidth; x++) {
-            for (int y = 0; y < levelHeight; y++) {
-                level[x][y] = Tile.EMPTY;
-            }
-        }
     }
 
     @Override
@@ -244,22 +228,7 @@ public class GeneratorScatterLayout implements Generator{
         }
     }
 
-    private void buildWalls() {
-        for (int x = 0; x < levelWidth; x++) {
-            for (int y = 0; y < levelHeight; y++) {
-                //level[x][y] = Tiles.EMPTY;
-                if (level[x][y] == Tile.ROOM || level[x][y] == Tile.CORRIDOR) {
-                    for (int xx = x - 1; xx <= x + 1; xx++) {
-                        for (int yy = y - 1; yy <= y + 1; yy++) {
-                            if (level[xx][yy] == Tile.EMPTY) {
-                                level[xx][yy] = Tile.WALL;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+
 
 
 

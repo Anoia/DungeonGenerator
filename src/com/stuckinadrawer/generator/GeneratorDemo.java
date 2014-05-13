@@ -33,9 +33,7 @@ public class GeneratorDemo extends JFrame{
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == 32){
-                    createNewLevel();
-                }
+                System.out.println(e.getKeyCode());
                 switch(e.getKeyCode()){
                     case 32:
                         createNewLevel();
@@ -52,6 +50,13 @@ public class GeneratorDemo extends JFrame{
                         setTitle("LevelGenerator: BSP-Tree");
                         System.out.println("Now using BSP-Tree to generate Level");
                         g = new GeneratorBSPLayout();
+                        createNewLevel();
+                        break;
+                    case 82:
+                        //rogue
+                        setTitle("LevelGenerator: Rogue Algorithm");
+                        System.out.println("Now using Rogue Algorithm to generate Level");
+                        g = new GeneratorRogueAlgorithm();
                         createNewLevel();
                         break;
                 }
@@ -85,6 +90,12 @@ public class GeneratorDemo extends JFrame{
                             break;
                         case CORRIDOR:
                             g2d.setColor(Color.darkGray);
+                            break;
+                        case ENTRANCE:
+                            g2d.setColor(Color.green);
+                            break;
+                        case EXIT:
+                            g2d.setColor(Color.blue);
                             break;
                     }
 

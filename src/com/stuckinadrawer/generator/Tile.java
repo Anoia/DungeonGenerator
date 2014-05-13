@@ -1,5 +1,5 @@
 package com.stuckinadrawer.generator;
 
 public enum Tile {
-    EMPTY, WALL, ROOM, CORRIDOR
+    EMPTY, WALL, ROOM, CORRIDOR, ENTRANCE, EXIT
 }
