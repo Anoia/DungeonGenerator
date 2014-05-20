@@ -30,7 +30,7 @@ public abstract class Generator {
                 if (level[x][y] == Tile.ROOM || level[x][y] == Tile.CORRIDOR) {
                     for (int xx = x - 1; xx <= x + 1; xx++) {
                         for (int yy = y - 1; yy <= y + 1; yy++) {
-                            if (level[xx][yy] == Tile.EMPTY) {
+                            if (isInLevelBounds(xx, yy) && level[xx][yy] == Tile.EMPTY) {
                                 level[xx][yy] = Tile.WALL;
                             }
                         }
@@ -38,6 +38,11 @@ public abstract class Generator {
                 }
             }
         }
+    }
+
+    boolean isInLevelBounds(int x, int y){
+        return !(x < 0 || y < 0 || x >= levelWidth || y >= levelHeight );
+
     }
 
 }

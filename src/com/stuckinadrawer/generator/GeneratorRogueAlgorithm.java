@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class GeneratorRogueAlgorithm extends Generator {
 
-    private int numRoomsHorizontal = 3;
-    private int numRoomsVertical = 3;
+    private int numRoomsHorizontal = 4;
+    private int numRoomsVertical = 4;
 
     int roomWidth;
     int roomHeight;
@@ -58,7 +58,6 @@ public class GeneratorRogueAlgorithm extends Generator {
             }
             GridRoom neighbour = connectedNeighbours.get(Utils.random(connectedNeighbours.size()-1));
             room.connected = true;
-            exit = getCenterOfGridRoomInLevel(room);
             room.connectedGridRooms.add(neighbour);
             neighbour.connectedGridRooms.add(room);
             unconnectedRooms = getUnconnectedRooms();
@@ -195,7 +194,6 @@ public class GeneratorRogueAlgorithm extends Generator {
     }
 
     private boolean isValidGridRoomIndex(int x, int y) {
-        boolean result = true;
         return !(x < 0 || y < 0 || x >= numRoomsHorizontal || y >= numRoomsVertical );
     }
 
@@ -204,17 +202,6 @@ public class GeneratorRogueAlgorithm extends Generator {
         for (int x = 0; x < numRoomsHorizontal; x++) {
             for (int y = 0; y < numRoomsVertical; y++) {
                 gridRooms[x][y] = new GridRoom(x, y);
-            }
-        }
-    }
-
-    private void grid() {
-        int roomWidth = levelWidth/numRoomsHorizontal;
-        int roomHeight = levelHeight/ numRoomsVertical;
-        for(int x = 0; x < numRoomsHorizontal; x++){
-            for(int y = 0; y < numRoomsVertical; y++){
-                //Room r = new Room(x*roomWidth, y*roomHeight, roomWidth, roomHeight);
-                //rooms.add(r);
             }
         }
     }
