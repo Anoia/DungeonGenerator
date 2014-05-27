@@ -100,7 +100,7 @@ public class Graph implements Serializable{
         this.vertices.remove(vertex);
     }
 
-    public HashSet<Vertex> neighbors(Vertex vertex){
+    public HashSet<Vertex> getNeighbors(Vertex vertex){
         HashSet<Vertex> result = new HashSet<Vertex>();
         for(Vertex v: this.vertices){
             HashSet<Vertex> edge = new HashSet<Vertex>();
@@ -113,8 +113,8 @@ public class Graph implements Serializable{
         return result;
     }
 
-    public int degree(Vertex vertex){
-        return neighbors(vertex).size();
+    public int getDegree(Vertex vertex){
+        return getNeighbors(vertex).size();
     }
 
     public boolean hasVertex(Vertex vertex){
@@ -143,17 +143,27 @@ public class Graph implements Serializable{
         String result = "";
         result += "Vertices: ";
         for(Vertex v: vertices){
-            result += v.getId()+":"+v.getLabel()+" ";
+            result += v.getId()+":"+v.getType()+" ";
         }
         result += "\n Edges: ";
         for(HashSet<Vertex> edge: edges){
             result+=" [";
             for(Vertex v: edge){
-                result+=v.getId()+":"+v.getLabel();
+                result+=v.getId()+":"+v.getType();
             }
             result+="] ";
         }
         return result;
     }
+
+    public HashSet<Vertex> getVerticesByType(String type){
+        HashSet<Vertex> result = new HashSet<Vertex>();
+        for(Vertex v: vertices){
+            if(v.getType().equals(type)) result.add(v);
+        }
+        return result;
+    }
+
+
 
 }

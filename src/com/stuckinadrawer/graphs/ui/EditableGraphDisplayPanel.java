@@ -37,7 +37,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                     break;
                 case ADD_EDGE:
                     if(v!=null) {
-                        System.out.println("Clicked on Vertex: " + v.getLabel());
+                        System.out.println("Clicked on Vertex: " + v.getType());
                         if (markedVertex == null) {
                             markedVertex = v;
                             v.marked = true;
@@ -67,7 +67,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                     break;
                 case REMOVE_EDGE:
                     if(v!=null) {
-                        System.out.println("Clicked on Vertex: " + v.getLabel());
+                        System.out.println("Clicked on Vertex: " + v.getType());
                         if (markedVertex == null) {
                             markedVertex = v;
                             v.marked = true;

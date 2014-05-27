@@ -4,24 +4,25 @@ import java.io.Serializable;
 
 public class Vertex implements Serializable{
     private static int currentMaxId = 0;
-    private String label;
+    private String type;
+    private int label = -1;
     private int id;
     protected int x, y;
     public float forceX, forceY = 0;
 
     public boolean marked = false;
 
-    public Vertex(String label) {
-        this.label = label;
+    public Vertex(String type) {
+        this.type = type;
         id = currentMaxId++;
     }
 
-    public String getLabel() {
-        return label;
+    public String getType() {
+        return type;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getX() {
@@ -34,6 +35,18 @@ public class Vertex implements Serializable{
 
     public int getId() {
         return id;
+    }
+
+    public int getLabel() {
+        return label;
+    }
+
+    public String getDescription(){
+        return getId()+":"+getType();
+    }
+
+    public void setLabel(int label) {
+        this.label = label;
     }
 
     public void setPosition(int x, int y) {
@@ -54,7 +67,7 @@ public class Vertex implements Serializable{
 
     @Override
     public int hashCode() {
-        return label.hashCode();
+        return type.hashCode();
     }
 
     public void applyForce(double stepSize) {

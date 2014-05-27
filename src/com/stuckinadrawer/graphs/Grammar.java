@@ -1,5 +1,7 @@
 package com.stuckinadrawer.graphs;
 
+import com.stuckinadrawer.GraphFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,12 +9,14 @@ public class Grammar implements Serializable{
 
     private ArrayList<Production> productions;
     private String name;
-    private Graph startingGraph;
+    private Graph startingGraph = null;
 
     public Grammar(){
         productions = new ArrayList<Production>();
-        startingGraph = new Graph();
         name = null;
+
+        GraphFactory graphFactory = new GraphFactory();
+        startingGraph = graphFactory.createStartGraph();
     }
 
     public ArrayList<Production> getProductions() {

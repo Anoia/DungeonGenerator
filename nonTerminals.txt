@@ -3,3 +3,5 @@ monster
 loot
 dungeon
 reward
+level
+room

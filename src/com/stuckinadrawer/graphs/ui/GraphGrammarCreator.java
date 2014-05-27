@@ -1,10 +1,6 @@
 package com.stuckinadrawer.graphs.ui;
 
-import com.stuckinadrawer.GraphFactory;
-import com.stuckinadrawer.graphs.ForceBasedLayout;
-import com.stuckinadrawer.graphs.Grammar;
-import com.stuckinadrawer.graphs.Graph;
-import com.stuckinadrawer.graphs.Production;
+import com.stuckinadrawer.graphs.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -16,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
 public class GraphGrammarCreator extends JFrame {
 
@@ -28,6 +23,8 @@ public class GraphGrammarCreator extends JFrame {
 
     SimpleGraphDisplayPanel gpLeft;
     SimpleGraphDisplayPanel gpRight;
+
+    JPanel startGraphPanel;
 
     private static final String FILE_NAME = "grammar1.ser";
 
@@ -50,10 +47,7 @@ public class GraphGrammarCreator extends JFrame {
             grammar = (Grammar) in.readObject();
             in.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        if(grammar == null){
+           // ex.printStackTrace();
             grammar = new Grammar();
         }
     }
@@ -80,7 +74,7 @@ public class GraphGrammarCreator extends JFrame {
         JPanel productionsPanel = createProductionsPanel();
 
 
-        JPanel startGraphPanel = createStartGraphPanel();
+        startGraphPanel = createStartGraphPanel();
         center.add(startGraphPanel);
         center.add(Box.createRigidArea(new Dimension(5, 5)));
         center.add(productionsPanel);
@@ -170,9 +164,22 @@ public class GraphGrammarCreator extends JFrame {
                 }
             }
         });
+
+        JButton btn_check = new JButton("CheckInGraph");
+        btn_check.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Production selectedProduction = getSelectedProductionFromList();
+                if(selectedProduction!=null){
+                    checkProduction(selectedProduction);
+                }
+            }
+        });
+
         buttonsPanel.add(btn_new);
         buttonsPanel.add(btn_edit);
         buttonsPanel.add(btn_delete);
+        buttonsPanel.add(btn_check);
 
 
         productionsPanel.add(label);
@@ -190,6 +197,16 @@ public class GraphGrammarCreator extends JFrame {
         return productionsPanel;
     }
 
+    private void checkProduction(Production selectedProduction) {
+        Graph subGraph = selectedProduction.getLeft();
+        UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
+        System.out.println("FINDER:");
+        finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
+        startGraphPanel.repaint();
+
+
+    }
+
     private JPanel createStartGraphPanel(){
         JPanel startGraphPanel = new JPanel();
         startGraphPanel.setLayout(new BoxLayout(startGraphPanel, BoxLayout.PAGE_AXIS));
@@ -199,13 +216,13 @@ public class GraphGrammarCreator extends JFrame {
         label.setFont(bigFont);
 
         startGraphPanel.add(label);
-        GraphFactory graphFactory = new GraphFactory();
-        Graph startGraph = graphFactory.createStartGraph();
+        Graph startGraph = grammar.getStartingGraph();
         new ForceBasedLayout().layout(startGraph);
         SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 400, 400);
         startGraphPanel.add(Box.createRigidArea(new Dimension(5, 5)));
         startGraphPanel.add(graphDisplayPanel);
 
+        grammar.setStartingGraph(startGraph);
 
         return startGraphPanel;
     }

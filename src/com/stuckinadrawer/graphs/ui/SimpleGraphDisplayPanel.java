@@ -6,7 +6,6 @@ import com.stuckinadrawer.graphs.Vertex;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -80,7 +79,7 @@ public class SimpleGraphDisplayPanel extends JPanel{
             if(vertex.marked){
                 c = Color.red;
             }
-            circeWithText(g2d, vertex.getLabel(), vertex.getX(), vertex.getY(), c);
+            circeWithText(g2d, vertex.getId()+":"+vertex.getType(), vertex.getX(), vertex.getY(), c);
         }
     }
 
