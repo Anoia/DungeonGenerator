@@ -143,7 +143,7 @@ public class Graph implements Serializable{
         String result = "";
         result += "Vertices: ";
         for(Vertex v: vertices){
-            result += v.getId()+":"+v.getType()+" ";
+            result += v.toString()+" ";
         }
         result += "\n Edges: ";
         for(HashSet<Vertex> edge: edges){
@@ -164,6 +164,15 @@ public class Graph implements Serializable{
         return result;
     }
 
+    public int getHighestVertexId(){
+        int result = 0;
+        for(Vertex v : vertices){
+            if(v.getId() > result){
+                result = v.getId();
+            }
+        }
+        return result;
+    }
 
 
 }

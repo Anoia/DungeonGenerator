@@ -5,21 +5,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class UllmanSubgraphIsomorphism {
+public class UllmanSubGraphIsomorphism {
 
 
     private Graph subGraph;
     private Graph hostGraph;
     private ArrayList<Vertex> subGraphVertices;
     private ArrayList<Vertex> hostGraphVertices;
-    private HashMap<Vertex, Vertex> assignments;
+    private HashMap<Vertex, Vertex> morphism;
 
     private int[][] M;
 
     public HashMap<Vertex, Vertex> findIsomorphism(Graph hostGraph, Graph subGraph){
         this.hostGraph = hostGraph;
         this.subGraph = subGraph;
-        assignments = new HashMap<Vertex, Vertex>();
+        morphism = new HashMap<Vertex, Vertex>();
         subGraphVertices = new ArrayList<Vertex>();
         subGraphVertices.addAll(subGraph.getVertices());
         hostGraphVertices = new ArrayList<Vertex>();
@@ -28,14 +28,15 @@ public class UllmanSubgraphIsomorphism {
         M = new int[subGraphVertices.size()][hostGraphVertices.size()];
 
         initM();
+        pruneM();
 
         if(search()){
             System.out.println("MATCHING SUBGRAPH FOUND!");
-            for(Map.Entry<Vertex, Vertex> entry : assignments.entrySet()){
+            for(Map.Entry<Vertex, Vertex> entry : morphism.entrySet()){
                 entry.getValue().marked = true;
                 System.out.println(entry.getKey().getDescription()+" matched to "+entry.getValue().getDescription());
             }
-            return assignments;
+            return morphism;
         }else{
             System.out.println("NO MATCHING SUBGRAPH FOUND!");
             return null;
@@ -60,8 +61,19 @@ public class UllmanSubgraphIsomorphism {
         }
     }
 
+    /**
+     * This is where Ullmanns stuff happens
+     */
+    private void pruneM() {
+
+        // 1 means Vertices I think vertices could be mapped
+        // if a Vertex p in subG can be mapped to a Vertex g in hostG, all neighbours of p have to be mapped to neighbours of g
+        // if neighbours can't be mapped then p can't be mapped ->  p = 0;
+
+    }
+
     private boolean search(){
-        int i = assignments.size();
+        int i = morphism.size();
 
         //check edges
         for(HashSet<Vertex> edge: subGraph.getEdges()){
@@ -75,9 +87,9 @@ public class UllmanSubgraphIsomorphism {
                 }
             }
             //if both vertices connected by edge are already assigned to host graph vertices
-            if(assignments.containsKey(edgeFirst) && assignments.containsKey(edgeSecond)){
+            if(morphism.containsKey(edgeFirst) && morphism.containsKey(edgeSecond)){
                 //check if assigned vertices are connected too
-                if(!hostGraph.hasEdge(assignments.get(edgeFirst), assignments.get(edgeSecond))){
+                if(!hostGraph.hasEdge(morphism.get(edgeFirst), morphism.get(edgeSecond))){
                     return false;
                 }
             }
@@ -92,10 +104,10 @@ public class UllmanSubgraphIsomorphism {
 
                 Vertex vertexInSubGraph = subGraphVertices.get(i);
                 Vertex vertexInHostGraph = hostGraphVertices.get(j);
-                if(!assignments.containsValue(vertexInHostGraph)){
-                    assignments.put(vertexInSubGraph, vertexInHostGraph);
+                if(!morphism.containsValue(vertexInHostGraph)){
+                    morphism.put(vertexInSubGraph, vertexInHostGraph);
                     if(search()) return true;
-                    assignments.remove(vertexInSubGraph);
+                    morphism.remove(vertexInSubGraph);
                 }
             }
         }

@@ -89,6 +89,11 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                         graph.deleteVertex(v);
                     }
                     break;
+                case MORPHISM:
+                    if(v!=null){
+                        v.setId(container.getMorphism());
+                        repaint();
+                    }
             }
 
         }

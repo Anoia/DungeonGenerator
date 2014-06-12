@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 public class GraphGrammarCreator extends JFrame {
 
@@ -165,13 +166,29 @@ public class GraphGrammarCreator extends JFrame {
             }
         });
 
-        JButton btn_check = new JButton("CheckInGraph");
+        JButton btn_check = new JButton("FindInGraph");
         btn_check.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
-                    checkProduction(selectedProduction);
+                    findProductionInGraph(selectedProduction);
+                }
+            }
+        });
+
+        JButton btn_apply = new JButton("Apply");
+        btn_apply.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Production selectedProduction = getSelectedProductionFromList();
+                if(selectedProduction!=null){
+                    HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
+                    if(morphism!=null){
+                        new SinglePushOut().applyProduction(selectedProduction, grammar.getStartingGraph(), morphism);
+                        startGraphPanel.repaint();
+                    }
+
                 }
             }
         });
@@ -180,6 +197,7 @@ public class GraphGrammarCreator extends JFrame {
         buttonsPanel.add(btn_edit);
         buttonsPanel.add(btn_delete);
         buttonsPanel.add(btn_check);
+        buttonsPanel.add(btn_apply);
 
 
         productionsPanel.add(label);
@@ -197,13 +215,14 @@ public class GraphGrammarCreator extends JFrame {
         return productionsPanel;
     }
 
-    private void checkProduction(Production selectedProduction) {
+    private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
         Graph subGraph = selectedProduction.getLeft();
-        UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
+        UllmanSubGraphIsomorphism finder = new UllmanSubGraphIsomorphism();
         System.out.println("FINDER:");
-        finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
+        HashMap<Vertex, Vertex> result = finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
         startGraphPanel.repaint();
 
+        return result;
 
     }
 
@@ -218,7 +237,7 @@ public class GraphGrammarCreator extends JFrame {
         startGraphPanel.add(label);
         Graph startGraph = grammar.getStartingGraph();
         new ForceBasedLayout().layout(startGraph);
-        SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 400, 400);
+        SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 600, 400);
         startGraphPanel.add(Box.createRigidArea(new Dimension(5, 5)));
         startGraphPanel.add(graphDisplayPanel);
 

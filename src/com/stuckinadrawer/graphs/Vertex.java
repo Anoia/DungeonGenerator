@@ -54,6 +54,10 @@ public class Vertex implements Serializable{
         this.y = y;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object obj){
         if (!(obj instanceof Vertex)) {
@@ -79,5 +83,10 @@ public class Vertex implements Serializable{
         this.x += deltaX;
         this.y += deltaY;
 
+    }
+
+    @Override
+    public String toString(){
+        return getId()+":"+getType();
     }
 }

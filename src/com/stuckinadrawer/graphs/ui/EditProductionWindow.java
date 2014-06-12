@@ -18,6 +18,7 @@ public class EditProductionWindow extends JDialog {
 
     private JList<Object> vertexList;
     private JTextField nameField;
+    private JTextField txt_morphism;
 
     public EditProductionWindow(GraphGrammarCreator creator){
         this(new Production(new Graph(), new Graph()), creator);
@@ -80,6 +81,16 @@ public class EditProductionWindow extends JDialog {
                 //vertexList.setVisible(false);
             }
         });
+        JButton btn_morphism = new JButton("Morphism");
+        btn_morphism.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clickMode = ClickMode.MORPHISM;
+            }
+        });
+
+        txt_morphism = new JTextField("0");
+        txt_morphism.setMaximumSize(txt_morphism.getPreferredSize());
 
         // create menu panel
         JPanel menuPanel = new JPanel();
@@ -97,7 +108,12 @@ public class EditProductionWindow extends JDialog {
         menuPanel.add(Box.createRigidArea(distanceBetweenElements));
         menuPanel.add(btn_rmvVertex);
         menuPanel.add(Box.createRigidArea(distanceBetweenElements));
+        menuPanel.add(btn_morphism);
+        menuPanel.add(txt_morphism);
+        menuPanel.add(Box.createRigidArea(distanceBetweenElements));
+       // menuPanel.add(Box.createVerticalGlue());
         menuPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+    //    menuPanel.add(Box.createVerticalGlue());
         //liste
         vertexList = new JList<Object>(vertexFactory.getAllSymbols().toArray());
         vertexList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -106,6 +122,7 @@ public class EditProductionWindow extends JDialog {
 
         vertexList.setCellRenderer(new CellRenderer());
         vertexList.setPreferredSize(new Dimension(100, 400));
+
 
         //vertexList.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(vertexList);
@@ -174,6 +191,10 @@ public class EditProductionWindow extends JDialog {
         return clickMode;
     }
 
+    public int getMorphism(){
+        return Integer.parseInt(txt_morphism.getText());
+    }
+
     public void setClickMode(ClickMode clickMode) {
         this.clickMode = clickMode;
     }
@@ -230,5 +251,5 @@ public class EditProductionWindow extends JDialog {
 }
 
 enum ClickMode {
-    ADD_EDGE, ADD_VERTEX, NONE, REMOVE_EDGE, REMOVE_VERTEX
+    ADD_EDGE, ADD_VERTEX, NONE, REMOVE_EDGE, MORPHISM, REMOVE_VERTEX
 }
