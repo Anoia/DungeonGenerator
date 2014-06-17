@@ -5,16 +5,17 @@ import java.io.Serializable;
 public class Vertex implements Serializable{
     private static int currentMaxId = 0;
     private String type;
-    private int label = -1;
-    private int id;
+    private final int id;
     protected int x, y;
     public float forceX, forceY = 0;
 
+    private int morphism = -1;
+
     public boolean marked = false;
 
-    public Vertex(String type) {
+    public Vertex(int id, String type) {
+        this.id = id;
         this.type = type;
-        id = currentMaxId++;
     }
 
     public String getType() {
@@ -37,41 +38,22 @@ public class Vertex implements Serializable{
         return id;
     }
 
-    public int getLabel() {
-        return label;
+
+    public int getMorphism() {
+        return morphism;
+    }
+
+    public void setMorphism(int morphism) {
+        this.morphism = morphism;
     }
 
     public String getDescription(){
-        return getId()+":"+getType();
-    }
-
-    public void setLabel(int label) {
-        this.label = label;
+        return getId()+":"+getType()+":"+getMorphism();
     }
 
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public void setId(int id){
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object obj){
-        if (!(obj instanceof Vertex)) {
-            return false;
-        }
-        Vertex other = (Vertex) obj;
-
-        return this.id == other.id;
-    }
-
-
-    @Override
-    public int hashCode() {
-        return type.hashCode();
     }
 
     public void applyForce(double stepSize) {
@@ -82,11 +64,31 @@ public class Vertex implements Serializable{
     public void move(int deltaX, int deltaY) {
         this.x += deltaX;
         this.y += deltaY;
+    }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vertex vertex = (Vertex) o;
+
+        if (id != vertex.id) return false;
+        if (!type.equals(vertex.type)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + id;
+        return result;
     }
 
     @Override
     public String toString(){
-        return getId()+":"+getType();
+        return getDescription();
     }
 }
