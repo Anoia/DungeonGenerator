@@ -233,7 +233,7 @@ public class GraphGrammarCreator extends JFrame {
 
     private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
         Graph subGraph = selectedProduction.getLeft();
-        UllmanSubGraphIsomorphism finder = new UllmanSubGraphIsomorphism();
+        UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
         System.out.println("FINDER:");
         HashMap<Vertex, Vertex> result = finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
         startGraphPanel.repaint();

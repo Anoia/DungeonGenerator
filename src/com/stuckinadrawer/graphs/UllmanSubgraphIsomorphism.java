@@ -1,25 +1,29 @@
 package com.stuckinadrawer.graphs;
 
+import com.stuckinadrawer.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class UllmanSubGraphIsomorphism {
+public class UllmanSubgraphIsomorphism {
 
 
     private Graph subGraph;
     private Graph hostGraph;
     private ArrayList<Vertex> subGraphVertices;
     private ArrayList<Vertex> hostGraphVertices;
-    private HashMap<Vertex, Vertex> morphism;
+    private HashMap<Vertex, Vertex> currentIsomorphism;
+
+    private ArrayList<HashMap<Vertex, Vertex>> isomorphisms = new ArrayList<HashMap<Vertex, Vertex>>();
 
     private int[][] M;
 
     public HashMap<Vertex, Vertex> findIsomorphism(Graph hostGraph, Graph subGraph){
         this.hostGraph = hostGraph;
         this.subGraph = subGraph;
-        morphism = new HashMap<Vertex, Vertex>();
+        currentIsomorphism = new HashMap<Vertex, Vertex>();
         subGraphVertices = new ArrayList<Vertex>();
         subGraphVertices.addAll(subGraph.getVertices());
         hostGraphVertices = new ArrayList<Vertex>();
@@ -30,16 +34,19 @@ public class UllmanSubGraphIsomorphism {
         initM();
         pruneM();
 
-        if(search()){
-            System.out.println("MATCHING SUBGRAPH FOUND!");
-            for(Map.Entry<Vertex, Vertex> entry : morphism.entrySet()){
+        search();
+
+        if (isomorphisms.isEmpty()) {
+            System.out.println("NO MATCHING SUBGRAPH FOUND!");
+            return null;
+        } else {
+            System.out.println("MATCHING SUBGRAPH FOUND! " + isomorphisms.size()+" different solutions");
+            currentIsomorphism = isomorphisms.get(Utils.random(isomorphisms.size()-1));
+            for(Map.Entry<Vertex, Vertex> entry : currentIsomorphism.entrySet()){
                 entry.getValue().marked = true;
                 System.out.println(entry.getKey().getDescription()+" matched to "+entry.getValue().getDescription());
             }
-            return morphism;
-        }else{
-            System.out.println("NO MATCHING SUBGRAPH FOUND!");
-            return null;
+            return currentIsomorphism;
         }
 
     }
@@ -73,7 +80,7 @@ public class UllmanSubGraphIsomorphism {
     }
 
     private boolean search(){
-        int i = morphism.size();
+        int i = currentIsomorphism.size();
 
         //check edges
         for(HashSet<Vertex> edge: subGraph.getEdges()){
@@ -87,16 +94,19 @@ public class UllmanSubGraphIsomorphism {
                 }
             }
             //if both vertices connected by edge are already assigned to host graph vertices
-            if(morphism.containsKey(edgeFirst) && morphism.containsKey(edgeSecond)){
+            if(currentIsomorphism.containsKey(edgeFirst) && currentIsomorphism.containsKey(edgeSecond)){
                 //check if assigned vertices are connected too
-                if(!hostGraph.hasEdge(morphism.get(edgeFirst), morphism.get(edgeSecond))){
+                if(!hostGraph.hasEdge(currentIsomorphism.get(edgeFirst), currentIsomorphism.get(edgeSecond))){
                     return false;
                 }
             }
         }
 
         //check if all vertices were assigned
-        if(i == subGraphVertices.size()) return true;
+        if(i == subGraphVertices.size()) {
+            saveCurrentIsomorphism();
+            return true;
+        }
 
         for(int j = 0; j < M[i].length; j++){
             int canBeAssigned = M[i][j];
@@ -104,10 +114,10 @@ public class UllmanSubGraphIsomorphism {
 
                 Vertex vertexInSubGraph = subGraphVertices.get(i);
                 Vertex vertexInHostGraph = hostGraphVertices.get(j);
-                if(!morphism.containsValue(vertexInHostGraph)){
-                    morphism.put(vertexInSubGraph, vertexInHostGraph);
-                    if(search()) return true;
-                    morphism.remove(vertexInSubGraph);
+                if(!currentIsomorphism.containsValue(vertexInHostGraph)){
+                    currentIsomorphism.put(vertexInSubGraph, vertexInHostGraph);
+                    search();
+                    currentIsomorphism.remove(vertexInSubGraph);
                 }
             }
         }
@@ -115,6 +125,15 @@ public class UllmanSubGraphIsomorphism {
         return false;
     }
 
+    private void saveCurrentIsomorphism() {
+        HashMap<Vertex, Vertex> IsomorphismToSave = new HashMap<Vertex, Vertex>();
+        for(Map.Entry<Vertex, Vertex> entry : currentIsomorphism.entrySet()){
+            IsomorphismToSave.put(entry.getKey(), entry.getValue());
+        }
+        isomorphisms.add(IsomorphismToSave);
+
+
+    }
 
 
 }
