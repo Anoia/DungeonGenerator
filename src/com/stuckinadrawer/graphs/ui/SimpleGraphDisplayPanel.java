@@ -61,14 +61,16 @@ public class SimpleGraphDisplayPanel extends JPanel{
     }
 
     private void drawEdges(Graphics2D g2d) {
-        for(HashSet<Vertex> edge: graph.getEdges()){
-            ArrayList<Integer> positions = new ArrayList<Integer>();
-            for(Vertex vertex: edge){
-                positions.add(vertex.getX());
-                positions.add(vertex.getY());
-            }
+        if(!graph.getEdges().isEmpty()){
+            for(HashSet<Vertex> edge: graph.getEdges()){
+                ArrayList<Integer> positions = new ArrayList<Integer>();
+                for(Vertex vertex: edge){
+                    positions.add(vertex.getX());
+                    positions.add(vertex.getY());
+                }
 
-            g2d.drawLine(positions.get(0), positions.get(1), positions.get(2), positions.get(3));
+                g2d.drawLine(positions.get(0), positions.get(1), positions.get(2), positions.get(3));
+            }
         }
 
     }
@@ -79,7 +81,7 @@ public class SimpleGraphDisplayPanel extends JPanel{
             if(vertex.marked){
                 c = Color.red;
             }
-            circeWithText(g2d, vertex.getId()+":"+vertex.getType(), vertex.getX(), vertex.getY(), c);
+            circeWithText(g2d, vertex.toString(), vertex.getX(), vertex.getY(), c);
         }
     }
 

@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class GraphFactory {
 
-    VertexFactory factory = new VertexFactory();
+    VertexFactory factory = VertexFactory.getInstance();
 
     public Graph createRandomGraph(){
         int amountOfVertices = Utils.random(2, 6);
@@ -36,15 +36,9 @@ public class GraphFactory {
     }
 
     public Graph createStartGraph(){
-        Vertex entrance = factory.createNewVertex("entrance");
-        Vertex exit = factory.createNewVertex("exit");
         Vertex dungeon = factory.createNewVertex("dungeon");
         Graph graph = new Graph();
-        graph.addVertex(entrance);
-        graph.addVertex(exit);
         graph.addVertex(dungeon);
-        graph.addEdge(entrance, dungeon);
-        graph.addEdge(dungeon, exit);
         return graph;
     }
 

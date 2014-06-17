@@ -29,7 +29,7 @@ public class EditProductionWindow extends JDialog {
         System.out.println("hello");
         this.p = p;
         this.creator = creator;
-        vertexFactory = new VertexFactory();
+        vertexFactory = VertexFactory.getInstance();
         initUI();
         System.out.println("UI initiated");
 

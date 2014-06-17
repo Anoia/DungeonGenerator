@@ -35,8 +35,13 @@ public class GraphGrammarCreator extends JFrame {
         bigFont = new Font("big", Font.BOLD, 16);
         loadGrammar(FILE_NAME);
 
+
         initUI();
+
+
     }
+
+
 
     private void loadGrammar(String fileName){
         FileInputStream fis = null;
@@ -51,9 +56,14 @@ public class GraphGrammarCreator extends JFrame {
            // ex.printStackTrace();
             grammar = new Grammar();
         }
+
+        VertexFactory.setCurrentMaxId(grammar.currentMaxVertexId);
     }
 
     private void saveGrammar(String fileName){
+
+        grammar.currentMaxVertexId = VertexFactory.getCurrentMaxId();
+
         FileOutputStream fos = null;
         ObjectOutputStream out = null;
         try {
@@ -187,6 +197,12 @@ public class GraphGrammarCreator extends JFrame {
                     if(morphism!=null){
                         new SinglePushOut().applyProduction(selectedProduction, grammar.getStartingGraph(), morphism);
                         startGraphPanel.repaint();
+
+                        Graph startGraph = grammar.getStartingGraph();
+
+                        new ForceBasedLayout().layout(startGraph);
+
+
                     }
 
                 }

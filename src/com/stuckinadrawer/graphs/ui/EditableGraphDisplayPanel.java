@@ -91,7 +91,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                     break;
                 case MORPHISM:
                     if(v!=null){
-                        v.setId(container.getMorphism());
+                        v.setMorphism(container.getMorphism());
                         repaint();
                     }
             }
