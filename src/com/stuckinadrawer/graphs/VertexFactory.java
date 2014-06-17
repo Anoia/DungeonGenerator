@@ -6,24 +6,37 @@ import com.stuckinadrawer.Utils;
 import java.util.ArrayList;
 
 public class VertexFactory {
+
+    private static VertexFactory instance = new VertexFactory();
+
     String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ArrayList<String> terminals;
     ArrayList<String> nonTerminals;
 
-    public VertexFactory(){
+    private static int currentMaxId = 0;
+
+    private VertexFactory(){
         FileReader fr = new FileReader();
         terminals = fr.getTerminals();
         nonTerminals = fr.getNonTerminals();
     }
 
+    public static VertexFactory getInstance(){
+        return instance;
+    }
+
+    public static void setCurrentMaxId(int id){
+        currentMaxId = id;
+    }
+
+    public static int getCurrentMaxId() {
+        return currentMaxId;
+    }
 
     public Vertex createNewVertex(){
-        //int index = Utils.random(abc.length()-1);
-        //String label = abc.charAt(index)+"";
-
         int index = Utils.random(terminals.size()-1);
         String label = terminals.get(index);
-        return new Vertex(label);
+        return new Vertex(currentMaxId++, label);
     }
 
     public ArrayList<String> getTerminals() {
@@ -45,6 +58,6 @@ public class VertexFactory {
     }
 
     public Vertex createNewVertex(String label){
-        return new Vertex(label);
+        return new Vertex(currentMaxId++, label);
     }
 }
