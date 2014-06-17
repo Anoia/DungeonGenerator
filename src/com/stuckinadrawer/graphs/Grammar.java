@@ -11,6 +11,8 @@ public class Grammar implements Serializable{
     private String name;
     private Graph startingGraph = null;
 
+    public int currentMaxVertexId = 0;
+
     public Grammar(){
         productions = new ArrayList<Production>();
         name = null;
