@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class GeneratorRogueAlgorithm extends Generator {
 
-    private int numRoomsHorizontal = 4;
-    private int numRoomsVertical = 4;
+    private int numRoomsHorizontal = 3;
+    private int numRoomsVertical = 3;
 
     int roomWidth;
     int roomHeight;

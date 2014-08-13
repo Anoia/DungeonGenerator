@@ -41,6 +41,26 @@ public class SinglePushOut {
 
         }
 
+        // entferne alle kanten aus gematchtem graphen
+        HashSet<HashSet<Vertex>> edgesToDelete = new HashSet<HashSet<Vertex>>();
+        for(HashSet<Vertex> edge: g.getEdges()){
+            boolean containsFirstVertex = false;
+            for(Vertex v: edge){
+                if(!containsFirstVertex && assignments.containsValue(v)){
+                    containsFirstVertex = true;
+                }else if(containsFirstVertex){
+                    if(assignments.containsValue(v)){
+                        edgesToDelete.add(edge);
+                    }
+                }
+            }
+        }
+
+        for(HashSet<Vertex> edge: edgesToDelete){
+            g.deleteEdge(edge);
+        }
+
+
 
         // Füge alle nodes aus Prechts hinzu, die in Host noch nicht enthalten sind
 
