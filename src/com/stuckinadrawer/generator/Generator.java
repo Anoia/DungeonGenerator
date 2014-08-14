@@ -45,4 +45,8 @@ public abstract class Generator {
 
     }
 
+    public Tile[][] step(){
+        return level;
+    }
+
 }

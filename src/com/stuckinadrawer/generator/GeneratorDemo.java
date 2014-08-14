@@ -33,9 +33,13 @@ public class GeneratorDemo extends JFrame{
 
             @Override
             public void keyPressed(KeyEvent e) {
+                System.out.println(e.getKeyCode());
                 switch(e.getKeyCode()){
                     case 32:
                         createNewLevel();
+                        break;
+                    case 10:
+                        step();
                         break;
                     case 83:
                         //scatter
@@ -58,6 +62,13 @@ public class GeneratorDemo extends JFrame{
                         g = new GeneratorRogueAlgorithm();
                         createNewLevel();
                         break;
+                    case 67:
+                        //cave
+                        setTitle("LevelGenerator: Cave Algorithm");
+                        System.out.println("Now using Cave Algorithm to generate Level");
+                        g = new GeneratorCave();
+                        createNewLevel();
+                        break;
                 }
             }
 
@@ -65,6 +76,11 @@ public class GeneratorDemo extends JFrame{
             public void keyReleased(KeyEvent e) {
             }
         });
+    }
+
+    private void step() {
+        level = g.step();
+        repaint();
     }
 
 
