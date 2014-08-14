@@ -13,7 +13,7 @@ public class GeneratorDemo extends JFrame{
 
     public GeneratorDemo(){
         //g = new GeneratorBSPLayout();
-        g = new GeneratorScatterLayout();
+        g = new ScatterLayout();
         this.level = g.generate();
         initGUI();
     }
@@ -45,28 +45,35 @@ public class GeneratorDemo extends JFrame{
                         //scatter
                         setTitle("LevelGenerator: ScatterLayout");
                         System.out.println("Now using ScatterLayout to generate Level");
-                        g = new GeneratorScatterLayout();
+                        g = new ScatterLayout();
                         createNewLevel();
                         break;
                     case 66:
                         //bsp
                         setTitle("LevelGenerator: BSP-Tree");
                         System.out.println("Now using BSP-Tree to generate Level");
-                        g = new GeneratorBSPLayout();
+                        g = new BSP();
                         createNewLevel();
                         break;
                     case 82:
                         //rogue
                         setTitle("LevelGenerator: Rogue Algorithm");
                         System.out.println("Now using Rogue Algorithm to generate Level");
-                        g = new GeneratorRogueAlgorithm();
+                        g = new RogueAlgorithm();
                         createNewLevel();
                         break;
                     case 67:
                         //cave
-                        setTitle("LevelGenerator: Cave Algorithm");
-                        System.out.println("Now using Cave Algorithm to generate Level");
-                        g = new GeneratorCave();
+                        setTitle("LevelGenerator: Cave Cellular Automata");
+                        System.out.println("Now using Cellular Automata to generate Cave");
+                        g = new CaveCellularAutomata();
+                        createNewLevel();
+                        break;
+                    case 86:
+                        //caveWalk
+                        setTitle("LevelGenerator: CaveWalk Algorithm");
+                        System.out.println("Now using CaveWalk Algorithm to generate Cave");
+                        g = new CaveWalk();
                         createNewLevel();
                         break;
                 }

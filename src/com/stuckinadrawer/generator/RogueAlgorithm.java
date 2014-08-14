@@ -5,7 +5,7 @@ import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
 
-public class GeneratorRogueAlgorithm extends Generator {
+public class RogueAlgorithm extends Generator {
 
     private int numRoomsHorizontal = 3;
     private int numRoomsVertical = 3;
@@ -18,13 +18,13 @@ public class GeneratorRogueAlgorithm extends Generator {
 
     GridRoom[][] gridRooms;
 
-    public GeneratorRogueAlgorithm(int levelWidth, int levelHeight){
+    public RogueAlgorithm(int levelWidth, int levelHeight){
         super(levelWidth, levelHeight);
         roomWidth = levelWidth/numRoomsHorizontal;
         roomHeight = levelHeight/ numRoomsVertical;
     }
 
-    public GeneratorRogueAlgorithm(){
+    public RogueAlgorithm(){
         this(70, 50);
     }
 

@@ -4,15 +4,15 @@ import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
 
-public class GeneratorBSPLayout extends Generator{
+public class BSP extends Generator{
 
     private final static int MAX_LEAF_SIZE = 30;
 
-    public GeneratorBSPLayout(int levelWidth, int levelHeight){
+    public BSP(int levelWidth, int levelHeight){
         super(levelWidth, levelHeight);
     }
 
-    public GeneratorBSPLayout(){
+    public BSP(){
         this(70, 50);
     }
 

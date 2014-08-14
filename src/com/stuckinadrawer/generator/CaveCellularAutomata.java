@@ -2,16 +2,16 @@ package com.stuckinadrawer.generator;
 
 import com.stuckinadrawer.Utils;
 
-public class GeneratorCave extends Generator {
+public class CaveCellularAutomata extends Generator {
 
     int step = 0;
 
-    public GeneratorCave(int levelWidth, int levelHeight){
+    public CaveCellularAutomata(int levelWidth, int levelHeight){
         super(levelWidth, levelHeight);
 
     }
 
-    public GeneratorCave(){
+    public CaveCellularAutomata(){
         this(70, 50);
     }
 
@@ -36,19 +36,19 @@ public class GeneratorCave extends Generator {
             for (int y = 0; y < levelHeight; y++) {
 
                 if(x==0 || y == 0 || x == levelWidth-1 || y == levelHeight-1){
-                    newLevel[x][y] = Tile.CORRIDOR;
+                    newLevel[x][y] = Tile.EMPTY;
                 }else{
                     int walls = getAmountOfWallsAroundTile(x, y, 1);
 
-                    if(level[x][y] == Tile.CORRIDOR){
-                        newLevel[x][y] = (walls  >= 4)?Tile.CORRIDOR:Tile.ROOM;
+                    if(level[x][y] == Tile.EMPTY){
+                        newLevel[x][y] = (walls  >= 4)?Tile.EMPTY:Tile.ROOM;
 
                     }else{
-                        newLevel[x][y] = (walls  >= 5)?Tile.CORRIDOR:Tile.ROOM;
+                        newLevel[x][y] = (walls  >= 5)?Tile.EMPTY:Tile.ROOM;
                     }
 
                     if(step < 3 && getAmountOfWallsAroundTile(x, y, 3)<1){
-                        newLevel[x][y] = Tile.CORRIDOR;
+                        newLevel[x][y] = Tile.EMPTY;
                     }
 
 
@@ -69,7 +69,7 @@ public class GeneratorCave extends Generator {
         for(int i = x-range; i<=x+range; i++){
             for(int j = y-range; j<=y+range; j++){
                 if(i >= 0 && i < levelWidth && j >= 0 && j < levelHeight) {
-                    if(!(x==i && y==j) && level[i][j] == Tile.CORRIDOR){
+                    if(!(x==i && y==j) && level[i][j] == Tile.EMPTY){
                         amount++;
                     }
                 }
@@ -89,11 +89,11 @@ public class GeneratorCave extends Generator {
                 if(rand>45){
                     level[x][y] = Tile.ROOM;
                 }else{
-                    level[x][y] = Tile.CORRIDOR;
+                    level[x][y] = Tile.EMPTY;
                 }
 
                 if(x==0 || y == 0 || x == levelWidth-1 || y == levelHeight-1){
-                    level[x][y] = Tile.CORRIDOR;
+                    level[x][y] = Tile.EMPTY;
                 }
 
             }

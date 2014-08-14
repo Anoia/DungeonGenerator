@@ -100,7 +100,7 @@ public class Leaf {
             // actually fill in the room tiles in level
             for(int x = 0; x < room.width; x++){
                 for(int y = 0; y < room.height; y++){
-                    GeneratorBSPLayout.level[room.x + x][room.y + y] = Tile.ROOM;
+                    BSP.level[room.x + x][room.y + y] = Tile.ROOM;
                 }
             }
 
@@ -124,7 +124,7 @@ public class Leaf {
                 else pointBY++;
             }
 
-            GeneratorBSPLayout.level[pointBX][pointBY] = Tile.CORRIDOR;
+            BSP.level[pointBX][pointBY] = Tile.CORRIDOR;
         }
     }
 

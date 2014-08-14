@@ -4,7 +4,7 @@ import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
 
-public class GeneratorScatterLayout extends Generator{
+public class ScatterLayout extends Generator{
 
     private int roomCount;
 
@@ -14,7 +14,7 @@ public class GeneratorScatterLayout extends Generator{
     private ArrayList<Room> rooms;
 
 
-    public GeneratorScatterLayout(int minRoomCount, int maxRoomCount, int minRoomSize, int maxRoomSize, int levelWidth, int levelHeight){
+    public ScatterLayout(int minRoomCount, int maxRoomCount, int minRoomSize, int maxRoomSize, int levelWidth, int levelHeight){
         super(levelWidth, levelHeight);
         this.minRoomSize = minRoomSize;
         this.maxRoomSize = maxRoomSize;
@@ -23,7 +23,7 @@ public class GeneratorScatterLayout extends Generator{
 
     }
 
-    public GeneratorScatterLayout(){
+    public ScatterLayout(){
         this(15, 25, 5, 15, 70, 50);
     }
 
