@@ -43,29 +43,21 @@ public class CaveWalk extends Generator {
                 case 1:
                     if(currentX+1 < levelWidth-1){
                         currentX++;
-                    }else{
-                    //    i--;
                     }
                     break;
                 case 2:
                     if(currentX-1 > 0){
                         currentX--;
-                    }else{
-                      //  i--;
                     }
                     break;
                 case 3:
                     if(currentY+1 < levelHeight-1){
                         currentY++;
-                    }else{
-                     //   i--;
                     }
                     break;
                 case 4:
                     if(currentY-1 > 0){
                         currentY--;
-                    }else{
-                      //  i--;
                     }
                     break;
             }
