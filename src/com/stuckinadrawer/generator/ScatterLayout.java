@@ -3,6 +3,8 @@ package com.stuckinadrawer.generator;
 import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ScatterLayout extends Generator{
 
@@ -24,7 +26,7 @@ public class ScatterLayout extends Generator{
     }
 
     public ScatterLayout(){
-        this(15, 25, 5, 15, 70, 50);
+        this(10, 20, 5, 20, 70, 50);
     }
 
     @Override
@@ -153,8 +155,21 @@ public class ScatterLayout extends Generator{
     }
 
     private void buildBetterCorridors(){
+
+        Comparator<Room> comparator = new Comparator<Room>() {
+            @Override
+            public int compare(Room o1, Room o2) {
+
+                return (o1.x+o1.y < o2.x+o2.y)? -1 : (o1.x+o1.y == o2.x+o2.y)? 0 : 1;
+            }
+        };
+
+        Collections.sort(rooms, comparator);
+
         for (Room roomA : rooms) {
+            System.out.println("ROOM "+ rooms.indexOf(roomA) +" " + roomA.x + " "+roomA.y);
             Room roomB = getNextRoom(roomA);
+            System.out.println("conntected to: "+ rooms.indexOf(roomB) +" " + roomB.x + " "+roomB.y);
 
             int pointAX = Utils.random(roomA.x + 1, roomA.x + roomA.width - 1);
             int pointAY = Utils.random(roomA.y + 1, roomA.y + roomA.height - 1);
