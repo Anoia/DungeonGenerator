@@ -42,8 +42,13 @@ public class EditProductionWindow extends JDialog {
 
     }
 
+    @Override
+    public Dimension getPreferredSize(){
+        return new Dimension(1200, 800);
+    }
+
     private void initUI() {
-        setTitle("production");
+        setTitle("Productions");
         System.out.println("start UI");
        // setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -158,25 +163,21 @@ public class EditProductionWindow extends JDialog {
         gpLeft = new EditableGraphDisplayPanel(p.getLeft(), 400, 400, this);
         gpRight = new EditableGraphDisplayPanel(p.getRight(), 400, 400, this);
         JPanel productionPanelContainer = new JPanel();
-        productionPanelContainer.setLayout(new BoxLayout(productionPanelContainer, BoxLayout.LINE_AXIS));
-        productionPanelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
         productionPanelContainer.add(gpLeft);
-        productionPanelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
         productionPanelContainer.add(gpRight);
-        productionPanelContainer.add(Box.createRigidArea(new Dimension(5, 5)));
 
 
         JPanel productionNameContainer = new JPanel();
-        productionNameContainer.setLayout(new BoxLayout(productionNameContainer, BoxLayout.LINE_AXIS));
         productionNameContainer.add(new Label("Name of the Production: "));
         nameField = new JTextField(p.getName());
+        nameField.setPreferredSize(new Dimension(400, 30));
         productionNameContainer.add(nameField);
 
-        JPanel centerPanelContailer = new JPanel();
-        centerPanelContailer.setLayout(new BoxLayout(centerPanelContailer, BoxLayout.PAGE_AXIS));
-        centerPanelContailer.add(productionNameContainer);
-        centerPanelContailer.add(productionPanelContainer);
-        this.add(centerPanelContailer, BorderLayout.CENTER);
+        JPanel centerPanelContainer = new JPanel();
+        centerPanelContainer.setLayout(new BoxLayout(centerPanelContainer, BoxLayout.PAGE_AXIS));
+        centerPanelContainer.add(productionNameContainer);
+        centerPanelContainer.add(productionPanelContainer);
+        this.add(centerPanelContainer, BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(creator);

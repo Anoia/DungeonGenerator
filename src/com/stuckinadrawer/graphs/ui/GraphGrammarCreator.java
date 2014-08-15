@@ -1,7 +1,9 @@
 package com.stuckinadrawer.graphs.ui;
 
+import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.*;
 
+import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -12,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GraphGrammarCreator extends JFrame {
@@ -108,7 +111,6 @@ public class GraphGrammarCreator extends JFrame {
 
         // Actual Productions List+Display
         JPanel insidePanel = new JPanel();
-        insidePanel.setLayout(new BoxLayout(insidePanel, BoxLayout.LINE_AXIS));
 
         productionList = new JList<String>();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -119,11 +121,10 @@ public class GraphGrammarCreator extends JFrame {
         JScrollPane scrollPane = new JScrollPane(productionList);
         insidePanel.add(scrollPane);
 
-        //insidePanel.add(new GraphDisplayPanel());
+
         gpLeft = new SimpleGraphDisplayPanel(400, 400);
         gpRight = new SimpleGraphDisplayPanel(400, 400);
         insidePanel.add(gpLeft);
-        insidePanel.add(Box.createRigidArea(new Dimension(5, 5)));
         insidePanel.add(gpRight);
 
         productionList.addListSelectionListener(new ListSelectionListener() {
@@ -141,7 +142,6 @@ public class GraphGrammarCreator extends JFrame {
 
         // Buttons
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.LINE_AXIS));
 
         JButton btn_new = new JButton("New");
         btn_new.addActionListener(new ActionListener() {
@@ -209,11 +209,34 @@ public class GraphGrammarCreator extends JFrame {
             }
         });
 
+        JButton btn_apply_random = new JButton("Apply Random");
+        btn_apply_random.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Production selectedProduction = getRandomProduction();
+                if(selectedProduction!=null){
+                    HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
+                    if(morphism!=null){
+                        new SinglePushOut().applyProduction(selectedProduction, grammar.getStartingGraph(), morphism);
+                        startGraphPanel.repaint();
+
+                        Graph startGraph = grammar.getStartingGraph();
+
+                        new ForceBasedLayout().layout(startGraph);
+
+
+                    }
+
+                }
+            }
+        });
+
         buttonsPanel.add(btn_new);
         buttonsPanel.add(btn_edit);
         buttonsPanel.add(btn_delete);
         buttonsPanel.add(btn_check);
         buttonsPanel.add(btn_apply);
+        buttonsPanel.add(btn_apply_random);
 
 
         productionsPanel.add(label);
@@ -231,6 +254,23 @@ public class GraphGrammarCreator extends JFrame {
         return productionsPanel;
     }
 
+    private Production getRandomProduction() {
+        System.out.println("looking for rand prod");
+        ArrayList<Production> possibleProductions = new ArrayList<Production>();
+        for(Production p: grammar.getProductions()){
+            if(findProductionInGraph(p)!=null){
+                possibleProductions.add(p);
+            }
+        }
+        if(!possibleProductions.isEmpty()){
+            int rand = Utils.random(possibleProductions.size()-1);
+            System.out.println("found "+possibleProductions.size()+"possible prods; chose nr"+rand);
+            return possibleProductions.get(rand);
+        }
+        return null;
+
+    }
+
     private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
         Graph subGraph = selectedProduction.getLeft();
         UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
@@ -244,7 +284,6 @@ public class GraphGrammarCreator extends JFrame {
 
     private JPanel createStartGraphPanel(){
         JPanel startGraphPanel = new JPanel();
-        startGraphPanel.setLayout(new BoxLayout(startGraphPanel, BoxLayout.PAGE_AXIS));
 
         // Title
         JLabel label = new JLabel("StartGraph");
@@ -253,8 +292,7 @@ public class GraphGrammarCreator extends JFrame {
         startGraphPanel.add(label);
         Graph startGraph = grammar.getStartingGraph();
         new ForceBasedLayout().layout(startGraph);
-        SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 600, 400);
-        startGraphPanel.add(Box.createRigidArea(new Dimension(5, 5)));
+        SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 800, 400);
         startGraphPanel.add(graphDisplayPanel);
 
         grammar.setStartingGraph(startGraph);
