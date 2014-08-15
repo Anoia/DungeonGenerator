@@ -18,6 +18,7 @@ public class SinglePushOut {
         //entferne alle nodes aus Host die in Plinks aber nicht in Prechts enthalten sind
         for(Vertex v: p.getLeft().getVertices()){
             System.out.println("check if "+v.toString()+" needs to be deleted");
+            String type = "error";
             int morph = v.getMorphism();
             //morph is -1 falls nicht verwendet, d.h. es kommt auf keinen fall in prechts vor
             Vertex isInPrechts = null;
@@ -25,6 +26,7 @@ public class SinglePushOut {
                 for(Vertex vrechts : p.getRight().getVertices()){
                     if(morph == vrechts.getMorphism()){
                         isInPrechts = vrechts;
+                        type = vrechts.getType();
                         break;
                     }
 
@@ -35,8 +37,12 @@ public class SinglePushOut {
             if(isInPrechts == null){
                 g.deleteVertex(vertexInHost);
             }else{
+
+
+                vertexInHost.setType(type);
                 assignments.remove(v);
                 assignments.put(isInPrechts, vertexInHost);
+
             }
 
         }
@@ -72,6 +78,7 @@ public class SinglePushOut {
                     if(vLinks.getMorphism() == morphRechts){
                         isInPlinks = true;
                         break;
+
                     }
                 }
             }
