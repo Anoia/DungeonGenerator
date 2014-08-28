@@ -19,6 +19,11 @@ public class CaveCellularAutomata extends Generator {
     public Tile[][] generate() {
         initializeCave();
         step = 0;
+        doStuff();
+        doStuff();
+        doStuff();
+        doStuff();
+        doStuff();
         return level;
     }
 
