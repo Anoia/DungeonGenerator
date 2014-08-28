@@ -199,7 +199,7 @@ public class GraphGrammarCreator extends JFrame {
                         startGraphPanel.repaint();
 
                         Graph startGraph = grammar.getStartingGraph();
-
+                        startGraph.setRandomVertexPosition(800, 400);
                         new ForceBasedLayout().layout(startGraph);
 
 
@@ -222,6 +222,7 @@ public class GraphGrammarCreator extends JFrame {
 
                         Graph startGraph = grammar.getStartingGraph();
 
+                        startGraph.setRandomVertexPosition(800, 400);
                         new ForceBasedLayout().layout(startGraph);
 
 
