@@ -1,8 +1,9 @@
-door
-witch
-skeleton
-rat
-entrance
+start
 exit
-chest
+opponent
+boss
+key
+lock
 trap
+chest
+buff

@@ -1,7 +1,7 @@
-obstacle
-monster
-loot
-dungeon
-reward
-level
-room
+ST
+OBSTACLE
+REWARD
+TASK
+LEVEL
+SECTION
+ENDSECTION
