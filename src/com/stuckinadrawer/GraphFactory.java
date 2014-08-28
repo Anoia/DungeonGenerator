@@ -36,9 +36,9 @@ public class GraphFactory {
     }
 
     public Graph createStartGraph(){
-        Vertex dungeon = factory.createNewVertex("dungeon");
+        Vertex v1 = factory.createNewVertex("ST");
         Graph graph = new Graph();
-        graph.addVertex(dungeon);
+        graph.addVertex(v1);
         return graph;
     }
 
