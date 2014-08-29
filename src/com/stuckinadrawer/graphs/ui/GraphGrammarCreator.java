@@ -30,7 +30,7 @@ public class GraphGrammarCreator extends JFrame {
 
     JPanel startGraphPanel;
 
-    private static final String FILE_NAME = "grammar1.ser";
+    private static final String FILE_NAME = "./grammar1.ser";
 
     public GraphGrammarCreator(){
         setLookAndFeel();
