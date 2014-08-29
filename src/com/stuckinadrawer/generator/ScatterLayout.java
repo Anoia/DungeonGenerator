@@ -33,14 +33,8 @@ public class ScatterLayout extends Generator{
     public Tile[][] generate(){
         initializeEmptyLevel();
         generateRooms();
-       // moveRoomsCloser();
-        //buildCorridors();
-
-        //createEnemies();
         buildBetterCorridors();
         putRoomsInMap();
-
-
 
         buildWalls();
 
@@ -85,73 +79,6 @@ public class ScatterLayout extends Generator{
 
         }
         return false;
-    }
-
-    private void moveRoomsCloser() {
-
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < rooms.size(); j++) {
-                Room room = rooms.get(j);
-                rooms.remove(room);
-                while (true) {
-                    int oldX = room.x;
-                    int oldY = room.y;
-
-                    if (room.x > 1) room.x--;
-                    if (room.y > 1) room.y--;
-                    if ((room.x == 1) && (room.y == 1)) {
-                        break;
-                    }
-
-                    if (doesRoomCollide(room)) {
-                        room.x = oldX;
-                        room.y = oldY;
-                        break;
-                    }
-                }
-                rooms.add(room);
-
-            }
-        }
-    }
-
-    private void buildCorridors() {
-
-        Boolean first = true;
-        for (int i = 0; i < rooms.size(); i++) {
-            Room roomA = rooms.get(i);
-            Room roomB;
-            if (first) {
-                roomB = findClosestRoom(roomA);
-                first = false;
-            } else {
-                int index = Utils.random(0, rooms.size() - 1);
-                roomB = rooms.get(index);
-                first = true;
-            }
-
-
-            if (roomB == null) {
-                continue;
-            }
-            int pointAX = Utils.random(roomA.x + 1, roomA.x + roomA.width - 1);
-            int pointAY = Utils.random(roomA.y + 1, roomA.y + roomA.height - 1);
-
-            int pointBX = Utils.random(roomB.x + 1, roomB.x + roomB.width - 1);
-            int pointBY = Utils.random(roomB.y + 1, roomB.y + roomB.height - 1);
-
-            while ((pointBX != pointAX) || (pointBY != pointAY)) {
-                if (pointBX != pointAX) {
-                    if (pointBX > pointAX) pointBX--;
-                    else pointBX++;
-                } else {
-                    if (pointBY > pointAY) pointBY--;
-                    else pointBY++;
-                }
-
-                level[pointBX][pointBY] = Tile.CORRIDOR;
-            }
-        }
     }
 
     private void buildBetterCorridors(){
@@ -200,33 +127,6 @@ public class ScatterLayout extends Generator{
             return rooms.get(0);
         }
         return rooms.get(index+1);
-    }
-
-    private Room findClosestRoom(Room room) {
-
-        int midX = room.x + (room.width / 2);
-        int midY = room.y * (room.height / 2);
-
-        Room closest = null;
-        int closestDistance = Integer.MAX_VALUE;
-        for (Room roomToCheck : rooms) {
-            if (room.equals(roomToCheck)) continue;
-            int roomToCheckMidX = roomToCheck.x + (roomToCheck.width / 2);
-            int roomToCheckMidY = roomToCheck.y + (roomToCheck.height / 2);
-            int distance = Math.abs(midX - roomToCheckMidX) + Math.abs(midY - roomToCheckMidY);
-            if (distance < closestDistance) {
-                closest = roomToCheck;
-                closestDistance = distance;
-            }
-        }
-        if (closest == null) {
-            System.out.println("ROOM WAS NULL");
-        }
-        return closest;
-    }
-
-    private void createEnemies() {
-
     }
 
     private void putRoomsInMap() {

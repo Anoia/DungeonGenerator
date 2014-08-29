@@ -25,7 +25,7 @@ public class BSP extends Generator{
         Leaf root = new Leaf(0, 0, levelWidth, levelHeight);
         leaves.add(root);
         boolean didSplit = true;
-        // loop through every Leaf in our List over and over again, until no more Leaves can be split.
+        // loop through every Leaf in List over and over again, until no more Leaves can be split.
         while(didSplit){
             didSplit = false;
             for(int i = 0; i < leaves.size(); i++){

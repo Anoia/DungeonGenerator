@@ -33,9 +33,9 @@ public class Leaf {
         }
 
         // determine direction of split
-        // if the width is >25% larger than height, we split vertically
-        // if the height is >25% larger than the width, we split horizontally
-        // otherwise we split randomly
+        // if the width is >25% larger than height, split vertically
+        // if the height is >25% larger than the width, split horizontally
+        // otherwise split randomly
 
         boolean splitH = Utils.randomBoolean();
         if (width > height && height / width >= 0.05)
@@ -43,10 +43,8 @@ public class Leaf {
         else if (height > width && width / height >= 0.05)
             splitH = true;
 
-        //determine the max height or width
         int max = (splitH ? height : width) - MIN_LEAF_SIZE;
 
-        // check whether the area is too small to split
         if(max < MIN_LEAF_SIZE)
             return false;
 
@@ -65,7 +63,6 @@ public class Leaf {
     }
 
     public void createRooms(){
-        // this function generates all the rooms and hallways for this Leaf and all of its children.
         if (leftChild != null || rightChild != null)
         {
             // this leaf has been split, so go into the children leafs
@@ -90,14 +87,13 @@ public class Leaf {
             // this Leaf is the ready to make a room
             Point roomSize;
             Point roomPos;
-            // the room can be between 3 x 3 tiles to the size of the leaf - 2.
+
             roomSize = new Point(Utils.random(5, width - 2), Utils.random(5, height - 2));
-            // place the room within the Leaf, but don't put it right
-            // against the side of the Leaf (that would merge rooms together)
+
             roomPos = new Point(Utils.random(1, width - roomSize.getX() - 1), Utils.random(1, height - roomSize.getY() - 1));
             room = new Room(x + roomPos.getX(), y + roomPos.getY(), roomSize.getX(), roomSize.getY());
 
-            // actually fill in the room tiles in level
+
             for(int x = 0; x < room.width; x++){
                 for(int y = 0; y < room.height; y++){
                     BSP.level[room.x + x][room.y + y] = Tile.ROOM;
