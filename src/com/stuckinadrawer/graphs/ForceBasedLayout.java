@@ -62,22 +62,13 @@ public class ForceBasedLayout {
 
     }
 
-    public void layout(Graph graph) {
-        new Thread(new LayoutRunnable(graph)).start();
 
-    }
 
-    private class LayoutRunnable implements Runnable{
-        private Graph graph;
-        public  LayoutRunnable(Graph graph){
-            this.graph = graph;
-        }
-
-        @Override
-        public void run() {
-            for(int i = 0; i < 1000; i++){
-                step(graph);
-            }
+    public void layout(Graph graph){
+        for(int i = 0; i < 1000; i++){
+            step(graph);
         }
     }
+
+
 }
