@@ -119,6 +119,8 @@ public class EditProductionWindow extends JDialog {
        // menuPanel.add(Box.createVerticalGlue());
         menuPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
     //    menuPanel.add(Box.createVerticalGlue());
+
+
         //liste
         vertexList = new JList<Object>(vertexFactory.getAllSymbols().toArray());
         vertexList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

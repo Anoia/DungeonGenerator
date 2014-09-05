@@ -3,7 +3,6 @@ package com.stuckinadrawer.graphs;
 import java.io.Serializable;
 
 public class Vertex implements Serializable{
-    private static int currentMaxId = 0;
     private String type;
     private final int id;
     protected int x, y;
@@ -75,7 +74,7 @@ public class Vertex implements Serializable{
         Vertex vertex = (Vertex) o;
 
         if (id != vertex.id) return false;
-        if (!type.equals(vertex.type)) return false;
+      //  if (!type.equals(vertex.type)) return false;
 
         return true;
     }
@@ -84,7 +83,7 @@ public class Vertex implements Serializable{
     public int hashCode() {
         int result = type.hashCode();
         result = 31 * result + id;
-        return result;
+        return id;
     }
 
     @Override

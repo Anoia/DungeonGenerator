@@ -49,6 +49,7 @@ public class VertexFactory {
 
     public ArrayList<String> getAllSymbols(){
         ArrayList<String> all = new ArrayList<String>();
+        all.add("*");
         all.add("-");
         all.addAll(nonTerminals);
         all.add("-");

@@ -30,7 +30,7 @@ public class UllmanSubgraphIsomorphism {
         hostGraphVertices.addAll(hostGraph.getVertices());
 
         M = new int[subGraphVertices.size()][hostGraphVertices.size()];
-
+        System.out.println("\n ###SUBGRAPH MATCHING### ");
         initM();
         pruneM();
 
@@ -60,7 +60,7 @@ public class UllmanSubgraphIsomorphism {
                 if(subGraph.getDegree(subVertex) > hostGraph.getDegree(hostVertex)){
                     M[i][j] = 0;
                 }
-                if(!subVertex.getType().equals(hostVertex.getType())){
+                if(!subVertex.getType().equals("*") && !subVertex.getType().equals(hostVertex.getType())){
                     M[i][j] = 0;
                 }
                 System.out.println(subVertex.getId()+":"+subVertex.getType()+" "+ hostVertex.getId()+":"+hostVertex.getType()+"   "+M[i][j]);

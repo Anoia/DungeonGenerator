@@ -13,7 +13,7 @@ public class SinglePushOut {
     }
 
     public void applyProduction(Production p, Graph g, HashMap<Vertex, Vertex> assignments){
-        System.out.println("applying prod");
+        System.out.println("\n ###APPLYING PRODUCTION### ");
 
         //entferne alle nodes aus Host die in Plinks aber nicht in Prechts enthalten sind
         for(Vertex v: p.getLeft().getVertices()){
@@ -39,7 +39,9 @@ public class SinglePushOut {
             }else{
 
 
+
                 vertexInHost.setType(type);
+
                 assignments.remove(v);
                 assignments.put(isInPrechts, vertexInHost);
 
@@ -64,6 +66,14 @@ public class SinglePushOut {
 
         for(HashSet<Vertex> edge: edgesToDelete){
             g.deleteEdge(edge);
+            String result = "";
+            result+=" [";
+            for(Vertex v: edge){
+                result+=v.getId()+":"+v.getType();
+            }
+            result+="] ";
+            System.out.println("DELETED EDGE: "+result);
+
         }
 
 
@@ -116,7 +126,7 @@ public class SinglePushOut {
 
             if(!g.hasEdge(v1Graph, v2Graph)){
                 //wenn es in g noch keine edge zwischen den beiden gibt, füg hinzu
-                System.out.println("EDGE MISSING");
+                System.out.println("added missing edge");
                 g.addEdge(v1Graph, v2Graph);
             }
 

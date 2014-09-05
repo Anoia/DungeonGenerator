@@ -1,7 +1,9 @@
 package com.stuckinadrawer.graphs.ui;
 
+import com.stuckinadrawer.ObjectCloner;
 import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.*;
+import com.sun.org.apache.xpath.internal.SourceTree;
 
 import javax.rmi.CORBA.Util;
 import javax.swing.*;
@@ -195,17 +197,21 @@ public class GraphGrammarCreator extends JFrame {
                 if(selectedProduction!=null){
                     HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
                     if(morphism!=null){
-                        new SinglePushOut().applyProduction(selectedProduction, grammar.getStartingGraph(), morphism);
-                        startGraphPanel.repaint();
+                        Production productionWithoutWildcard = createNewProductionWithoutWildcard(selectedProduction, morphism);
+                        new SinglePushOut().applyProduction(productionWithoutWildcard, grammar.getStartingGraph(), morphism);
+
 
                         Graph startGraph = grammar.getStartingGraph();
                         startGraph.setRandomVertexPosition(800, 400);
                         new ForceBasedLayout().layout(startGraph);
+                        startGraphPanel.repaint();
 
 
                     }
 
                 }
+
+                System.out.println("\nDONE\n\n");
             }
         });
 
@@ -217,7 +223,8 @@ public class GraphGrammarCreator extends JFrame {
                 if(selectedProduction!=null){
                     HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
                     if(morphism!=null){
-                        new SinglePushOut().applyProduction(selectedProduction, grammar.getStartingGraph(), morphism);
+                        Production productionWithoutWildcard = createNewProductionWithoutWildcard(selectedProduction, morphism);
+                        new SinglePushOut().applyProduction(productionWithoutWildcard, grammar.getStartingGraph(), morphism);
                         startGraphPanel.repaint();
 
                         Graph startGraph = grammar.getStartingGraph();
@@ -232,12 +239,27 @@ public class GraphGrammarCreator extends JFrame {
             }
         });
 
+        JButton btn_redraw = new JButton("Redraw");
+        btn_redraw.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Graph startGraph = grammar.getStartingGraph();
+                startGraph.setRandomVertexPosition(800, 400);
+                new ForceBasedLayout().layout(startGraph);
+                for(Vertex v:startGraph.getVertices())    {
+                    v.marked = false;
+                }
+                startGraphPanel.repaint();
+            }
+        });
+
         buttonsPanel.add(btn_new);
         buttonsPanel.add(btn_edit);
         buttonsPanel.add(btn_delete);
         buttonsPanel.add(btn_check);
         buttonsPanel.add(btn_apply);
         buttonsPanel.add(btn_apply_random);
+        buttonsPanel.add(btn_redraw);
 
 
         productionsPanel.add(label);
@@ -253,6 +275,46 @@ public class GraphGrammarCreator extends JFrame {
         });
         productionsPanel.add(btn_saveGrammar);
         return productionsPanel;
+    }
+
+    private Production createNewProductionWithoutWildcard(Production selectedProduction, HashMap<Vertex, Vertex> morphism) {
+        System.out.println("\n ###WILDCARDS### ");
+        Production newProduction;
+        try {
+            newProduction = (Production) ObjectCloner.deepCopy(selectedProduction);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return selectedProduction;
+        }
+
+        //remove wildcards from left side
+        for(Vertex vertexInLeftSide: newProduction.getLeft().getVertices()){
+            if(vertexInLeftSide.getType().equals("*")){
+                Vertex assigenedVertexInHost = morphism.get(vertexInLeftSide);
+                morphism.remove(vertexInLeftSide);
+                vertexInLeftSide.setType(assigenedVertexInHost.getType());
+                morphism.put(vertexInLeftSide, assigenedVertexInHost);
+                System.out.println("WILDCARD REMOVED FROM: "+vertexInLeftSide.getDescription());
+            }
+        }
+
+        //remove wildcards from right side
+        for(Vertex vertexInRightSide: newProduction.getRight().getVertices()){
+            if(vertexInRightSide.getType().equals("*")){
+                int morphRight = vertexInRightSide.getMorphism();
+                for(Vertex vertexInLeftSide: newProduction.getLeft().getVertices()){
+                    if(vertexInLeftSide.getMorphism() == morphRight){
+                        System.out.println("WIlDCARD REMOVED FROM "+vertexInRightSide.getDescription());
+                        System.out.println("set to: "+vertexInLeftSide.getType());
+                        vertexInRightSide.setType(vertexInLeftSide.getType());
+                    }
+                }
+
+
+            }
+        }
+
+        return newProduction;
     }
 
     private Production getRandomProduction() {
@@ -275,12 +337,9 @@ public class GraphGrammarCreator extends JFrame {
     private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
         Graph subGraph = selectedProduction.getLeft();
         UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
-        System.out.println("FINDER:");
         HashMap<Vertex, Vertex> result = finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
         startGraphPanel.repaint();
-
         return result;
-
     }
 
     private JPanel createStartGraphPanel(){
