@@ -177,5 +177,10 @@ public class Graph implements Serializable{
         return result;
     }
 
+    public void setVertexPosToZero(){
+        for(Vertex vertex: vertices){
+                vertex.setPosition(0, 0);
+        }
+    }
 
 }

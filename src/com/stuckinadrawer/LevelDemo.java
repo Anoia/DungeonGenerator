@@ -25,6 +25,7 @@ public class LevelDemo extends JFrame{
 
         loadGrammar(GraphGrammarCreator.FILE_NAME);
         levelGraph = grammar.getGraph();
+        levelGraph.setVertexPosToZero();
         initUI();
 
 
@@ -86,12 +87,18 @@ public class LevelDemo extends JFrame{
                 System.out.println(e.getKeyCode());
                 switch(e.getKeyCode()){
                     case 32:
-                        createNewLevel();
+                        grammar.resetGraph();
+                        levelGraph = grammar.getGraph();
+                        panel.setGraphToDisplay(levelGraph);
+                        grammar.applyAllProductions();
+                        levelGraph.setRandomVertexPosition(1000, 1000);
+                        layouter.layout(levelGraph);
+                        panel.repaint();
                         break;
                     case 80:
                         //apply 1 prod
                         if(grammar.applyRandomProduction()){
-                            levelGraph.setRandomVertexPosition(getSize().width, getSize().height);
+                            levelGraph.setRandomVertexPosition(1000, 1000);
                             layouter.layout(levelGraph);
                             panel.repaint();
                         }
@@ -110,6 +117,25 @@ public class LevelDemo extends JFrame{
                     case 27:
                         //quit
                         System.exit(0);
+                        break;
+                    case 73:
+                        for(Vertex v: levelGraph.getVertices()){
+                            System.out.println(v.getDescription()+": "+v.getX() + " "+v.getY());
+                        }
+                        break;
+                    case 83:
+                        //Startgraph
+                        grammar.resetGraph();
+                        levelGraph = grammar.getGraph();
+                        panel.setGraphToDisplay(levelGraph);
+                        levelGraph.setVertexPosToZero();
+                        break;
+                    case 65:
+                        //all
+                        grammar.applyAllProductions();
+                        levelGraph.setRandomVertexPosition(1000, 1000);
+                        layouter.layout(levelGraph);
+                        panel.repaint();
                         break;
                 }
             }
