@@ -3,9 +3,7 @@ package com.stuckinadrawer.graphs.ui;
 import com.stuckinadrawer.ObjectCloner;
 import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.*;
-import com.sun.org.apache.xpath.internal.SourceTree;
 
-import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -32,7 +30,7 @@ public class GraphGrammarCreator extends JFrame {
 
     JPanel startGraphPanel;
 
-    private static final String FILE_NAME = "./grammar1.ser";
+    public static final String FILE_NAME = "./grammar1.ser";
 
     public GraphGrammarCreator(){
         setLookAndFeel();
@@ -134,8 +132,8 @@ public class GraphGrammarCreator extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
-                    gpLeft.setGraph(selectedProduction.getLeft());
-                    gpRight.setGraph(selectedProduction.getRight());
+                    gpLeft.setGraphToDisplay(selectedProduction.getLeft());
+                    gpRight.setGraphToDisplay(selectedProduction.getRight());
                 }
             }
         });

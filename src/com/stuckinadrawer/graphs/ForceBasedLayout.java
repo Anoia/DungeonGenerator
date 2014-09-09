@@ -28,7 +28,7 @@ public class ForceBasedLayout {
 
                     //Add some jitter if distance² is very small
                     if(delta2 < 0.1){
-                        System.out.println("Too Close! Jitter!");
+                    //    System.out.println("Too Close! Jitter!");
                         deltaX = 1 * Math.random() + 0.1;
                         deltaY = 1 * Math.random() + 0.1;
                         delta2 = deltaX * deltaX + deltaY * deltaY;

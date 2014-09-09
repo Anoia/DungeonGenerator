@@ -10,7 +10,7 @@ public class GraphFactory {
     VertexFactory factory = VertexFactory.getInstance();
 
     public Graph createRandomGraph(){
-        int amountOfVertices = Utils.random(2, 6);
+        int amountOfVertices = Utils.random(5, 10);
         HashSet<Vertex> vertices = new HashSet<Vertex>();
         ArrayList<Vertex> vertexList = new ArrayList<Vertex>();
         for(int i = 0; i < amountOfVertices; i++){

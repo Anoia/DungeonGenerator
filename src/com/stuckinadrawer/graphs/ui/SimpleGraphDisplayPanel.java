@@ -5,42 +5,56 @@ import com.stuckinadrawer.graphs.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SimpleGraphDisplayPanel extends JPanel{
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
-    int offsetX;
-    int offsetY;
+    protected int offsetX;
+    protected int offsetY;
 
-    Graph graph;
+    protected Graph graphToDisplay;
 
     private final int vertexRadius = 20;
 
     public SimpleGraphDisplayPanel(Graph graph, int width, int height) {
         super();
-        this.graph = graph;
+        this.graphToDisplay = graph;
         this.width = width;
         this.height = height;
         offsetX = width/2;
         offsetY = height/2;
 
-        CustomMouseMotionListener customMouseListener = new CustomMouseMotionListener();
-        addMouseMotionListener(customMouseListener);
 
+
+    }
+
+    public SimpleGraphDisplayPanel(Graph g){
+        super();
+    }
+
+    public SimpleGraphDisplayPanel(){
+        this(null);
     }
 
     public SimpleGraphDisplayPanel(int width, int height){
         this(null, width, height);
     }
 
-    private void draw(Graphics g){
+    public void updateSize(){
+        this.width = getSize().width;
+        this.height = getSize().height;
+        offsetX = width/2;
+        offsetY = height/2;
+        System.out.println("UPDATE SIZE: "+this.width+" "+this.height);
+    }
 
+
+    private void draw(Graphics g){
+       // g.setFont(new Font("default", Font.BOLD, 16));
         //this is where the drawing happens
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.WHITE);
@@ -51,7 +65,7 @@ public class SimpleGraphDisplayPanel extends JPanel{
 
         g2d.translate(offsetX, offsetY);
 
-        if(graph != null){
+        if(graphToDisplay != null){
             drawEdges(g2d);
             drawVertices(g2d);
         }
@@ -61,8 +75,8 @@ public class SimpleGraphDisplayPanel extends JPanel{
     }
 
     private void drawEdges(Graphics2D g2d) {
-        if(!graph.getEdges().isEmpty()){
-            for(HashSet<Vertex> edge: graph.getEdges()){
+        if(!graphToDisplay.getEdges().isEmpty()){
+            for(HashSet<Vertex> edge: graphToDisplay.getEdges()){
                 ArrayList<Integer> positions = new ArrayList<Integer>();
                 for(Vertex vertex: edge){
                     positions.add(vertex.getX());
@@ -76,7 +90,7 @@ public class SimpleGraphDisplayPanel extends JPanel{
     }
 
     public void drawVertices(Graphics2D g2d){
-        for(Vertex vertex: graph.getVertices()){
+        for(Vertex vertex: graphToDisplay.getVertices()){
             Color c = Color.black;
             if(vertex.marked){
                 c = Color.red;
@@ -106,7 +120,7 @@ public class SimpleGraphDisplayPanel extends JPanel{
 
 
     public Vertex getVertexOnPosition(int x, int y){
-        for(Vertex v: graph.getVertices()){
+        for(Vertex v: graphToDisplay.getVertices()){
             int distanceX = x - v.getX();
             int distanceY = y - v.getY();
             int distance2 = distanceX*distanceX + distanceY*distanceY;
@@ -118,29 +132,17 @@ public class SimpleGraphDisplayPanel extends JPanel{
 
     }
 
-    public void setGraph(Graph graph) {
-        this.graph = graph;
+    public void setGraphToDisplay(Graph graphToDisplay) {
+        this.graphToDisplay = graphToDisplay;
         repaint();
     }
 
     public void clear() {
-        this.graph = null;
+        this.graphToDisplay = null;
         repaint();
     }
 
-    private class CustomMouseMotionListener implements MouseMotionListener{
 
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent e) {
-
-        }
-    }
 
 
 

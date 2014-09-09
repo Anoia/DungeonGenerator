@@ -47,7 +47,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                                 markedVertex = null;
                             } else {
                                 markedVertex.marked = false;
-                                graph.addEdge(v, markedVertex);
+                                graphToDisplay.addEdge(v, markedVertex);
                                 markedVertex = null;
                             }
 
@@ -60,7 +60,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                         if(vertexSelection!= null && !vertexSelection.equals("-")){
                             Vertex vertex = container.getVertexFactory().createNewVertex(vertexSelection);
                             vertex.setPosition(mouseX, mouseY);
-                            graph.addVertex(vertex);
+                            graphToDisplay.addVertex(vertex);
                         }
 
                     }
@@ -77,7 +77,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                                 markedVertex = null;
                             } else {
                                 markedVertex.marked = false;
-                                graph.deleteEdge(v, markedVertex);
+                                graphToDisplay.deleteEdge(v, markedVertex);
                                 markedVertex = null;
                             }
 
@@ -86,7 +86,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                     break;
                 case REMOVE_VERTEX:
                     if(v!=null) {
-                        graph.deleteVertex(v);
+                        graphToDisplay.deleteVertex(v);
                     }
                     break;
                 case MORPHISM:

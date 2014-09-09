@@ -150,8 +150,8 @@ public class EditProductionWindow extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 keepUpdating = false;
                 p.setName(nameField.getText());
-                p.setLeft(gpLeft.graph);
-                p.setRight(gpRight.graph);
+                p.setLeft(gpLeft.graphToDisplay);
+                p.setRight(gpRight.graphToDisplay);
                 creator.addProduction(p);
                 dispose();
             }

@@ -6,6 +6,7 @@ public class Vertex implements Serializable{
     private String type;
     private final int id;
     protected int x, y;
+    public boolean notPositioned = true;
     public float forceX, forceY = 0;
 
     private int morphism = -1;
@@ -53,6 +54,7 @@ public class Vertex implements Serializable{
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+        notPositioned = false;
     }
 
     public void applyForce(double stepSize) {
