@@ -43,7 +43,7 @@ public class UllmanSubgraphIsomorphism {
             System.out.println("MATCHING SUBGRAPH FOUND! " + isomorphisms.size()+" different solutions");
             currentIsomorphism = isomorphisms.get(Utils.random(isomorphisms.size()-1));
             for(Map.Entry<Vertex, Vertex> entry : currentIsomorphism.entrySet()){
-                entry.getValue().marked = true;
+              //  entry.getValue().marked = true;
                 System.out.println(entry.getKey().getDescription()+" matched to "+entry.getValue().getDescription());
             }
             return currentIsomorphism;

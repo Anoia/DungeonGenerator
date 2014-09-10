@@ -91,12 +91,14 @@ public class LevelDemo extends JFrame{
                         levelGraph = grammar.getGraph();
                         panel.setGraphToDisplay(levelGraph);
                         grammar.applyAllProductions();
+                        clearMarkings();
                         levelGraph.setRandomVertexPosition(1000, 1000);
                         layouter.layout(levelGraph);
                         panel.repaint();
                         break;
                     case 80:
                         //apply 1 prod
+                        clearMarkings();
                         if(grammar.applyRandomProduction()){
                             levelGraph.setRandomVertexPosition(1000, 1000);
                             layouter.layout(levelGraph);
@@ -133,6 +135,7 @@ public class LevelDemo extends JFrame{
                     case 65:
                         //all
                         grammar.applyAllProductions();
+                        clearMarkings();
                         levelGraph.setRandomVertexPosition(1000, 1000);
                         layouter.layout(levelGraph);
                         panel.repaint();
@@ -144,6 +147,13 @@ public class LevelDemo extends JFrame{
             public void keyReleased(KeyEvent e) {
             }
         });
+
+    }
+
+    private void clearMarkings() {
+        for(Vertex v: levelGraph.getVertices()){
+            v.marked = false;
+        }
 
     }
 
@@ -227,13 +237,7 @@ public class LevelDemo extends JFrame{
         public MyPanel(int width, int height) {
             this(null, width, height);
         }
-        @Override
-        public void drawVertices(Graphics2D g2d){
-            Color c = Color.black;
-            for(Vertex vertex: graphToDisplay.getVertices()){
-                circeWithText(g2d, vertex.toString(), vertex.getX(), vertex.getY(), c);
-            }
-        }
+
 
 
     }

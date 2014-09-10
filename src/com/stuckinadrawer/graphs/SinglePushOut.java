@@ -38,7 +38,7 @@ public class SinglePushOut {
                 g.deleteVertex(vertexInHost);
             }else{
 
-
+                vertexInHost.marked = true;
 
                 vertexInHost.setType(type);
 
@@ -101,6 +101,7 @@ public class SinglePushOut {
                 System.out.println("New Vertex: "+newVertex.toString());
                 //add to assignments to check for missing edges in Host later
                 assignments.put(vRechts, newVertex);
+                newVertex.marked = true;
 
             }
         }
