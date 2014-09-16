@@ -7,6 +7,8 @@ import com.stuckinadrawer.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Grammar implements Serializable{
 
@@ -68,14 +70,30 @@ public class Grammar implements Serializable{
 
         Production selectedProduction = getRandomProduction();
         if(selectedProduction == null){
-           return false;
+            return false;
         }
 
 
         HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
+        int x, y, num, xVal, yVal;
+        xVal = 0;
+        yVal = 0;
+        num = 0;
+        Iterator it = morphism.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            Vertex v = (Vertex) pairs.getValue();
+            xVal += v.getX();
+            yVal += v.getY();
+            num++;
+           // it.remove(); // avoids a ConcurrentModificationException
+        }
+        x = xVal/num;
+        y = yVal/num;
 
         Production productionWithoutWildcard = createNewProductionWithoutWildcard(selectedProduction, morphism);
         new SinglePushOut().applyProduction(productionWithoutWildcard, graph, morphism);
+        graph.setVertexPosition(x, y);
 
         return true;
     }

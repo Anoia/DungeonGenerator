@@ -183,4 +183,13 @@ public class Graph implements Serializable{
         }
     }
 
+    public void setVertexPosition(int x, int y){
+        for(Vertex vertex: vertices){
+            if(vertex.notPositioned){
+                vertex.setPosition(Utils.random(x-4, x+4), Utils.random(y-4, y+4));
+            }
+
+        }
+    }
+
 }

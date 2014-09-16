@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 
 public class LevelDemo extends JFrame{
@@ -22,42 +23,20 @@ public class LevelDemo extends JFrame{
     boolean keepUpdating = false;
 
     public LevelDemo(){
-
-        loadGrammar(GraphGrammarCreator.FILE_NAME);
+        loadGrammar();
         levelGraph = grammar.getGraph();
         levelGraph.setVertexPosToZero();
         initUI();
-
-
-
-
-
     }
 
-    private void loadGrammar(String fileName){
-        FileInputStream fis = null;
-        ObjectInputStream in = null;
-        grammar = null;
+    private void loadGrammar(){
+        FileReader fr = new FileReader();
         try {
-            fis = new FileInputStream(fileName);
-            in = new ObjectInputStream(fis);
-            grammar = (Grammar) in.readObject();
-            in.close();
-        } catch (Exception ex) {
-            // ex.printStackTrace();
-            grammar = new Grammar();
+            grammar = fr.loadGrammar("grammar1.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        VertexFactory.setCurrentMaxId(grammar.currentMaxVertexId);
     }
-
-
-    private void createNewLevel() {
-
-
-    }
-
-
 
     private void initUI() {
         setTitle("LevelDemo");
@@ -70,8 +49,6 @@ public class LevelDemo extends JFrame{
 
         panel = new MyPanel(levelGraph, getSize().width, getSize().height);
         add(panel, BorderLayout.CENTER);
-        //setLocationRelativeTo(null);
-
 
         createKeyListener();
     }
@@ -90,9 +67,10 @@ public class LevelDemo extends JFrame{
                         grammar.resetGraph();
                         levelGraph = grammar.getGraph();
                         panel.setGraphToDisplay(levelGraph);
+                        levelGraph.setVertexPosToZero();
                         grammar.applyAllProductions();
                         clearMarkings();
-                        levelGraph.setRandomVertexPosition(1000, 1000);
+                        //levelGraph.setRandomVertexPosition(1000, 1000);
                         layouter.layout(levelGraph);
                         panel.repaint();
                         break;
@@ -100,7 +78,7 @@ public class LevelDemo extends JFrame{
                         //apply 1 prod
                         clearMarkings();
                         if(grammar.applyRandomProduction()){
-                            levelGraph.setRandomVertexPosition(1000, 1000);
+                           // levelGraph.setRandomVertexPosition(1000, 1000);
                             layouter.layout(levelGraph);
                             panel.repaint();
                         }
@@ -136,7 +114,7 @@ public class LevelDemo extends JFrame{
                         //all
                         grammar.applyAllProductions();
                         clearMarkings();
-                        levelGraph.setRandomVertexPosition(1000, 1000);
+                       // levelGraph.setRandomVertexPosition(1000, 1000);
                         layouter.layout(levelGraph);
                         panel.repaint();
                         break;
@@ -233,13 +211,6 @@ public class LevelDemo extends JFrame{
                 }
             });
         }
-
-        public MyPanel(int width, int height) {
-            this(null, width, height);
-        }
-
-
-
     }
 
     public static void main(String[] arg){
