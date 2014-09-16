@@ -1,5 +1,8 @@
 package com.stuckinadrawer;
 
+import com.google.gson.Gson;
+import com.stuckinadrawer.graphs.Grammar;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,14 +24,14 @@ public class FileReader {
     }
 
     public ArrayList<String> getNonTerminals(){
-        return loadFile(nonTerminalsFile);
+        return loadAlphabetFile(nonTerminalsFile);
     }
 
     public ArrayList<String> getTerminals(){
-        return loadFile(terminalsFile);
+        return loadAlphabetFile(terminalsFile);
     }
 
-    private ArrayList<String> loadFile(File file){
+    private ArrayList<String> loadAlphabetFile(File file){
         ArrayList<String> strings = new ArrayList<String>();
 
         FileInputStream fis = null;
@@ -39,15 +42,17 @@ public class FileReader {
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 
-        String line = null;
+        String line;
         try {
             while((line = br.readLine()) != null){
                 strings.add(line);
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         Collections.sort(strings);
+
 
         return strings;
     }
@@ -63,5 +68,37 @@ public class FileReader {
         }
 
     }
+
+    public Grammar loadGrammar(String filename) throws IOException {
+
+        File dir = new File(".");
+        File file = new File(dir.getCanonicalPath() + File.separator + filename);
+
+        FileInputStream fis = new FileInputStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+        //convert the json string back to object
+        Gson gson = new Gson();
+        Grammar grammar = gson.fromJson(br, Grammar.class);
+        br.close();
+        return grammar;
+
+    }
+
+    public void saveGrammar(Grammar grammar, String filename){
+        Gson gson = new Gson();
+        String grammarString  = gson.toJson(grammar);
+        try {
+            PrintWriter out = new PrintWriter(filename);
+            out.print(grammarString);
+            out.close();
+            System.out.println("Grammar saved");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.stuckinadrawer.graphs.ui;
 
+import com.stuckinadrawer.FileReader;
 import com.stuckinadrawer.ObjectCloner;
 import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.*;
@@ -10,10 +11,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +28,7 @@ public class GraphGrammarCreator extends JFrame {
 
     JPanel startGraphPanel;
 
-    public static final String FILE_NAME = "./grammar1.ser";
+    public static final String FILE_NAME = "grammar1.ser";
 
     public GraphGrammarCreator(){
         setLookAndFeel();
@@ -47,6 +45,7 @@ public class GraphGrammarCreator extends JFrame {
 
 
     private void loadGrammar(String fileName){
+        /*
         FileInputStream fis = null;
         ObjectInputStream in = null;
         grammar = null;
@@ -59,6 +58,14 @@ public class GraphGrammarCreator extends JFrame {
            // ex.printStackTrace();
             grammar = new Grammar();
         }
+                                                        */
+        FileReader fr = new FileReader();
+        try {
+            grammar = fr.loadGrammar("grammar1.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         VertexFactory.setCurrentMaxId(grammar.currentMaxVertexId);
     }
@@ -66,7 +73,7 @@ public class GraphGrammarCreator extends JFrame {
     private void saveGrammar(String fileName){
 
         grammar.currentMaxVertexId = VertexFactory.getCurrentMaxId();
-
+        /*
         FileOutputStream fos = null;
         ObjectOutputStream out = null;
         try {
@@ -77,7 +84,10 @@ public class GraphGrammarCreator extends JFrame {
             out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        } */
+
+        FileReader fr = new FileReader();
+        fr.saveGrammar(grammar, "./grammar1.txt");
     }
 
     private void initUI() {
