@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GraphGrammarCreator extends JFrame {
 
@@ -27,7 +28,7 @@ public class GraphGrammarCreator extends JFrame {
 
     JPanel startGraphPanel;
 
-    public static final String FILE_NAME = "./grammar1.ser";
+    public static final String FILE_NAME = "grammar1.txt";
 
     public GraphGrammarCreator(){
         setLookAndFeel();
@@ -58,7 +59,7 @@ public class GraphGrammarCreator extends JFrame {
         grammar.currentMaxVertexId = VertexFactory.getCurrentMaxId();
 
         FileReader fr = new FileReader();
-        fr.saveGrammar(grammar, fileName);
+        fr.saveGrammar(grammar, "./"+fileName);
     }
 
     private void initUI() {
@@ -163,7 +164,12 @@ public class GraphGrammarCreator extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
-                    findProductionInGraph(selectedProduction);
+                    HashMap<Vertex, Vertex> match = grammar.findProductionInGraph(selectedProduction);
+                    for (Map.Entry pair : match.entrySet()) {
+                        Vertex v = (Vertex) pair.getValue();
+                        v.marked = true;
+                    }
+                    startGraphPanel.repaint();
                 }
             }
         });
@@ -174,20 +180,12 @@ public class GraphGrammarCreator extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
-                    HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
-                    if(morphism!=null){
-                        Production productionWithoutWildcard = createNewProductionWithoutWildcard(selectedProduction, morphism);
-                        new SinglePushOut().applyProduction(productionWithoutWildcard, grammar.getStartingGraph(), morphism);
 
-
-                        Graph startGraph = grammar.getStartingGraph();
-                        startGraph.setRandomVertexPosition(800, 400);
-                        new ForceBasedLayout().layout(startGraph);
-                        startGraphPanel.repaint();
-
-
-                    }
-
+                    grammar.applyProduction(selectedProduction);
+                    Graph startGraph = grammar.getGraph();
+                    startGraph.setRandomVertexPosition(800, 400);
+                    new ForceBasedLayout().layout(startGraph);
+                    startGraphPanel.repaint();
                 }
 
                 System.out.println("\nDONE\n\n");
@@ -198,23 +196,12 @@ public class GraphGrammarCreator extends JFrame {
         btn_apply_random.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Production selectedProduction = getRandomProduction();
-                if(selectedProduction!=null){
-                    HashMap <Vertex, Vertex> morphism = findProductionInGraph(selectedProduction);
-                    if(morphism!=null){
-                        Production productionWithoutWildcard = createNewProductionWithoutWildcard(selectedProduction, morphism);
-                        new SinglePushOut().applyProduction(productionWithoutWildcard, grammar.getStartingGraph(), morphism);
-                        startGraphPanel.repaint();
+                grammar.applyRandomProduction();
+                Graph startGraph = grammar.getGraph();
 
-                        Graph startGraph = grammar.getStartingGraph();
-
-                        startGraph.setRandomVertexPosition(800, 400);
-                        new ForceBasedLayout().layout(startGraph);
-
-
-                    }
-
-                }
+                startGraph.setRandomVertexPosition(800, 400);
+                new ForceBasedLayout().layout(startGraph);
+                startGraphPanel.repaint();
             }
         });
 
@@ -222,7 +209,7 @@ public class GraphGrammarCreator extends JFrame {
         btn_redraw.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Graph startGraph = grammar.getStartingGraph();
+                Graph startGraph = grammar.getGraph();
                 startGraph.setRandomVertexPosition(800, 400);
                 new ForceBasedLayout().layout(startGraph);
                 for(Vertex v:startGraph.getVertices())    {
@@ -256,70 +243,9 @@ public class GraphGrammarCreator extends JFrame {
         return productionsPanel;
     }
 
-    private Production createNewProductionWithoutWildcard(Production selectedProduction, HashMap<Vertex, Vertex> morphism) {
-        System.out.println("\n ###WILDCARDS### ");
-        Production newProduction;
-        try {
-            newProduction = (Production) ObjectCloner.deepCopy(selectedProduction);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return selectedProduction;
-        }
-
-        //remove wildcards from left side
-        for(Vertex vertexInLeftSide: newProduction.getLeft().getVertices()){
-            if(vertexInLeftSide.getType().equals("*")){
-                Vertex assigenedVertexInHost = morphism.get(vertexInLeftSide);
-                morphism.remove(vertexInLeftSide);
-                vertexInLeftSide.setType(assigenedVertexInHost.getType());
-                morphism.put(vertexInLeftSide, assigenedVertexInHost);
-                System.out.println("WILDCARD REMOVED FROM: "+vertexInLeftSide.getDescription());
-            }
-        }
-
-        //remove wildcards from right side
-        for(Vertex vertexInRightSide: newProduction.getRight().getVertices()){
-            if(vertexInRightSide.getType().equals("*")){
-                int morphRight = vertexInRightSide.getMorphism();
-                for(Vertex vertexInLeftSide: newProduction.getLeft().getVertices()){
-                    if(vertexInLeftSide.getMorphism() == morphRight){
-                        System.out.println("WIlDCARD REMOVED FROM "+vertexInRightSide.getDescription());
-                        System.out.println("set to: "+vertexInLeftSide.getType());
-                        vertexInRightSide.setType(vertexInLeftSide.getType());
-                    }
-                }
 
 
-            }
-        }
 
-        return newProduction;
-    }
-
-    private Production getRandomProduction() {
-        System.out.println("looking for rand prod");
-        ArrayList<Production> possibleProductions = new ArrayList<Production>();
-        for(Production p: grammar.getProductions()){
-            if(findProductionInGraph(p)!=null){
-                possibleProductions.add(p);
-            }
-        }
-        if(!possibleProductions.isEmpty()){
-            int rand = Utils.random(possibleProductions.size()-1);
-            System.out.println("found "+possibleProductions.size()+"possible prods; chose nr"+rand);
-            return possibleProductions.get(rand);
-        }
-        return null;
-
-    }
-
-    private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
-        Graph subGraph = selectedProduction.getLeft();
-        SubGraphIsomorphism finder = new SubGraphIsomorphism();
-        HashMap<Vertex, Vertex> result = finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
-        startGraphPanel.repaint();
-        return result;
-    }
 
     private JPanel createStartGraphPanel(){
         JPanel startGraphPanel = new JPanel();
@@ -329,13 +255,10 @@ public class GraphGrammarCreator extends JFrame {
         label.setFont(bigFont);
 
         startGraphPanel.add(label);
-        Graph startGraph = grammar.getStartingGraph();
+        Graph startGraph = grammar.getGraph();
         new ForceBasedLayout().layout(startGraph);
         SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 800, 400);
         startGraphPanel.add(graphDisplayPanel);
-
-        grammar.setStartingGraph(startGraph);
-
         return startGraphPanel;
     }
 
