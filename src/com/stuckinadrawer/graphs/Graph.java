@@ -3,43 +3,44 @@ package com.stuckinadrawer.graphs;
 import com.stuckinadrawer.Utils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Graph implements Serializable{
 
-    private HashSet<HashSet<Vertex>> edges;
+    private HashSet<ArrayList<Vertex>> edges;
     private HashSet<Vertex> vertices;
 
-    public Graph(HashSet<HashSet<Vertex>> edges, HashSet<Vertex> vertices){
+    public Graph(HashSet<ArrayList<Vertex>> edges, HashSet<Vertex> vertices){
         this.vertices = new HashSet<Vertex>();
         for(Vertex vertex: vertices){
             addVertex(vertex);
         }
-        this.edges = new HashSet<HashSet<Vertex>>();
-        for(HashSet<Vertex> edge: edges){
+        this.edges = new HashSet<ArrayList<Vertex>>();
+        for(ArrayList<Vertex> edge: edges){
             // vertices in edge will be added too
             addEdge(edge);
         }
 
     }
 
-    public Graph(HashSet<HashSet<Vertex>> edges){
+    public Graph(HashSet<ArrayList<Vertex>> edges){
         this(edges, new HashSet<Vertex>());
     }
 
     public Graph(){
         vertices = new HashSet<Vertex>();
-        edges = new HashSet<HashSet<Vertex>>();
+        edges = new HashSet<ArrayList<Vertex>>();
     }
 
     public void addEdge(Vertex v1, Vertex v2){
-        HashSet<Vertex> edge = new HashSet<Vertex>();
+        ArrayList<Vertex> edge = new ArrayList<Vertex>();
         edge.add(v1);
         edge.add(v2);
         addEdge(edge);
     }
 
-    public void addEdge(HashSet<Vertex> edge){
+    public void addEdge(ArrayList<Vertex> edge){
         for(Vertex vertex: edge){
             vertices.add(vertex);
         }
@@ -60,26 +61,42 @@ public class Graph implements Serializable{
         return this.vertices;
     }
 
-    public HashSet<HashSet<Vertex>> getEdges(){
+    public HashSet<ArrayList<Vertex>> getEdges(){
         return this.edges;
     }
 
-    public HashSet<HashSet<Vertex>> getIncidentEdges(Vertex vertex){
-        HashSet<HashSet<Vertex>> result = new HashSet<HashSet<Vertex>>();
-        for(HashSet<Vertex> edge: this.edges){
-            if(edge.contains(vertex)){
+    public HashSet<ArrayList<Vertex>> getIncomingEdges(Vertex vertex){
+        HashSet<ArrayList<Vertex>> result = new HashSet<ArrayList<Vertex>>();
+        for(ArrayList<Vertex> edge: this.edges){
+            if(edge.get(1).equals(vertex)){
+                result.add(edge);
+            }
+        }
+        return result;
+    }
+    public HashSet<ArrayList<Vertex>> getOutgoingEdges(Vertex vertex){
+        HashSet<ArrayList<Vertex>> result = new HashSet<ArrayList<Vertex>>();
+        for(ArrayList<Vertex> edge: this.edges){
+            if(edge.get(0).equals(vertex)){
                 result.add(edge);
             }
         }
         return result;
     }
 
-    public void deleteEdge(HashSet<Vertex> edge){
+    public HashSet<ArrayList<Vertex>> getIncidentEdges(Vertex vertex){
+        HashSet<ArrayList<Vertex>> result = new HashSet<ArrayList<Vertex>>();
+        result.addAll(getIncomingEdges(vertex));
+        result.addAll(getOutgoingEdges(vertex));
+        return result;
+    }
+
+    public void deleteEdge(ArrayList<Vertex> edge){
         this.edges.remove(edge);
     }
 
     public void deleteEdge(Vertex v1, Vertex v2){
-        HashSet<Vertex> edge = new HashSet<Vertex>();
+        ArrayList<Vertex> edge = new ArrayList<Vertex>();
         edge.add(v1);
         edge.add(v2);
         deleteEdge(edge);
@@ -87,7 +104,7 @@ public class Graph implements Serializable{
 
 
     public void deleteVertex(Vertex vertex){
-        for(HashSet<Vertex> edge: getIncidentEdges(vertex)){
+        for(ArrayList<Vertex> edge: getIncidentEdges(vertex)){
             this.edges.remove(edge);
         }
         this.vertices.remove(vertex);
@@ -95,14 +112,30 @@ public class Graph implements Serializable{
 
     public HashSet<Vertex> getNeighbors(Vertex vertex){
         HashSet<Vertex> result = new HashSet<Vertex>();
+        result.addAll(inNeighborhood(vertex));
+        result.addAll(outNeighborhood(vertex));
+        return result;
+    }
+
+    public HashSet<Vertex> inNeighborhood(Vertex vertex){
+        HashSet<Vertex> result = new HashSet<Vertex>();
         for(Vertex v: this.vertices){
-            HashSet<Vertex> edge = new HashSet<Vertex>();
-            edge.add(vertex);
-            edge.add(v);
-            if(hasEdge(edge)){
+            if(hasEdge(v, vertex)){
                 result.add(v);
             }
         }
+
+        return result;
+    }
+
+    public HashSet<Vertex> outNeighborhood(Vertex vertex){
+        HashSet<Vertex> result = new HashSet<Vertex>();
+        for(Vertex v: this.vertices){
+            if(hasEdge(vertex, v)){
+                result.add(v);
+            }
+        }
+
         return result;
     }
 
@@ -110,16 +143,23 @@ public class Graph implements Serializable{
         return getNeighbors(vertex).size();
     }
 
+    public int inDegree(Vertex vertex){
+        return inNeighborhood(vertex).size();
+    }
+    public int outDegree(Vertex vertex){
+        return outNeighborhood(vertex).size();
+    }
+
     public boolean hasVertex(Vertex vertex){
         return this.vertices.contains(vertex);
     }
 
-    public boolean hasEdge(HashSet<Vertex> edge){
+    public boolean hasEdge(ArrayList<Vertex> edge){
         return this.edges.contains(edge);
     }
 
     public boolean hasEdge(Vertex v1, Vertex v2){
-        HashSet<Vertex> edge = new HashSet<Vertex>();
+        ArrayList<Vertex> edge = new ArrayList<Vertex>();
         edge.add(v1);
         edge.add(v2);
         return hasEdge(edge);
@@ -142,7 +182,7 @@ public class Graph implements Serializable{
             result += v.toString()+" ";
         }
         result += "\n Edges: ";
-        for(HashSet<Vertex> edge: edges){
+        for(ArrayList<Vertex> edge: edges){
             result+=" [";
             for(Vertex v: edge){
                 result+=v.getId()+":"+v.getType();

@@ -49,6 +49,7 @@ public class GraphGrammarCreator extends JFrame {
             grammar = fr.loadGrammar(fileName);
         } catch (IOException e) {
             e.printStackTrace();
+            grammar = new Grammar();
         }
 
 

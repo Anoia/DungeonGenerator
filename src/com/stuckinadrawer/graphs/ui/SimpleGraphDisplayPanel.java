@@ -5,6 +5,7 @@ import com.stuckinadrawer.graphs.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -76,15 +77,41 @@ public class SimpleGraphDisplayPanel extends JPanel{
 
     private void drawEdges(Graphics2D g2d) {
         if(!graphToDisplay.getEdges().isEmpty()){
-            for(HashSet<Vertex> edge: graphToDisplay.getEdges()){
-                ArrayList<Integer> positions = new ArrayList<Integer>();
-                for(Vertex vertex: edge){
-                    positions.add(vertex.getX());
-                    positions.add(vertex.getY());
-                }
+            for(ArrayList<Vertex> edge: graphToDisplay.getEdges()){
+                Point start = new Point(edge.get(0).getX(), edge.get(0).getY());
+                Point end = new Point(edge.get(1).getX(), edge.get(1).getY());
 
-                g2d.drawLine(positions.get(0), positions.get(1), positions.get(2), positions.get(3));
+                drawLineWithArrow(g2d, start, end);
+
             }
+        }
+
+    }
+
+    public void drawLineWithArrow(Graphics2D g2d, Point tail, Point tip){
+        double distance = Math.sqrt(Math.pow(tail.x-tip.x, 2) + Math.pow(tail.y-tip.y, 2));
+        double newDistance = distance-vertexRadius;
+        //move tip, not covered by vertex anymore
+        double cx = (tip.x-tail.x) / distance * newDistance;
+        double cy =  (tip.y-tail.y) / distance * newDistance;
+        tip = new Point((int)(tail.x + cx),(int)(tail.y + cy));
+
+        double phi = Math.toRadians(30);
+        int barb = 10;
+
+        g2d.drawLine(tail.x, tail.y, tip.x, tip.y);
+
+        double dy = tip.y - tail.y;
+        double dx = tip.x - tail.x;
+        double theta = Math.atan2(dy, dx);
+        double x, y, rho = theta + phi;
+
+        for(int j = 0; j < 2; j++)
+        {
+            x = tip.x - barb * Math.cos(rho);
+            y = tip.y - barb * Math.sin(rho);
+            g2d.draw(new Line2D.Double(tip.x, tip.y, x, y));
+            rho = theta - phi;
         }
 
     }

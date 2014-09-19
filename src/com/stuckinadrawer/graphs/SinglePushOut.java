@@ -1,5 +1,6 @@
 package com.stuckinadrawer.graphs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,21 +51,14 @@ public class SinglePushOut {
         }
 
         // entferne alle kanten aus gematchtem graphen
-        HashSet<HashSet<Vertex>> edgesToDelete = new HashSet<HashSet<Vertex>>();
-        for(HashSet<Vertex> edge: g.getEdges()){
-            boolean containsFirstVertex = false;
-            for(Vertex v: edge){
-                if(!containsFirstVertex && assignments.containsValue(v)){
-                    containsFirstVertex = true;
-                }else if(containsFirstVertex){
-                    if(assignments.containsValue(v)){
-                        edgesToDelete.add(edge);
-                    }
-                }
+        HashSet<ArrayList<Vertex>> edgesToDelete = new HashSet<ArrayList<Vertex>>();
+        for(ArrayList<Vertex> edge: g.getEdges()){
+            if(assignments.containsValue(edge.get(0)) && assignments.containsValue(edge.get(1))){
+                edgesToDelete.add(edge);
             }
         }
 
-        for(HashSet<Vertex> edge: edgesToDelete){
+        for(ArrayList<Vertex> edge: edgesToDelete){
             g.deleteEdge(edge);
             String result = "";
             result+=" [";
@@ -107,16 +101,9 @@ public class SinglePushOut {
         }
 
         // füge alle Kanten aus Prechts hinzu, die in Host noch nicht enthalten sind
-        for(HashSet<Vertex> edge: p.getRight().getEdges()){
-            Vertex v1Prod = null;
-            Vertex v2Prod = null;
-            for(Vertex v: edge){
-                if(v1Prod==null){
-                    v1Prod = v;
-                }else{
-                    v2Prod=v;
-                }
-            }
+        for(ArrayList<Vertex> edge: p.getRight().getEdges()){
+            Vertex v1Prod = edge.get(0);
+            Vertex v2Prod = edge.get(1);
 
             System.out.println("Checking Edge: [" +v1Prod.toString()+", "+v2Prod.toString()+"] aus PRechts");
 

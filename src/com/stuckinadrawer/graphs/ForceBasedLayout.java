@@ -40,7 +40,7 @@ public class ForceBasedLayout {
 
 
                     //Hooke's Law -- spring force along edges
-                    if(graph.hasEdge(vertex1, vertex2)){
+                    if(graph.hasEdge(vertex1, vertex2) || graph.hasEdge(vertex2, vertex1)){
                         double distance = Math.sqrt(delta2);
                         vertex1.forceX += (distance - SPRING_LENGTH) * deltaX;
                         vertex1.forceY += (distance - SPRING_LENGTH) * deltaY;

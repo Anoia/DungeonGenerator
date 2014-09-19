@@ -47,7 +47,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                                 markedVertex = null;
                             } else {
                                 markedVertex.marked = false;
-                                graphToDisplay.addEdge(v, markedVertex);
+                                graphToDisplay.addEdge(markedVertex, v);
                                 markedVertex = null;
                             }
 
@@ -77,7 +77,7 @@ public class EditableGraphDisplayPanel extends SimpleGraphDisplayPanel {
                                 markedVertex = null;
                             } else {
                                 markedVertex.marked = false;
-                                graphToDisplay.deleteEdge(v, markedVertex);
+                                graphToDisplay.deleteEdge(markedVertex, v);
                                 markedVertex = null;
                             }
 

@@ -4,7 +4,6 @@ import com.stuckinadrawer.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class SubGraphIsomorphism {
@@ -85,16 +84,9 @@ public class SubGraphIsomorphism {
         int i = currentIsomorphism.size();
 
         //check edges
-        for(HashSet<Vertex> edge: subGraph.getEdges()){
-            Vertex edgeFirst = null;
-            Vertex edgeSecond = null;
-            for(Vertex v: edge){
-                if(edgeFirst==null){
-                    edgeFirst = v;
-                }else{
-                    edgeSecond=v;
-                }
-            }
+        for(ArrayList<Vertex> edge: subGraph.getEdges()){
+            Vertex edgeFirst = edge.get(0);
+            Vertex edgeSecond = edge.get(1);
             //if both vertices connected by edge are already assigned to host graph vertices
             if(currentIsomorphism.containsKey(edgeFirst) && currentIsomorphism.containsKey(edgeSecond)){
                 //check if assigned vertices are connected too

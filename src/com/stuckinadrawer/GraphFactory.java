@@ -18,10 +18,10 @@ public class GraphFactory {
             vertices.add(v);
             vertexList.add(v);
         }
-        HashSet<HashSet<Vertex>> edges = new HashSet<HashSet<Vertex>>();
+        HashSet<ArrayList<Vertex>> edges = new HashSet<ArrayList<Vertex>>();
         int amountOfEdges = Utils.random(amountOfVertices, amountOfVertices+3);
         for(int i = 0; i < amountOfEdges; i++){
-            HashSet<Vertex> edge = new HashSet<Vertex>();
+            ArrayList<Vertex> edge = new ArrayList<Vertex>();
             Vertex v1 = getRandomVertexFromList(vertexList);
             Vertex v2 = getRandomVertexFromList(vertexList);
             while(v1.equals(v2)){
