@@ -136,7 +136,7 @@ public class Grammar implements Serializable{
     }
     private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
         Graph subGraph = selectedProduction.getLeft();
-        UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
+        SubGraphIsomorphism finder = new SubGraphIsomorphism();
         return finder.findIsomorphism(graph, subGraph);
     }
 

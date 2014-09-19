@@ -7,13 +7,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class UllmanSubgraphIsomorphism {
+public class SubGraphIsomorphism {
 
 
     private Graph subGraph;
     private Graph hostGraph;
     private ArrayList<Vertex> subGraphVertices;
     private ArrayList<Vertex> hostGraphVertices;
+
+    // currentIsomorphism contains vertices in subGraph as keys and
+    // assigned vertices in hostGraph as values
     private HashMap<Vertex, Vertex> currentIsomorphism;
 
     private ArrayList<HashMap<Vertex, Vertex>> isomorphisms = new ArrayList<HashMap<Vertex, Vertex>>();
@@ -43,7 +46,6 @@ public class UllmanSubgraphIsomorphism {
             System.out.println("MATCHING SUBGRAPH FOUND! " + isomorphisms.size()+" different solutions");
             currentIsomorphism = isomorphisms.get(Utils.random(isomorphisms.size()-1));
             for(Map.Entry<Vertex, Vertex> entry : currentIsomorphism.entrySet()){
-              //  entry.getValue().marked = true;
                 System.out.println(entry.getKey().getDescription()+" matched to "+entry.getValue().getDescription());
             }
             return currentIsomorphism;
@@ -73,7 +75,7 @@ public class UllmanSubgraphIsomorphism {
      */
     private void pruneM() {
 
-        // 1 means Vertices I think vertices could be mapped
+        // 1 means vertices could be mapped
         // if a Vertex p in subG can be mapped to a Vertex g in hostG, all neighbours of p have to be mapped to neighbours of g
         // if neighbours can't be mapped then p can't be mapped ->  p = 0;
 

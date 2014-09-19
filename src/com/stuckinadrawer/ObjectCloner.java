@@ -34,8 +34,10 @@ public class ObjectCloner {
         }
         finally
         {
-            oos.close();
-            ois.close();
+            if (oos != null && ois != null) {
+                oos.close();
+                ois.close();
+            }
         }
     }
 

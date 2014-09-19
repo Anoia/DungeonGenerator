@@ -21,7 +21,6 @@ public class Graph implements Serializable{
             addEdge(edge);
         }
 
-
     }
 
     public Graph(HashSet<HashSet<Vertex>> edges){
@@ -32,12 +31,6 @@ public class Graph implements Serializable{
         vertices = new HashSet<Vertex>();
         edges = new HashSet<HashSet<Vertex>>();
     }
-
-   /*
-    public Graph(HashSet<Vertex> vertices){
-        this(new HashSet<HashSet<Vertex>>(), vertices);
-    }*/
-
 
     public void addEdge(Vertex v1, Vertex v2){
         HashSet<Vertex> edge = new HashSet<Vertex>();

@@ -17,22 +17,20 @@ import java.util.HashMap;
 
 public class GraphGrammarCreator extends JFrame {
 
-    private Font defaultFont;
     private Font bigFont;
 
     private Grammar grammar;
     JList<String> productionList;
 
-    SimpleGraphDisplayPanel gpLeft;
-    SimpleGraphDisplayPanel gpRight;
+    SimpleGraphDisplayPanel graphPanelLeft;
+    SimpleGraphDisplayPanel graphPanelRight;
 
     JPanel startGraphPanel;
 
-    public static final String FILE_NAME = "grammar1.ser";
+    public static final String FILE_NAME = "./grammar1.ser";
 
     public GraphGrammarCreator(){
         setLookAndFeel();
-        defaultFont = new Font("default", Font.PLAIN, 12);
         bigFont = new Font("big", Font.BOLD, 16);
         loadGrammar(FILE_NAME);
 
@@ -45,23 +43,9 @@ public class GraphGrammarCreator extends JFrame {
 
 
     private void loadGrammar(String fileName){
-        /*
-        FileInputStream fis = null;
-        ObjectInputStream in = null;
-        grammar = null;
-        try {
-            fis = new FileInputStream(fileName);
-            in = new ObjectInputStream(fis);
-            grammar = (Grammar) in.readObject();
-            in.close();
-        } catch (Exception ex) {
-           // ex.printStackTrace();
-            grammar = new Grammar();
-        }
-                                                        */
         FileReader fr = new FileReader();
         try {
-            grammar = fr.loadGrammar("grammar1.txt");
+            grammar = fr.loadGrammar(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,23 +55,10 @@ public class GraphGrammarCreator extends JFrame {
     }
 
     private void saveGrammar(String fileName){
-
         grammar.currentMaxVertexId = VertexFactory.getCurrentMaxId();
-        /*
-        FileOutputStream fos = null;
-        ObjectOutputStream out = null;
-        try {
-            fos = new FileOutputStream(fileName);
-            out = new ObjectOutputStream(fos);
-            out.writeObject(grammar);
-
-            out.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } */
 
         FileReader fr = new FileReader();
-        fr.saveGrammar(grammar, "./grammar1.txt");
+        fr.saveGrammar(grammar, fileName);
     }
 
     private void initUI() {
@@ -132,18 +103,18 @@ public class GraphGrammarCreator extends JFrame {
         insidePanel.add(scrollPane);
 
 
-        gpLeft = new SimpleGraphDisplayPanel(400, 400);
-        gpRight = new SimpleGraphDisplayPanel(400, 400);
-        insidePanel.add(gpLeft);
-        insidePanel.add(gpRight);
+        graphPanelLeft = new SimpleGraphDisplayPanel(400, 400);
+        graphPanelRight = new SimpleGraphDisplayPanel(400, 400);
+        insidePanel.add(graphPanelLeft);
+        insidePanel.add(graphPanelRight);
 
         productionList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
-                    gpLeft.setGraphToDisplay(selectedProduction.getLeft());
-                    gpRight.setGraphToDisplay(selectedProduction.getRight());
+                    graphPanelLeft.setGraphToDisplay(selectedProduction.getLeft());
+                    graphPanelRight.setGraphToDisplay(selectedProduction.getRight());
                 }
             }
         });
@@ -344,7 +315,7 @@ public class GraphGrammarCreator extends JFrame {
 
     private HashMap<Vertex, Vertex> findProductionInGraph(Production selectedProduction) {
         Graph subGraph = selectedProduction.getLeft();
-        UllmanSubgraphIsomorphism finder = new UllmanSubgraphIsomorphism();
+        SubGraphIsomorphism finder = new SubGraphIsomorphism();
         HashMap<Vertex, Vertex> result = finder.findIsomorphism(grammar.getStartingGraph(), subGraph);
         startGraphPanel.repaint();
         return result;
@@ -411,8 +382,8 @@ public class GraphGrammarCreator extends JFrame {
     }
 
     private void updateListModel(){
-        gpRight.clear();
-        gpLeft.clear();
+        graphPanelRight.clear();
+        graphPanelLeft.clear();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
         for(Production p: grammar.getProductions()){
             listModel.addElement(p.getName());
