@@ -13,7 +13,7 @@ import java.io.ObjectInputStream;
 
 public class LevelDemo extends JFrame{
 
-    Grammar grammar;
+    GrammarManager grammarManager;
 
     Graph levelGraph;
 
@@ -23,19 +23,21 @@ public class LevelDemo extends JFrame{
     boolean keepUpdating = false;
 
     public LevelDemo(){
-        loadGrammar();
-        levelGraph = grammar.getGraph();
+        grammarManager = new GrammarManager();
+        grammarManager.setGrammar(loadGrammar());
+        levelGraph = grammarManager.getCurrentGraph();
         levelGraph.setVertexPosToZero();
         initUI();
     }
 
-    private void loadGrammar(){
+    private Grammar loadGrammar(){
         FileReader fr = new FileReader();
         try {
-            grammar = fr.loadGrammar("grammar1.txt");
+            return fr.loadGrammar("grammar1.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return new Grammar();
     }
 
     private void initUI() {
@@ -64,11 +66,11 @@ public class LevelDemo extends JFrame{
                 System.out.println(e.getKeyCode());
                 switch(e.getKeyCode()){
                     case 32:
-                        grammar.resetGraph();
-                        levelGraph = grammar.getGraph();
+                        grammarManager.resetCurrentGraph();
+                        levelGraph = grammarManager.getCurrentGraph();
                         panel.setGraphToDisplay(levelGraph);
                         levelGraph.setVertexPosToZero();
-                        grammar.applyAllProductions();
+                        grammarManager.applyAllProductions();
                         clearMarkings();
                         //levelGraph.setRandomVertexPosition(1000, 1000);
                         layouter.layout(levelGraph);
@@ -77,7 +79,7 @@ public class LevelDemo extends JFrame{
                     case 80:
                         //apply 1 prod
                         clearMarkings();
-                        if(grammar.applyRandomProduction()){
+                        if(grammarManager.applyRandomProduction()){
                            // levelGraph.setRandomVertexPosition(1000, 1000);
                             layouter.layout(levelGraph);
                             panel.repaint();
@@ -105,14 +107,14 @@ public class LevelDemo extends JFrame{
                         break;
                     case 83:
                         //Startgraph
-                        grammar.resetGraph();
-                        levelGraph = grammar.getGraph();
+                        grammarManager.resetCurrentGraph();
+                        levelGraph = grammarManager.getCurrentGraph();
                         panel.setGraphToDisplay(levelGraph);
                         levelGraph.setVertexPosToZero();
                         break;
                     case 65:
                         //all
-                        grammar.applyAllProductions();
+                        grammarManager.applyAllProductions();
                         clearMarkings();
                        // levelGraph.setRandomVertexPosition(1000, 1000);
                         layouter.layout(levelGraph);

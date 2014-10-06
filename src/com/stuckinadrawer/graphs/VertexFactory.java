@@ -9,7 +9,6 @@ public class VertexFactory {
 
     private static VertexFactory instance = new VertexFactory();
 
-    String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ArrayList<String> terminals;
     ArrayList<String> nonTerminals;
 

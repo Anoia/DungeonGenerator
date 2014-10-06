@@ -34,7 +34,6 @@ public class SubGraphIsomorphism {
         M = new int[subGraphVertices.size()][hostGraphVertices.size()];
         System.out.println("\n ###SUBGRAPH MATCHING### ");
         initM();
-        pruneM();
 
         search();
 
@@ -69,16 +68,7 @@ public class SubGraphIsomorphism {
         }
     }
 
-    /**
-     * This is where Ullmanns stuff happens
-     */
-    private void pruneM() {
 
-        // 1 means vertices could be mapped
-        // if a Vertex p in subG can be mapped to a Vertex g in hostG, all neighbours of p have to be mapped to neighbours of g
-        // if neighbours can't be mapped then p can't be mapped ->  p = 0;
-
-    }
 
     private boolean search(){
         int i = currentIsomorphism.size();

@@ -9,26 +9,24 @@ import java.util.Collections;
 
 public class FileReader {
 
-    private File terminalsFile;
-    private File nonTerminalsFile;
-
-    public FileReader() {
-
+    public ArrayList<String> getNonTerminals(){
         File dir = new File(".");
         try {
-            terminalsFile = new File(dir.getCanonicalPath() + File.separator + "terminals.txt");
-            nonTerminalsFile = new File(dir.getCanonicalPath() + File.separator + "nonTerminals.txt");
+            return loadAlphabetFile(new File(dir.getCanonicalPath() + File.separator + "nonTerminals.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<String> getNonTerminals(){
-        return loadAlphabetFile(nonTerminalsFile);
+        return null;
     }
 
     public ArrayList<String> getTerminals(){
-        return loadAlphabetFile(terminalsFile);
+        File dir = new File(".");
+        try {
+            return loadAlphabetFile(new File(dir.getCanonicalPath() + File.separator + "terminals.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private ArrayList<String> loadAlphabetFile(File file){
@@ -55,18 +53,6 @@ public class FileReader {
 
 
         return strings;
-    }
-
-    public static void main(String[] arg) throws IOException {
-        FileReader fr = new FileReader();
-        for(String s : fr.getNonTerminals()){
-            System.out.println(s);
-        }
-        System.out.println("---");
-        for(String s : fr.getTerminals()){
-            System.out.println(s);
-        }
-
     }
 
     public Grammar loadGrammar(String filename) throws IOException {

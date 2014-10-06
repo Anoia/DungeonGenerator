@@ -76,7 +76,6 @@ public class Vertex implements Serializable{
         Vertex vertex = (Vertex) o;
 
         if (id != vertex.id) return false;
-      //  if (!type.equals(vertex.type)) return false;
 
         return true;
     }

@@ -20,7 +20,7 @@ public class GraphGrammarCreator extends JFrame {
 
     private Font bigFont;
 
-    private Grammar grammar;
+    private GrammarManager grammarManager;
     JList<String> productionList;
 
     SimpleGraphDisplayPanel graphPanelLeft;
@@ -31,36 +31,31 @@ public class GraphGrammarCreator extends JFrame {
     public static final String FILE_NAME = "grammar1.txt";
 
     public GraphGrammarCreator(){
+        grammarManager = new GrammarManager();
         setLookAndFeel();
         bigFont = new Font("big", Font.BOLD, 16);
-        loadGrammar(FILE_NAME);
-
-
+        grammarManager.setGrammar(loadGrammar(FILE_NAME));
+        VertexFactory.setCurrentMaxId(grammarManager.getGrammar().getCurrentMaxVertexId());
         initUI();
-
-
     }
 
 
 
-    private void loadGrammar(String fileName){
+    private Grammar loadGrammar(String fileName){
         FileReader fr = new FileReader();
         try {
-            grammar = fr.loadGrammar(fileName);
+            return fr.loadGrammar(fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            grammar = new Grammar();
+            return new Grammar();
         }
-
-
-        VertexFactory.setCurrentMaxId(grammar.currentMaxVertexId);
     }
 
     private void saveGrammar(String fileName){
-        grammar.currentMaxVertexId = VertexFactory.getCurrentMaxId();
+        grammarManager.getGrammar().setCurrentMaxVertexId(VertexFactory.getCurrentMaxId());
 
         FileReader fr = new FileReader();
-        fr.saveGrammar(grammar, "./"+fileName);
+        fr.saveGrammar(grammarManager.getGrammar(), "./"+fileName);
     }
 
     private void initUI() {
@@ -97,7 +92,7 @@ public class GraphGrammarCreator extends JFrame {
 
         productionList = new JList<String>();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
-        for(Production p: grammar.getProductions()){
+        for(Production p: grammarManager.getGrammar().getProductions()){
             listModel.addElement(p.getName());
         }
         productionList.setModel(listModel);
@@ -165,7 +160,7 @@ public class GraphGrammarCreator extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
-                    HashMap<Vertex, Vertex> match = grammar.findProductionInGraph(selectedProduction);
+                    HashMap<Vertex, Vertex> match = grammarManager.findProductionInGraph(selectedProduction);
                     for (Map.Entry pair : match.entrySet()) {
                         Vertex v = (Vertex) pair.getValue();
                         v.marked = true;
@@ -182,8 +177,8 @@ public class GraphGrammarCreator extends JFrame {
                 Production selectedProduction = getSelectedProductionFromList();
                 if(selectedProduction!=null){
 
-                    grammar.applyProduction(selectedProduction);
-                    Graph startGraph = grammar.getGraph();
+                    grammarManager.applyProduction(selectedProduction);
+                    Graph startGraph = grammarManager.getCurrentGraph();
                     startGraph.setRandomVertexPosition(800, 400);
                     new ForceBasedLayout().layout(startGraph);
                     startGraphPanel.repaint();
@@ -197,8 +192,8 @@ public class GraphGrammarCreator extends JFrame {
         btn_apply_random.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                grammar.applyRandomProduction();
-                Graph startGraph = grammar.getGraph();
+                grammarManager.applyRandomProduction();
+                Graph startGraph = grammarManager.getCurrentGraph();
 
                 startGraph.setRandomVertexPosition(800, 400);
                 new ForceBasedLayout().layout(startGraph);
@@ -210,7 +205,7 @@ public class GraphGrammarCreator extends JFrame {
         btn_redraw.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Graph startGraph = grammar.getGraph();
+                Graph startGraph = grammarManager.getCurrentGraph();
                 startGraph.setRandomVertexPosition(800, 400);
                 new ForceBasedLayout().layout(startGraph);
                 for(Vertex v:startGraph.getVertices())    {
@@ -256,7 +251,7 @@ public class GraphGrammarCreator extends JFrame {
         label.setFont(bigFont);
 
         startGraphPanel.add(label);
-        Graph startGraph = grammar.getGraph();
+        Graph startGraph = grammarManager.getCurrentGraph();
         new ForceBasedLayout().layout(startGraph);
         SimpleGraphDisplayPanel graphDisplayPanel = new SimpleGraphDisplayPanel(startGraph, 800, 400);
         startGraphPanel.add(graphDisplayPanel);
@@ -266,7 +261,7 @@ public class GraphGrammarCreator extends JFrame {
     public Production getSelectedProductionFromList(){
         if(!productionList.isSelectionEmpty()){
             String name = productionList.getSelectedValue();
-            for(Production p: grammar.getProductions()){
+            for(Production p: grammarManager.getGrammar().getProductions()){
                 if(name.equals(p.getName())){
                     return p;
                 }
@@ -295,13 +290,13 @@ public class GraphGrammarCreator extends JFrame {
     }
 
     public void addProduction(Production production){
-        grammar.addProduction(production);
+        grammarManager.getGrammar().addProduction(production);
         updateListModel();
 
     }
 
     public void removeProduction(Production production){
-        grammar.removeProduction(production);
+        grammarManager.getGrammar().removeProduction(production);
         updateListModel();
     }
 
@@ -309,7 +304,7 @@ public class GraphGrammarCreator extends JFrame {
         graphPanelRight.clear();
         graphPanelLeft.clear();
         DefaultListModel<String> listModel = new DefaultListModel<String>();
-        for(Production p: grammar.getProductions()){
+        for(Production p: grammarManager.getGrammar().getProductions()){
             listModel.addElement(p.getName());
         }
         productionList.setModel(listModel);

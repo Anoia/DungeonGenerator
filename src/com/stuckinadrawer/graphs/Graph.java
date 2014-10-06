@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * This class contains an implementation for a directed graph structure
+ */
 public class Graph implements Serializable{
 
     private HashSet<ArrayList<Vertex>> edges;
@@ -18,7 +21,6 @@ public class Graph implements Serializable{
         }
         this.edges = new HashSet<ArrayList<Vertex>>();
         for(ArrayList<Vertex> edge: edges){
-            // vertices in edge will be added too
             addEdge(edge);
         }
 
@@ -29,8 +31,7 @@ public class Graph implements Serializable{
     }
 
     public Graph(){
-        vertices = new HashSet<Vertex>();
-        edges = new HashSet<ArrayList<Vertex>>();
+        this(new HashSet<ArrayList<Vertex>>(), new HashSet<Vertex>());
     }
 
     public void addEdge(Vertex v1, Vertex v2){
