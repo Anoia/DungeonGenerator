@@ -1,8 +1,6 @@
-package com.stuckinadrawer.graphs.ui;
+package com.stuckinadrawer.ui;
 
 import com.stuckinadrawer.FileReader;
-import com.stuckinadrawer.ObjectCloner;
-import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.*;
 
 import javax.swing.*;
@@ -12,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

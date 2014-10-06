@@ -1,15 +1,12 @@
 package com.stuckinadrawer;
 
 import com.stuckinadrawer.graphs.*;
-import com.stuckinadrawer.graphs.ui.GraphGrammarCreator;
-import com.stuckinadrawer.graphs.ui.SimpleGraphDisplayPanel;
+import com.stuckinadrawer.ui.SimpleGraphDisplayPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 public class LevelDemo extends JFrame{
 

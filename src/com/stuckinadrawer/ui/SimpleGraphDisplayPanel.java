@@ -1,4 +1,4 @@
-package com.stuckinadrawer.graphs.ui;
+package com.stuckinadrawer.ui;
 
 import com.stuckinadrawer.graphs.Graph;
 import com.stuckinadrawer.graphs.Vertex;
@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class SimpleGraphDisplayPanel extends JPanel{
 

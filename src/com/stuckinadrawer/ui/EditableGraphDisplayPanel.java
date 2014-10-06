@@ -1,4 +1,4 @@
-package com.stuckinadrawer.graphs.ui;
+package com.stuckinadrawer.ui;
 
 import com.stuckinadrawer.graphs.Graph;
 import com.stuckinadrawer.graphs.Vertex;
