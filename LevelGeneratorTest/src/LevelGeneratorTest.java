@@ -5,6 +5,7 @@ import com.stuckinadrawer.graphs.Graph;
 import com.stuckinadrawer.graphs.Vertex;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Stack;
 
@@ -12,9 +13,10 @@ public class LevelGeneratorTest {
 
     private Graph levelGraph;
     Tile[][] level;
+    ArrayList<Room> rooms = new ArrayList<Room>();
 
-    private int levelWidth = 64;
-    private int levelHeight = 64;
+    private int levelWidth = 100;
+    private int levelHeight = 100;
 
     public LevelGeneratorTest(){
         levelGraph = createLevelGraph();
@@ -22,19 +24,43 @@ public class LevelGeneratorTest {
 
         createGroups();
 
-        Renderer renderer= new Renderer(level);
+        new Renderer(level);
+    }
+
+    private class Room{
+        int x, y, width, height;
+        int groupID;
+        ArrayList<Vertex> elements = new ArrayList<Vertex>();
+        ArrayList<Integer> outgoingRoomIDs = new ArrayList<Integer>();
+
+        public Room(){
+            this.width = 3;
+            this.height = 3;
+        }
+
+        public void expand() {
+            this.width++;
+            this.height++;
+
+        }
     }
 
     private void createGroups() {
         //uses morphism field to assign groups;
         //same group = in same room
 
-        int groupID = 1;
+        int groupID = 0;
 
         Stack<Vertex> nextVertices = new Stack<Vertex>();
 
         Vertex currentVertex = findStartVertex();
         currentVertex.setMorphism(groupID);
+        Room room = new Room();
+        room.groupID = groupID;
+        room.elements.add(currentVertex);
+        room.expand();
+        rooms.add(room);
+
         groupID++;
 
         nextVertices.addAll(levelGraph.getOutgoingNeighbors(currentVertex));
@@ -43,6 +69,20 @@ public class LevelGeneratorTest {
         while(!nextVertices.empty()){
             currentVertex = nextVertices.pop();
             currentVertex.setMorphism(groupID);
+
+
+
+            if(groupID >= rooms.size()){
+                room = new Room();
+                room.groupID = groupID;
+                rooms.add(room);
+            }else{
+                room = rooms.get(groupID);
+            }
+
+            room.expand();
+            room.elements.add(currentVertex);
+
             System.out.println("\n"+currentVertex.getDescription() + " was assigned");
             HashSet<Vertex> outgoingNeighbours = levelGraph.getOutgoingNeighbors(currentVertex);
             System.out.println("has "+ outgoingNeighbours.size() + " outgoing neighbours");
@@ -74,6 +114,14 @@ public class LevelGeneratorTest {
 
         }
         System.out.println("end");
+
+        for(Room r: rooms){
+            String elements = "";
+            for(Vertex v: r.elements){
+                elements += v.getType()+ " ";
+            }
+            System.out.println("ROOM "+r.groupID + " contains: "+elements);
+        }
 
     }
 
