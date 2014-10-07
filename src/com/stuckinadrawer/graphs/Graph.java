@@ -113,12 +113,12 @@ public class Graph implements Serializable{
 
     public HashSet<Vertex> getNeighbors(Vertex vertex){
         HashSet<Vertex> result = new HashSet<Vertex>();
-        result.addAll(inNeighborhood(vertex));
-        result.addAll(outNeighborhood(vertex));
+        result.addAll(getIncomingNeighbors(vertex));
+        result.addAll(getOutgoingNeighbors(vertex));
         return result;
     }
 
-    public HashSet<Vertex> inNeighborhood(Vertex vertex){
+    public HashSet<Vertex> getIncomingNeighbors(Vertex vertex){
         HashSet<Vertex> result = new HashSet<Vertex>();
         for(Vertex v: this.vertices){
             if(hasEdge(v, vertex)){
@@ -129,7 +129,7 @@ public class Graph implements Serializable{
         return result;
     }
 
-    public HashSet<Vertex> outNeighborhood(Vertex vertex){
+    public HashSet<Vertex> getOutgoingNeighbors(Vertex vertex){
         HashSet<Vertex> result = new HashSet<Vertex>();
         for(Vertex v: this.vertices){
             if(hasEdge(vertex, v)){
@@ -145,10 +145,10 @@ public class Graph implements Serializable{
     }
 
     public int inDegree(Vertex vertex){
-        return inNeighborhood(vertex).size();
+        return getIncomingNeighbors(vertex).size();
     }
     public int outDegree(Vertex vertex){
-        return outNeighborhood(vertex).size();
+        return getOutgoingNeighbors(vertex).size();
     }
 
     public boolean hasVertex(Vertex vertex){
