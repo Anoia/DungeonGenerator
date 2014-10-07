@@ -23,15 +23,75 @@ public class LevelGeneratorTest {
         level = initEmptyLevel();
 
         createGroups();
+        createRooms();
 
         new Renderer(level);
+    }
+
+    private void createRooms() {
+
+        for(Room r: rooms){
+            if(r.groupID == 0){
+                r.x = levelWidth/2;
+                r.y = levelHeight/2;
+                putRoomInMap(r);
+            }
+
+        }
+
+    }
+
+    private void putRoomInMap(Room r) {
+        for(int x = r.x; x <= r.x+r.width; x++){
+            for(int y = r.y; y <= r.y+r.height; y++){
+                if(x == r.x || x == r.x+r.width || y == r.y || y == r.y+r.height){
+                    level[x][y] = Tile.WALL;
+                }else{
+                    level[x][y] = Tile.ROOM;
+                }
+            }
+        }
+        int i = 0;
+        for(Vertex v: r.elements){
+            Tile tile = Tile.EMPTY;
+            if(v.getType().equals("start")){
+                tile = Tile.ENTRANCE;
+            }
+            if(v.getType().equals("exit")){
+                tile = Tile.EXIT;
+            }
+            if(v.getType().equals("opponent")){
+                tile = Tile.OPPONENT;
+            }
+            if(v.getType().equals("boss")){
+                tile = Tile.BOSS;
+            }
+            if(v.getType().equals("key")){
+                tile = Tile.KEY;
+            }
+            if(v.getType().equals("lock")){
+                tile = Tile.LOCK;
+            }
+            if(v.getType().equals("trap")){
+                tile = Tile.TRAP;
+            }
+            if(v.getType().equals("chest")){
+                tile = Tile.CHEST;
+            }
+            if(v.getType().equals("buff")){
+                tile = Tile.BUFF;
+            }
+            level[r.x+2+i][r.y+2] = tile;
+            i++;
+        }
+
     }
 
     private class Room{
         int x, y, width, height;
         int groupID;
         ArrayList<Vertex> elements = new ArrayList<Vertex>();
-        ArrayList<Integer> outgoingRoomIDs = new ArrayList<Integer>();
+        int incomingRoomID = -1;
 
         public Room(){
             this.width = 3;
@@ -119,6 +179,12 @@ public class LevelGeneratorTest {
             String elements = "";
             for(Vertex v: r.elements){
                 elements += v.getType()+ " ";
+                for(Vertex incomingNeighbour: levelGraph.getIncomingNeighbors(v)){
+                    if (incomingNeighbour.getMorphism()!= r.groupID){
+                        r.incomingRoomID = incomingNeighbour.getMorphism();
+                        break;
+                    }
+                }
             }
             System.out.println("ROOM "+r.groupID + " contains: "+elements);
         }
@@ -166,4 +232,6 @@ public class LevelGeneratorTest {
     public static void main(String [] arg){
         new LevelGeneratorTest();
     }
+
+
 }
