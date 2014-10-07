@@ -1,10 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public class Renderer extends JFrame {
 
     private Tile[][] level;
     private final int tileSize = 16;
+    private int offsetX = 0, offsetY = 0;
 
     public Renderer(Tile[][] level){
         this.level = level;
@@ -14,14 +19,25 @@ public class Renderer extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
     }
 
 
-    private class MyPanel extends JPanel {
+    private class MyPanel extends JPanel implements MouseListener, MouseMotionListener{
+
+        private Point dragging;
+
+        public MyPanel(){
+            this.addMouseListener(this);
+            this.addMouseMotionListener(this);
+        }
+
         private void draw(Graphics g){
 
             //this is where the drawing happens
             Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(Color.WHITE);
+            g2d.fillRect(0, 0, getWidth(), getHeight());
 
             for (int x = 0; x < level.length; x++) {
                 for (int y = 0; y < level[0].length; y++) {
@@ -47,9 +63,9 @@ public class Renderer extends JFrame {
                             break;
                     }
 
-                    g2d.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
+                    g2d.fillRect(x*tileSize + offsetX, y*tileSize+offsetY, tileSize, tileSize);
                     g2d.setColor(Color.black);
-                    g2d.drawRect(x*tileSize, y*tileSize, tileSize, tileSize);
+                    g2d.drawRect(x*tileSize+offsetX, y*tileSize+offsetY, tileSize, tileSize);
                 }
             }
 
@@ -64,6 +80,46 @@ public class Renderer extends JFrame {
         @Override
         public Dimension getPreferredSize(){
             return new Dimension(level.length*tileSize, level[0].length*tileSize);
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            dragging = new Point(e.getX(), e.getY());
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            Point newPos =  e.getPoint();
+            offsetX += newPos.x - dragging.x;
+            offsetY += newPos.y - dragging.y;
+            dragging = newPos;
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+
         }
     }
 
