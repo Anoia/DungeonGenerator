@@ -8,7 +8,7 @@ public class Renderer extends JFrame {
 
     public Renderer(Tile[][] level){
         this.level = level;
-        setTitle("LevelGenerator: ScatterLayout");
+        setTitle("LevelGeneratorTest");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         add(new MyPanel());
         pack();
