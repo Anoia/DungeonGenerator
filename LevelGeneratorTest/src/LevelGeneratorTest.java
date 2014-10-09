@@ -28,7 +28,7 @@ public class LevelGeneratorTest {
         createGroups();
         positionRooms();
 
-        separateRooms();
+
 
 
 
@@ -53,9 +53,26 @@ public class LevelGeneratorTest {
                     level[pos.getX()][pos.getY()].tileType = TileType.CORRIDOR;
                 }
             }
-
+            surroundCorridorWithWalls();
         }
 
+
+    }
+
+    private void surroundCorridorWithWalls() {
+        for (int x = 0; x < levelWidth; x++) {
+            for (int y = 0; y < levelHeight; y++) {
+                if (level[x][y].tileType == TileType.CORRIDOR) {
+                    for (int xx = x - 1; xx <= x + 1; xx++) {
+                        for (int yy = y - 1; yy <= y + 1; yy++) {
+                            if ( level[xx][yy].tileType == TileType.EMPTY) {
+                                level[xx][yy].tileType = TileType.WALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
     }
 
