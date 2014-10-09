@@ -23,8 +23,8 @@ public class Room{
     }
 
     public void applyForce() {
-        this.x += this.forceX / 2 + 1;
-        this.y += this.forceY / 2 + 1;
+        this.x += this.forceX;
+        this.y += this.forceY;
 
     }
 }
