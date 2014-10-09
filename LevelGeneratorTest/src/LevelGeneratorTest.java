@@ -1,4 +1,5 @@
 import com.stuckinadrawer.FileReader;
+import com.stuckinadrawer.Point;
 import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.Grammar;
 import com.stuckinadrawer.graphs.GrammarManager;
@@ -8,6 +9,7 @@ import com.stuckinadrawer.graphs.Vertex;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class LevelGeneratorTest {
@@ -25,12 +27,33 @@ public class LevelGeneratorTest {
 
         createGroups();
         positionRooms();
-        makeCorridors();
+
+        separateRooms();
+
+
+
+        for(Room r: rooms){
+            putRoomInMap(r);
+        }
+
+       // makeCorridors();
 
         new Renderer(level);
     }
 
     private void makeCorridors() {
+        Pathfinder pathfinder = new Pathfinder(level);
+        for(Room r: rooms){
+            if(r.groupID == 0) continue;
+            Room connectedRoom = rooms.get(r.incomingRoomID);
+            LinkedList<Point> path = pathfinder.findPath(r, connectedRoom);
+            for(Point pos: path){
+                Tile t = level[pos.getX()][pos.getY()];
+                if(t == Tile.WALL || t == Tile.EMPTY){
+                    level[pos.getX()][pos.getY()] = Tile.CORRIDOR;
+                }
+            }
+        }
 
 
     }
@@ -63,14 +86,13 @@ public class LevelGeneratorTest {
             r.y = y;
             r.initialPos = true;
 
+            separateRooms();
 
         }
 
-        separateRooms();
 
-        for(Room r: rooms){
-            putRoomInMap(r);
-        }
+
+
 
     }
 
@@ -99,8 +121,8 @@ public class LevelGeneratorTest {
                         deltaY = 1;
                     }
 
-                    room1.forceX -= deltaX;
-                    room1.forceY -= deltaY;
+                    room1.forceX -= (deltaX>0)?1:-1;
+                    room1.forceY -= (deltaY>0)?1:-1;
 
 
                 }
@@ -116,7 +138,7 @@ public class LevelGeneratorTest {
 
 
     private boolean checkForRoomCollision(Room room1, Room room2) {
-        int border = 1;
+        int border = 2;
         return !(
                 (room1.x + room1.width < room2.x - border) ||
                         (room1.x > room2.x + room2.width + border) ||
