@@ -61,6 +61,8 @@ public class Renderer extends JFrame {
                         case EXIT:
                             g2d.setColor(Color.blue);
                             break;
+                        default:
+                            g2d.setColor(Color.orange);
                     }
 
                     g2d.fillRect(x*tileSize + offsetX, y*tileSize+offsetY, tileSize, tileSize);

@@ -1,4 +1,5 @@
 import com.stuckinadrawer.FileReader;
+import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.Grammar;
 import com.stuckinadrawer.graphs.GrammarManager;
 import com.stuckinadrawer.graphs.Graph;
@@ -23,23 +24,106 @@ public class LevelGeneratorTest {
         level = initEmptyLevel();
 
         createGroups();
-        createRooms();
+        positionRooms();
 
         new Renderer(level);
     }
 
-    private void createRooms() {
+    private void findPath(Room start, Room end){
+
+    }
+
+    private void positionRooms() {
 
         for(Room r: rooms){
             if(r.groupID == 0){
                 r.x = levelWidth/2;
                 r.y = levelHeight/2;
-                putRoomInMap(r);
+                r.initalPos = true;
+                continue;
             }
+
+
+
+            Room connectedRoom = rooms.get(r.incomingRoomID);
+
+            int offset = Utils.random(0, 8) - 4;
+            int x = connectedRoom.x + offset;
+            offset = Utils.random(0, 8) - 4;
+            int y = connectedRoom.y + offset;
+
+            if(x == connectedRoom.x && y == connectedRoom.y){
+                x = (Utils.random(1)>0)? connectedRoom.x-1:connectedRoom.x+1;
+                y = (Utils.random(1)>0)? connectedRoom.y-1:connectedRoom.y+1;
+            }
+
+            r.x = x;
+            r.y = y;
+            r.initalPos = true;
+
 
         }
 
+        separateRooms();
+
+        for(Room r: rooms){
+            putRoomInMap(r);
+        }
+
     }
+
+    private void separateRooms(){
+        boolean overlap = true;
+        while(overlap){
+            overlap = false;
+            for(Room room1: rooms){
+                if(!room1.initalPos){
+                    continue;
+                }
+                room1.forceX = 0;
+                room1.forceY = 0;
+
+                for(Room room2: rooms){
+                    if(!room2.initalPos || room2.equals(room1) || !checkForRoomCollision(room1, room2)){
+                        continue;
+                    }
+
+                    overlap = true;
+
+                    double deltaX = room2.x - room1.x;
+                    double deltaY = room2.y - room1.y;
+                    if(deltaX == 0 && deltaY == 0){
+                        deltaX = 1;
+                        deltaY = 1;
+                    }
+
+                    room1.forceX -= deltaX;
+                    room1.forceY -= deltaY;
+
+
+                }
+            }
+
+            for(Room r: rooms){
+                r.applyForce();
+
+            }
+        }
+    }
+
+
+
+    private boolean checkForRoomCollision(Room room1, Room room2) {
+        int border = 1;
+        return !(
+                (room1.x + room1.width < room2.x - border) ||
+                        (room1.x > room2.x + room2.width + border) ||
+                        (room1.y + room1.height < room2.y - border) ||
+                        (room1.y > room2.y + room2.height + border)
+        );
+
+    }
+
 
     private void putRoomInMap(Room r) {
         for(int x = r.x; x <= r.x+r.width; x++){
@@ -92,6 +176,9 @@ public class LevelGeneratorTest {
         int groupID;
         ArrayList<Vertex> elements = new ArrayList<Vertex>();
         int incomingRoomID = -1;
+        boolean initalPos = false;
+
+        int forceX, forceY = 0;
 
         public Room(){
             this.width = 3;
@@ -101,6 +188,12 @@ public class LevelGeneratorTest {
         public void expand() {
             this.width++;
             this.height++;
+
+        }
+
+        public void applyForce() {
+            this.x += this.forceX / 2 + 1;
+            this.y += this.forceY / 2 + 1;
 
         }
     }
