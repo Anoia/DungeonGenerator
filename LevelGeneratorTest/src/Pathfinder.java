@@ -127,7 +127,10 @@ public class Pathfinder {
 
     private boolean isWalkable(int x, int y){
         boolean walkable = true;
-        if(level[x][y] == Tile.WALL){
+
+        if(x < 0 || y < 0 || x >= 150 || y >= 150) return false;
+
+        if(level[x][y].tileType == TileType.WALL || level[x][y].tileType == TileType.CORRIDOR ){
             Tile tile = level[x][y];
             if(tile.getRoomID() == currentGoalRoom.groupID || tile.getRoomID() == currentStartRoom.groupID){
                // walkable = false;

@@ -18,8 +18,8 @@ public class LevelGeneratorTest {
     Tile[][] level;
     ArrayList<Room> rooms = new ArrayList<Room>();
 
-    private int levelWidth = 100;
-    private int levelHeight = 100;
+    private int levelWidth = 150;
+    private int levelHeight = 150;
 
     public LevelGeneratorTest(){
         levelGraph = createLevelGraph();
@@ -36,7 +36,7 @@ public class LevelGeneratorTest {
             putRoomInMap(r);
         }
 
-       // makeCorridors();
+        makeCorridors();
 
         new Renderer(level);
     }
@@ -49,10 +49,11 @@ public class LevelGeneratorTest {
             LinkedList<Point> path = pathfinder.findPath(r, connectedRoom);
             for(Point pos: path){
                 Tile t = level[pos.getX()][pos.getY()];
-                if(t == Tile.WALL || t == Tile.EMPTY){
-                    level[pos.getX()][pos.getY()] = Tile.CORRIDOR;
+                if(t.tileType == TileType.WALL || t.tileType == TileType.EMPTY){
+                    level[pos.getX()][pos.getY()].tileType = TileType.CORRIDOR;
                 }
             }
+
         }
 
 
@@ -153,9 +154,9 @@ public class LevelGeneratorTest {
         for(int x = r.x; x <= r.x+r.width; x++){
             for(int y = r.y; y <= r.y+r.height; y++){
                 if(x == r.x || x == r.x+r.width || y == r.y || y == r.y+r.height){
-                    level[x][y] = Tile.WALL;
+                    level[x][y] = new Tile(TileType.WALL);
                 }else{
-                    level[x][y] = Tile.ROOM;
+                    level[x][y] = new Tile(TileType.ROOM);
                 }
 
                 level[x][y].setRoomID(r.groupID);
@@ -163,36 +164,35 @@ public class LevelGeneratorTest {
         }
         int i = 0;
         for(Vertex v: r.elements){
-            Tile tile = Tile.EMPTY;
+            TileType tileType = TileType.EMPTY;
             if(v.getType().equals("start")){
-                tile = Tile.ENTRANCE;
+                tileType = TileType.ENTRANCE;
             }
             if(v.getType().equals("exit")){
-                tile = Tile.EXIT;
+                tileType = TileType.EXIT;
             }
             if(v.getType().equals("opponent")){
-                tile = Tile.OPPONENT;
+                tileType = TileType.OPPONENT;
             }
             if(v.getType().equals("boss")){
-                tile = Tile.BOSS;
+                tileType = TileType.BOSS;
             }
             if(v.getType().equals("key")){
-                tile = Tile.KEY;
+                tileType = TileType.KEY;
             }
             if(v.getType().equals("lock")){
-                tile = Tile.LOCK;
+                tileType = TileType.LOCK;
             }
             if(v.getType().equals("trap")){
-                tile = Tile.TRAP;
+                tileType = TileType.TRAP;
             }
             if(v.getType().equals("chest")){
-                tile = Tile.CHEST;
+                tileType = TileType.CHEST;
             }
             if(v.getType().equals("buff")){
-                tile = Tile.BUFF;
+                tileType = TileType.BUFF;
             }
-            tile.setRoomID(r.groupID);
-            level[r.x+2+i][r.y+2] = tile;
+            level[r.x+2+i][r.y+2].tileType = tileType;
 
 
             i++;
@@ -301,7 +301,7 @@ public class LevelGeneratorTest {
 
         for (int x = 0; x < levelWidth; x++) {
             for (int y = 0; y < levelHeight; y++) {
-                level[x][y] = Tile.EMPTY;
+                level[x][y] = new Tile(TileType.EMPTY);
             }
         }
         return level;

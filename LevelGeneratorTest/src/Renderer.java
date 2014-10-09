@@ -42,7 +42,7 @@ public class Renderer extends JFrame {
             for (int x = 0; x < level.length; x++) {
                 for (int y = 0; y < level[0].length; y++) {
                     g2d.setColor(Color.black);
-                    switch (level[x][y]) {
+                    switch (level[x][y].tileType) {
                         case EMPTY:
 
                             break;

@@ -1,7 +1,11 @@
-public enum Tile {
-    EMPTY, WALL, ROOM, CORRIDOR, ENTRANCE, EXIT, OPPONENT, BOSS, KEY, LOCK, TRAP, CHEST, BUFF;
+public class Tile {
 
-    private int roomID = -1;
+    public TileType tileType;
+    public int roomID = -1;
+
+    public Tile(TileType tileType){
+        this.tileType = tileType;
+    }
 
 
     public int getRoomID() {
@@ -11,4 +15,5 @@ public enum Tile {
     public void setRoomID(int roomID) {
         this.roomID = roomID;
     }
+
 }
