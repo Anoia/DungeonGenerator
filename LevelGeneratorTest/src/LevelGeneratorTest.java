@@ -41,7 +41,7 @@ public class LevelGeneratorTest {
             if(r.groupID == 0){
                 r.x = levelWidth/2;
                 r.y = levelHeight/2;
-                r.initalPos = true;
+                r.initialPos = true;
                 continue;
             }
 
@@ -61,7 +61,7 @@ public class LevelGeneratorTest {
 
             r.x = x;
             r.y = y;
-            r.initalPos = true;
+            r.initialPos = true;
 
 
         }
@@ -79,14 +79,14 @@ public class LevelGeneratorTest {
         while(overlap){
             overlap = false;
             for(Room room1: rooms){
-                if(!room1.initalPos){
+                if(!room1.initialPos){
                     continue;
                 }
                 room1.forceX = 0;
                 room1.forceY = 0;
 
                 for(Room room2: rooms){
-                    if(!room2.initalPos || room2.equals(room1) || !checkForRoomCollision(room1, room2)){
+                    if(!room2.initialPos || room2.equals(room1) || !checkForRoomCollision(room1, room2)){
                         continue;
                     }
 
@@ -135,6 +135,8 @@ public class LevelGeneratorTest {
                 }else{
                     level[x][y] = Tile.ROOM;
                 }
+
+                level[x][y].setRoomID(r.groupID);
             }
         }
         int i = 0;
@@ -167,7 +169,10 @@ public class LevelGeneratorTest {
             if(v.getType().equals("buff")){
                 tile = Tile.BUFF;
             }
+            tile.setRoomID(r.groupID);
             level[r.x+2+i][r.y+2] = tile;
+
+
             i++;
         }
 

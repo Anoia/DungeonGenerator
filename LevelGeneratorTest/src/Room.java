@@ -7,7 +7,7 @@ public class Room{
     int groupID;
     ArrayList<Vertex> elements = new ArrayList<Vertex>();
     int incomingRoomID = -1;
-    boolean initalPos = false;
+    boolean initialPos = false;
 
     int forceX, forceY = 0;
 
