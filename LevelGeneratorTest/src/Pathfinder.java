@@ -6,12 +6,18 @@ import java.util.*;
 public class Pathfinder {
 
     private Tile[][] level;
+    private Room currentStartRoom;
+    private Room currentGoalRoom;
 
     public Pathfinder(Tile[][] level){
         this.level = level;
     }
 
-    public LinkedList<Point> findPath(Point startPos, Point goalPos){
+    public LinkedList<Point> findPath(Room startRoom, Room goalRoom){
+        currentStartRoom = startRoom;
+        currentGoalRoom = goalRoom;
+        Point startPos = new Point(startRoom.x + startRoom.width/2, startRoom.y + startRoom.height/2);
+        Point goalPos = new Point(goalRoom.x + goalRoom.width/2, goalRoom.y + goalRoom.height/2);
         Node start = new Node(startPos);
         Node goal = new Node(goalPos);
 
@@ -120,7 +126,15 @@ public class Pathfinder {
     }
 
     private boolean isWalkable(int x, int y){
-        return level[x][y] == Tile.EMPTY || level[x][y] == Tile.ROOM;
+        boolean walkable = true;
+        if(level[x][y] == Tile.WALL){
+            Tile tile = level[x][y];
+            if(!(tile.getRoomID() == currentGoalRoom.groupID || tile.getRoomID() == currentStartRoom.groupID)){
+                walkable = false;
+            }
+        }
+
+        return walkable;
     }
 
     private class Node implements Serializable {
