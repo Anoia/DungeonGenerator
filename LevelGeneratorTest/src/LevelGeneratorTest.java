@@ -44,7 +44,7 @@ public class LevelGeneratorTest {
     private void makeCorridors() {
         Pathfinder pathfinder = new Pathfinder(level);
         for(Room r: rooms){
-            if(r.groupID == 0) continue;
+            if(r.id == 0) continue;
             Room connectedRoom = rooms.get(r.incomingRoomID);
             LinkedList<Point> path = pathfinder.findPath(r, connectedRoom);
             for(Point pos: path){
@@ -79,7 +79,7 @@ public class LevelGeneratorTest {
     private void positionRooms() {
 
         for(Room r: rooms){
-            if(r.groupID == 0){
+            if(r.id == 0){
                 r.x = levelWidth/2;
                 r.y = levelHeight/2;
                 r.initialPos = true;
@@ -144,7 +144,7 @@ public class LevelGeneratorTest {
                     room1.forceX -= (deltaX>0)?1:-1;
                     room1.forceY -= (deltaY>0)?1:-1;
 
-                    if(room1.groupID == room2.incomingRoomID || room2.groupID == room1.incomingRoomID){
+                    if(room1.id == room2.incomingRoomID || room2.id == room1.incomingRoomID){
                         double distance = Math.sqrt(delta2);
                         if(distance > 15){
                             room1.forceX += (distance - 15) * deltaX;
@@ -190,7 +190,7 @@ public class LevelGeneratorTest {
                     level[x][y] = new Tile(TileType.ROOM);
                 }
 
-                level[x][y].setRoomID(r.groupID);
+                level[x][y].setRoomID(r.id);
             }
         }
         int i = 0;
@@ -243,7 +243,7 @@ public class LevelGeneratorTest {
         Vertex currentVertex = findStartVertex();
         currentVertex.setMorphism(groupID);
         Room room = new Room();
-        room.groupID = groupID;
+        room.id = groupID;
         room.elements.add(currentVertex);
         room.expand();
         rooms.add(room);
@@ -261,7 +261,7 @@ public class LevelGeneratorTest {
 
             if(groupID >= rooms.size()){
                 room = new Room();
-                room.groupID = groupID;
+                room.id = groupID;
                 rooms.add(room);
             }else{
                 room = rooms.get(groupID);
@@ -314,13 +314,13 @@ public class LevelGeneratorTest {
             for(Vertex v: r.elements){
                 elements += v.getType()+ " ";
                 for(Vertex incomingNeighbour: levelGraph.getIncomingNeighbors(v)){
-                    if (incomingNeighbour.getMorphism()!= r.groupID){
+                    if (incomingNeighbour.getMorphism()!= r.id){
                         r.incomingRoomID = incomingNeighbour.getMorphism();
                         break;
                     }
                 }
             }
-            System.out.println("ROOM "+r.groupID + " contains: "+elements);
+            System.out.println("ROOM "+r.id + " contains: "+elements);
         }
 
     }

@@ -132,7 +132,7 @@ public class Pathfinder {
 
         if(level[x][y].tileType == TileType.WALL || level[x][y].tileType == TileType.CORRIDOR ){
             Tile tile = level[x][y];
-            if(tile.getRoomID() == currentGoalRoom.groupID || tile.getRoomID() == currentStartRoom.groupID){
+            if(tile.getRoomID() == currentGoalRoom.id || tile.getRoomID() == currentStartRoom.id){
                // walkable = false;
             }else{
                 walkable = false;

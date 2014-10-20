@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Room{
     int x, y, width, height;
-    int groupID;
+    int id;
     ArrayList<Vertex> elements = new ArrayList<Vertex>();
     int incomingRoomID = -1;
     boolean initialPos = false;
