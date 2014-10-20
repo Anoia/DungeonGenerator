@@ -47,7 +47,7 @@ public class Renderer extends JFrame {
 
                             break;
                         case WALL:
-                           // g2d.setColor(Color.red);
+                            g2d.setColor(Color.red);
                             break;
                         case ROOM:
                             g2d.setColor(Color.gray);
@@ -60,6 +60,9 @@ public class Renderer extends JFrame {
                             break;
                         case EXIT:
                             g2d.setColor(Color.blue);
+                            break;
+                        case KEY:
+                            g2d.setColor(Color.pink);
                             break;
                         default:
                             g2d.setColor(Color.orange);

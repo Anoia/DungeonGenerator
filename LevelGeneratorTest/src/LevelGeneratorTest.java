@@ -139,8 +139,19 @@ public class LevelGeneratorTest {
                         deltaY = 1;
                     }
 
+                    double delta2 = deltaX * deltaX + deltaY * deltaY;
+
                     room1.forceX -= (deltaX>0)?1:-1;
                     room1.forceY -= (deltaY>0)?1:-1;
+
+                    if(room1.groupID == room2.incomingRoomID || room2.groupID == room1.incomingRoomID){
+                        double distance = Math.sqrt(delta2);
+                        if(distance > 15){
+                            room1.forceX += (distance - 15) * deltaX;
+                            room1.forceY += (distance - 15) * deltaY;
+                        }
+
+                    }
 
 
                 }
@@ -170,6 +181,9 @@ public class LevelGeneratorTest {
     private void putRoomInMap(Room r) {
         for(int x = r.x; x <= r.x+r.width; x++){
             for(int y = r.y; y <= r.y+r.height; y++){
+
+                if(x < 0 || x >=levelWidth || y < 0 || y >= levelHeight) continue;
+
                 if(x == r.x || x == r.x+r.width || y == r.y || y == r.y+r.height){
                     level[x][y] = new Tile(TileType.WALL);
                 }else{
@@ -209,6 +223,7 @@ public class LevelGeneratorTest {
             if(v.getType().equals("buff")){
                 tileType = TileType.BUFF;
             }
+            if(r.x+2+i < 0 || r.x+2+i >=levelWidth || r.y+2 < 0 || r.y+2 >= levelHeight) continue;
             level[r.x+2+i][r.y+2].tileType = tileType;
 
 
@@ -260,11 +275,18 @@ public class LevelGeneratorTest {
             System.out.println("has "+ outgoingNeighbours.size() + " outgoing neighbours");
             if(outgoingNeighbours.size() > 1){
                 System.out.println("added all, new id");
-                groupID++;
+
                 sameID = 0;
                 for(Vertex v: outgoingNeighbours){
-                    nextVertices.push(v);
+                    if(v.getType().equals("key")){
+                        room.expand();
+                        room.elements.add(v);
+                    }else{
+                        nextVertices.push(v);
+                    }
+
                 }
+                groupID++;
             }else if (outgoingNeighbours.size() == 1){
                 System.out.println("added one");
                 for(Vertex v: outgoingNeighbours){
