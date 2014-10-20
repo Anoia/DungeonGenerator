@@ -14,6 +14,44 @@ public class Grid {
 
         initEmpty();
         layout();
+        cropGrid();
+    }
+
+    private void cropGrid() {
+
+        int minX, maxX, minY, maxY;
+        minX = maxX = minY = maxY = grid.length/2;
+
+        for(int x = 0; x < grid.length; x++ ){
+            for(int y = 0; y < grid[x].length; y++ ){
+                System.out.print(grid[x][y] + " ");
+                if(grid[x][y] == -1) continue;
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+
+            }
+            System.out.println("");
+        }
+
+        System.out.println("MINMAX: "+minX+" "+maxX + " | " + minY +" "+maxY);
+
+        int[][] croppedGrid = new int[maxX-minX+3][maxY-minY+3];
+        int i = 0;
+        int j = 0;
+        for(int x = minX; x <= maxX; x++ ){
+            for(int y = minY; y <= maxY; y++ ){
+                int val = grid[x][y];
+                //croppedGrid[i][j] = val;
+                System.out.print(grid[x][y]);
+                j++;
+            }
+            i++;
+            System.out.println("");
+        }
+
+
     }
 
     private void initEmpty() {
@@ -42,7 +80,7 @@ public class Grid {
             Room incomingConnection = rooms.get(r.incomingRoomID);
 
             Point newSpot = findEmptySpotNextToRoom(incomingConnection);
-            if(newSpot == null){
+            while(newSpot == null){
                 //move something
 
                 //choose dir to move:
@@ -59,7 +97,7 @@ public class Grid {
                     y--;
                 }
 
-
+                System.out.println("MAKE SPACE");
                 makeSpace(horizontal, new Point(x,y));
 
                 newSpot = findEmptySpotNextToRoom(incomingConnection);
@@ -82,6 +120,21 @@ public class Grid {
                     if(y == point.getY()+1){
                         //the new row
                         grid[x][y] = -1;
+                        System.out.println("new row "+x+" "+y);
+
+                        //if two sides connected make this corridor!
+
+                        if(grid[x][y-1] == -1 || grid[x][y+1] == -1 || grid[x][y-1] == 99 || grid[x][y+1] == 99) continue;
+
+                        Room r1 = rooms.get(grid[x][y-1]);
+                        Room r2 = rooms.get(grid[x][y+1]);
+
+                        if(r1.incomingRoomID == r2.id || r2.incomingRoomID == r1.id){
+                            System.out.println("99 !");
+                            grid[x][y] = 99;
+                        }
+
+
                         continue;
                     }
 
@@ -96,6 +149,21 @@ public class Grid {
                     if(x == point.getX()+1){
                         //the new row
                         grid[x][y] = -1;
+                        System.out.println("new row "+x+" "+y);
+
+                        //if two sides connected make this corridor!
+
+                        if(grid[x-1][y] == -1 || grid[x+1][y] == -1 || grid[x-1][y] == 99 || grid[x+1][y] == 99) continue;
+
+                        Room r1 = rooms.get(grid[x-1][y]);
+                        Room r2 = rooms.get(grid[x+1][y]);
+
+                        if(r1.incomingRoomID == r2.id || r2.incomingRoomID == r1.id){
+                            System.out.println("99 !");
+                            grid[x][y] = 99;
+                        }
+
+
                         continue;
                     }
 
@@ -110,7 +178,7 @@ public class Grid {
         for(int x = 0; x < grid.length; x++ ){
             for(int y = 0; y < grid[x].length; y++ ){
                 int id = grid[x][y];
-                if(id != -1){
+                if(id != -1 && id != 99){
                     rooms.get(id).id = id;
                 }
             }

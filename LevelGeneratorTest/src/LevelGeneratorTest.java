@@ -26,6 +26,7 @@ public class LevelGeneratorTest {
         level = initEmptyLevel();
 
         createGroups();
+        new Grid(rooms);
         positionRooms();
 
 
@@ -320,7 +321,7 @@ public class LevelGeneratorTest {
                     }
                 }
             }
-            System.out.println("ROOM "+r.id + " contains: "+elements);
+            System.out.println("ROOM "+r.id + " contains: "+elements+"; incoming: room "+r.incomingRoomID);
         }
 
     }
