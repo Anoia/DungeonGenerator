@@ -37,14 +37,14 @@ public class Grid {
 
         System.out.println("MINMAX: "+minX+" "+maxX + " | " + minY +" "+maxY);
 
-        int[][] croppedGrid = new int[maxX-minX+3][maxY-minY+3];
+        int[][] croppedGrid = new int[maxX-minX+1][maxY-minY+1];
         int i = 0;
         int j = 0;
         for(int x = minX; x <= maxX; x++ ){
             for(int y = minY; y <= maxY; y++ ){
                 int val = grid[x][y];
-                //croppedGrid[i][j] = val;
-                System.out.print(grid[x][y]);
+                croppedGrid[x-minX][y-minY] = val;
+                System.out.print(grid[x][y]+" ");
                 j++;
             }
             i++;
@@ -211,19 +211,19 @@ public class Grid {
 
         ArrayList<Point> points = new ArrayList<Point>();
 
-        if(rooms.get(grid[x-1][y]).incomingRoomID != r.id
+        if(grid[x-1][y] != 99 && rooms.get(grid[x-1][y]).incomingRoomID != r.id
                 && r.incomingRoomID != rooms.get(grid[x-1][y]).id) {
             points.add(new Point(x - 1, y));
         }
-        if(rooms.get(grid[x+1][y]).incomingRoomID != r.id
+        if(grid[x+1][y] != 99 && rooms.get(grid[x+1][y]).incomingRoomID != r.id
                 && r.incomingRoomID != rooms.get(grid[x+1][y]).id) {
             points.add(new Point(x + 1, y));
         }
-        if(rooms.get(grid[x][y-1]).incomingRoomID != r.id
+        if(grid[x][y-1] != 99 && rooms.get(grid[x][y-1]).incomingRoomID != r.id
                 && r.incomingRoomID != rooms.get(grid[x][y-1]).id) {
             points.add(new Point(x, y - 1));
         }
-        if(rooms.get(grid[x][y+1]).incomingRoomID != r.id
+        if(grid[x][y+1] != 99 && rooms.get(grid[x][y+1]).incomingRoomID != r.id
                 && r.incomingRoomID != rooms.get(grid[x][y+1]).id) {
             points.add(new Point(x, y + 1));
         }
