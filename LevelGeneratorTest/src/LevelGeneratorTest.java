@@ -16,21 +16,24 @@ public class LevelGeneratorTest {
 
     private Graph levelGraph;
     Tile[][] level;
-    ArrayList<Room> rooms = new ArrayList<Room>();
+    ArrayList<Room> rooms;
 
-    private int levelWidth = 150;
-    private int levelHeight = 150;
+    private int fieldSize = 10;
+
+    private int levelWidth;
+    private int levelHeight;
 
     public LevelGeneratorTest(){
         levelGraph = createLevelGraph();
+        rooms = createRooms();
+        Grid grid  = new Grid();
+
+        int[][] roomGrid = grid.createRoomGrid(rooms);
+
+        levelWidth = roomGrid.length * fieldSize;
+        levelHeight = roomGrid[0].length * fieldSize;
+
         level = initEmptyLevel();
-
-        createGroups();
-        new Grid(rooms);
-        positionRooms();
-
-
-
 
 
         for(Room r: rooms){
@@ -66,6 +69,7 @@ public class LevelGeneratorTest {
                 if (level[x][y].tileType == TileType.CORRIDOR) {
                     for (int xx = x - 1; xx <= x + 1; xx++) {
                         for (int yy = y - 1; yy <= y + 1; yy++) {
+                            if(xx < 0 || xx > levelWidth || yy < 0 || yy > levelHeight) continue;
                             if ( level[xx][yy].tileType == TileType.EMPTY) {
                                 level[xx][yy].tileType = TileType.WALL;
                             }
@@ -165,8 +169,6 @@ public class LevelGeneratorTest {
         }
     }
 
-
-
     private boolean checkForRoomCollision(Room room1, Room room2) {
         int border = 2;
         return !(
@@ -180,6 +182,14 @@ public class LevelGeneratorTest {
 
 
     private void putRoomInMap(Room r) {
+        System.out.println("mapping: "+r.id +"on pos "+r.x+" "+r.y);
+
+        r.x = r.x * fieldSize + 2;
+        r.y = r.y * fieldSize + 2;
+        r.width = fieldSize - 4;
+        r.height = fieldSize - 4;
+
+
         for(int x = r.x; x <= r.x+r.width; x++){
             for(int y = r.y; y <= r.y+r.height; y++){
 
@@ -233,9 +243,11 @@ public class LevelGeneratorTest {
 
     }
 
-    private void createGroups() {
+    private ArrayList<Room> createRooms() {
         //uses morphism field to assign groups;
         //same group = in same room
+
+        ArrayList<Room> rooms = new ArrayList<Room>();
 
         int groupID = 0;
 
@@ -323,6 +335,8 @@ public class LevelGeneratorTest {
             }
             System.out.println("ROOM "+r.id + " contains: "+elements+"; incoming: room "+r.incomingRoomID);
         }
+
+        return rooms;
 
     }
 
