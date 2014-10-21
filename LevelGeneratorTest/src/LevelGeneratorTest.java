@@ -1,6 +1,5 @@
 import com.stuckinadrawer.FileReader;
 import com.stuckinadrawer.Point;
-import com.stuckinadrawer.Utils;
 import com.stuckinadrawer.graphs.Grammar;
 import com.stuckinadrawer.graphs.GrammarManager;
 import com.stuckinadrawer.graphs.Graph;
@@ -80,106 +79,6 @@ public class LevelGeneratorTest {
         }
 
     }
-
-    private void positionRooms() {
-
-        for(Room r: rooms){
-            if(r.id == 0){
-                r.x = levelWidth/2;
-                r.y = levelHeight/2;
-                r.initialPos = true;
-                continue;
-            }
-
-
-
-            Room connectedRoom = rooms.get(r.incomingRoomID);
-
-            int offset = Utils.random(0, 8) - 4;
-            int x = connectedRoom.x + offset;
-            offset = Utils.random(0, 8) - 4;
-            int y = connectedRoom.y + offset;
-
-            if(x == connectedRoom.x && y == connectedRoom.y){
-                x = (Utils.random(1)>0)? connectedRoom.x-1:connectedRoom.x+1;
-                y = (Utils.random(1)>0)? connectedRoom.y-1:connectedRoom.y+1;
-            }
-
-            r.x = x;
-            r.y = y;
-            r.initialPos = true;
-
-            separateRooms();
-
-        }
-
-
-
-
-
-    }
-
-    private void separateRooms(){
-        boolean overlap = true;
-        while(overlap){
-            overlap = false;
-            for(Room room1: rooms){
-                if(!room1.initialPos){
-                    continue;
-                }
-                room1.forceX = 0;
-                room1.forceY = 0;
-
-                for(Room room2: rooms){
-                    if(!room2.initialPos || room2.equals(room1) || !checkForRoomCollision(room1, room2)){
-                        continue;
-                    }
-
-                    overlap = true;
-
-                    double deltaX = room2.x - room1.x;
-                    double deltaY = room2.y - room1.y;
-                    if(deltaX == 0 && deltaY == 0){
-                        deltaX = 1;
-                        deltaY = 1;
-                    }
-
-                    double delta2 = deltaX * deltaX + deltaY * deltaY;
-
-                    room1.forceX -= (deltaX>0)?1:-1;
-                    room1.forceY -= (deltaY>0)?1:-1;
-
-                    if(room1.id == room2.incomingRoomID || room2.id == room1.incomingRoomID){
-                        double distance = Math.sqrt(delta2);
-                        if(distance > 15){
-                            room1.forceX += (distance - 15) * deltaX;
-                            room1.forceY += (distance - 15) * deltaY;
-                        }
-
-                    }
-
-
-                }
-            }
-
-            for(Room r: rooms){
-                r.applyForce();
-
-            }
-        }
-    }
-
-    private boolean checkForRoomCollision(Room room1, Room room2) {
-        int border = 2;
-        return !(
-                (room1.x + room1.width < room2.x - border) ||
-                        (room1.x > room2.x + room2.width + border) ||
-                        (room1.y + room1.height < room2.y - border) ||
-                        (room1.y > room2.y + room2.height + border)
-        );
-
-    }
-
 
     private void putRoomInMap(Room r) {
         System.out.println("mapping: "+r.id +"on pos "+r.x+" "+r.y);
