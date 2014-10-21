@@ -9,12 +9,13 @@ public class Grid {
 
     int[][] grid;
 
-    public Grid(ArrayList<Room> rooms){
+    public  int[][] createRoomGrid(ArrayList<Room> rooms){
         this.rooms = rooms;
 
         initEmpty();
         layout();
         cropGrid();
+        return grid;
     }
 
     private void cropGrid() {
@@ -50,6 +51,8 @@ public class Grid {
             i++;
             System.out.println("");
         }
+
+        grid = croppedGrid;
 
 
     }
