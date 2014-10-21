@@ -2,13 +2,13 @@ import com.stuckinadrawer.graphs.Vertex;
 
 import java.util.ArrayList;
 
-public class Room{
+class Room {
     int x, y, width, height;
     int id;
     ArrayList<Vertex> elements = new ArrayList<Vertex>();
     int incomingRoomID = -1;
 
-    public Room(){
+    public Room() {
         this.width = 3;
         this.height = 3;
     }

@@ -1,9 +1,9 @@
-public class Tile {
+class Tile {
 
     public TileType tileType;
-    public int roomID = -1;
+    private int roomID = -1;
 
-    public Tile(TileType tileType){
+    public Tile(TileType tileType) {
         this.tileType = tileType;
     }
 

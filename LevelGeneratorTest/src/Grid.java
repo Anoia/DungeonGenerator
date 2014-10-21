@@ -3,7 +3,7 @@ import com.stuckinadrawer.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Grid {
+class Grid {
 
     private ArrayList<Room> rooms;
     private int[][] grid;

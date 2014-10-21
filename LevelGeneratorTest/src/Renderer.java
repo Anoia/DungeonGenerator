@@ -1,17 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class Renderer extends JFrame {
+class Renderer extends JFrame {
 
-    private Tile[][] level;
     private final int tileSize = 16;
+    private Tile[][] level;
     private int offsetX = 0, offsetY = 0;
 
-    public Renderer(Tile[][] level){
+    public Renderer(Tile[][] level) {
         this.level = level;
         setTitle("LevelGeneratorTest");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -23,16 +22,16 @@ public class Renderer extends JFrame {
     }
 
 
-    private class MyPanel extends JPanel implements MouseListener, MouseMotionListener{
+    private class MyPanel extends JPanel implements MouseListener, MouseMotionListener {
 
         private Point dragging;
 
-        public MyPanel(){
+        public MyPanel() {
             this.addMouseListener(this);
             this.addMouseMotionListener(this);
         }
 
-        private void draw(Graphics g){
+        private void draw(Graphics g) {
 
             //this is where the drawing happens
             Graphics2D g2d = (Graphics2D) g;
@@ -68,9 +67,9 @@ public class Renderer extends JFrame {
                             g2d.setColor(Color.orange);
                     }
 
-                    g2d.fillRect(x*tileSize + offsetX, y*tileSize+offsetY, tileSize, tileSize);
+                    g2d.fillRect(x * tileSize + offsetX, y * tileSize + offsetY, tileSize, tileSize);
                     g2d.setColor(Color.black);
-                    g2d.drawRect(x*tileSize+offsetX, y*tileSize+offsetY, tileSize, tileSize);
+                    g2d.drawRect(x * tileSize + offsetX, y * tileSize + offsetY, tileSize, tileSize);
                 }
             }
 
@@ -83,8 +82,8 @@ public class Renderer extends JFrame {
         }
 
         @Override
-        public Dimension getPreferredSize(){
-            return new Dimension(level.length*tileSize, level[0].length*tileSize);
+        public Dimension getPreferredSize() {
+            return new Dimension(level.length * tileSize, level[0].length * tileSize);
         }
 
         @Override
@@ -115,7 +114,7 @@ public class Renderer extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            Point newPos =  e.getPoint();
+            Point newPos = e.getPoint();
             offsetX += newPos.x - dragging.x;
             offsetY += newPos.y - dragging.y;
             dragging = newPos;
