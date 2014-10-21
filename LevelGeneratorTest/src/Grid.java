@@ -35,6 +35,11 @@ public class Grid {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 int val = grid[x][y];
+                if(val >= 0 && val < 99){
+                    Room r = rooms.get(val);
+                    r.x = x - minX;
+                    r.y = y - minY;
+                }
                 croppedGrid[x - minX][y - minY] = val;
                 System.out.print(grid[x][y] + " ");
             }
